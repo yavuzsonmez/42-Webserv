@@ -6,7 +6,7 @@
 #    By: ysonmez <ysonmez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/21 13:57:50 by ysonmez          ###   ########.fr        #
+#    Updated: 2022/07/25 13:39:18 by ysonmez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,8 +52,7 @@ silence:
 
 valgrind			:	$(NAME)
 						@echo "$(B)Checking for memory leaks..$(Reset)"
-						@valgrind --leak-check=full --log-file="leaks.log" $(NAME)
-						@echo "$(B)Valgrind logged in 'leaks.log'$(Reset)"
+						@valgrind --leak-check=full $(NAME)
 
 clean			:
 						@rm -f $(OBJS)
