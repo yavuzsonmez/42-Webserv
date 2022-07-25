@@ -9,6 +9,14 @@ void lower_str(char *str, size_t length)
 		str[i] = tolower(str[i]);
 }
 
+
+//lowercase a string, then we can also accept more inputs
+void upper_str(char *str, size_t length)
+{
+	for (size_t i = 0; i < length; i++)
+		str[i] = toupper(str[i]);
+}
+
 int	main(int argc, char**argv)
 {
 	std::string str = "webSerV.conF"; //input with uppercase characters

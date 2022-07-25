@@ -1,7 +1,6 @@
 
 #include "../../inc/utility.hpp"
 
-
 // return true if 2 strings are exactly equal
 // to compare the name of the config file provided by the user to the one we accept
 bool str_compare(std::string const &s1, std::string const &s2)
