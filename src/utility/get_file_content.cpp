@@ -1,12 +1,11 @@
-#include<iostream>
-#include<fstream>
-#include<sstream>
-#include<string>
+
+#include "../../inc/utility.hpp"
 
 std::string get_file_content(std::string path)
 {
 	std::ifstream f(path); //taking file as inputstream
 	std::string str;
+
 	if(f) {
 		std::ostringstream ss;
 		ss << f.rdbuf(); // reading data
