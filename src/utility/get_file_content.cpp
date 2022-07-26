@@ -14,9 +14,9 @@ std::string get_file_content(std::string path)
 	return (str);
 }
 
-int	main(int argc, char**argv)
-{
-	(void)argc;
-	std::cout << get_file_content(argv[1]) << std::endl;
-	return (0);
-}
+// int	main(int argc, char**argv)
+// {
+// 	(void)argc;
+// 	std::cout << get_file_content(argv[1]) << std::endl;
+// 	return (0);
+// }
