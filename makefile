@@ -6,7 +6,7 @@
 #    By: ysonmez <ysonmez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/25 17:00:50 by ysonmez          ###   ########.fr        #
+#    Updated: 2022/07/26 12:54:41 by ysonmez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,9 @@ HDRS			=		/inc/
 SRCS			=		/src/utility/get_file_content.cpp \
 						/src/utility/is_file_accessible.cpp \
 						/src/utility/lower_upper_str.cpp \
-						/src/utility/str_compare.cpp \
-						/src/utility/strip_comment_from_file.cpp \
+						/src/utility/check_config_file.cpp \
+						/src/utility/strip_from_str.cpp \
+						/src/utility/get_file_name.cpp \
 
 OBJS			=		$(SRCS:.cpp=.o)
 
@@ -55,8 +56,9 @@ test_util			:
 						@c++ src/utility/get_file_content.cpp -o get_file_content.out
 						@c++ src/utility/is_file_accessible.cpp -o  is_file_accessible.out
 						@c++ src/utility/lower_upper_str.cpp -o lower_upper_str.out
-						@c++ src/utility/str_compare.cpp -o str_compare.out
+						@c++ src/utility/check_config_file.cpp -o check_config_file.out
 						@c++ src/utility/strip_from_str.cpp -o strip_comment_from_file.out
+						@c++ src/utility/get_file_name.cpp -o get_file_name.out
 						@echo "$(P)Unit test for utilities functions built$(Reset)"
 
 rm_util				:
