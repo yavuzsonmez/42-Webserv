@@ -6,7 +6,7 @@
 #    By: ysonmez <ysonmez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/26 12:54:41 by ysonmez          ###   ########.fr        #
+#    Updated: 2022/07/26 17:21:02 by ysonmez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,17 +15,25 @@ R				=		\033[0;31m					# Red
 G				=		\033[0;32m					# Green
 B				=		\033[0;34m					# Blue
 P				=		\033[0;35m					# Purple
+Y				=		\033[33;1m					# Yellow
 
 NAME			=		webserv
 
-HDRS			=		/inc/
+HDRS			=		./inc/utility.hpp \
+						./inc/request.hpp \
 
-SRCS			=		/src/utility/get_file_content.cpp \
-						/src/utility/is_file_accessible.cpp \
-						/src/utility/lower_upper_str.cpp \
-						/src/utility/check_config_file.cpp \
-						/src/utility/strip_from_str.cpp \
-						/src/utility/get_file_name.cpp \
+PARSING			=		./src/parsing/request.cpp \
+
+UTILS			=		./src/utility/get_file_content.cpp \
+						./src/utility/is_file_accessible.cpp \
+						./src/utility/lower_upper_str.cpp \
+						./src/utility/check_config_file.cpp \
+						./src/utility/strip_from_str.cpp \
+						./src/utility/get_file_name.cpp \
+
+ENTRY			=		./main.cpp
+
+SRCS			=		$(UTILS) $(PARSING) $(ENTRY)
 
 OBJS			=		$(SRCS:.cpp=.o)
 

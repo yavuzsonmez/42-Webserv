@@ -1,28 +1,106 @@
+
 #include "../../inc/request.hpp"
 
-Request::Request()
+Request::Request() :
+	_method(UNKNOWN),
+	_protocol(HTTP),
+	_domain("/"),
+	_port(80),
+	_httpVersion("HTTP/1.1") {}
+
+Request::Request(std::string const &req) :
+	_method(UNKNOWN),
+	_protocol(HTTP),
+	_domain("/"),
+	_port(80),
+	_httpVersion("HTTP/1.1") { parser(req); }
+
+Request::Request( const Request & src ) :
+	_method(src._method),
+	_protocol(src._protocol),
+	_port(src._port),
+	_scriptName(src._scriptName),
+	_path(src._path),
+	_queryString(src._queryString),
+	_fragment(src._fragment),
+	_httpVersion(src._httpVersion),
+	_headers(src._headers),
+	_body(src._body) {}
+
+Request::~Request() {}
+
+void Request::parser(std::string const &req)
 {
+	return ;
 }
 
-Request::Request( const Request & src )
-{
+std::string Request::getMethod() const {
+	if (_method == GET)
+		return ("GET");
+	if (_method == POST)
+		return ("POST");
+	if (_method == DELETE)
+		return ("DELETE");
+	return ("UNKNOWN");
 }
 
-Request::~Request()
-{
+std::string	Request::getProtocol() const {
+	if (_protocol == HTTP)
+		return ("HTTP");
+	return ("UNKNOWN");
 }
 
-Request &				Request::operator=( Request const & rhs )
-{
-	//if ( this != &rhs )
-	//{
-		//this->_value = rhs.getValue();
-	//}
-	return *this;
+std::string Request::getDomain() const { return _domain; }
+
+std::string Request::getPort() const {
+	std::string port;
+	std::stringstream ss;
+	ss << _port;
+	ss >> port;
+	return port;
 }
+
+std::string Request::getScriptname() const { return _scriptName; }
+
+std::string Request::getPath() const { return _path; }
+
+std::string Request::getQuerystring() const { return _queryString; }
+
+std::string Request::getFragment() const { return _fragment; }
+
+std::string Request::getHttpversion() const { return _httpVersion; }
+
+std::map <std::string, std::string> Request::getHeaders() const {
+	return _headers;
+}
+
+std::string Request::getBody() const { return _body; }
 
 std::ostream &			operator<<( std::ostream & o, Request const & i )
 {
-	//o << "Value = " << i.getValue();
+
+	typedef std::map<std::string, std::string>::const_iterator iterator;
+
+	std::map<std::string, std::string> headers(i.getHeaders());
+	o << R << "/* ************************************************************************** */" << std::endl << "/* "
+	<< G << "method: " << i.getMethod() << std::endl
+	<< R << "/* ************************************************************************** */"  << std::endl << "/* "
+	<< B << "protocol: " << i.getProtocol() << std::endl << R << "/* "
+	<< P << "domain: " << i.getDomain() << std::endl << R << "/* "
+	<< Y << "port: " << i.getPort() << std::endl << R << "/* "
+	<< G << "script name: " << i.getScriptname() << std::endl << R << "/* "
+	<< B << "path: " << i.getPath() << std::endl << R << "/* "
+	<< P << "query string: " << i.getQuerystring() << std::endl << R << "/* "
+	<< Y << "fragment: " << i.getFragment() << std::endl
+	<< R << "/* ************************************************************************** */" <<  std::endl << "/* "
+	<< G << "http version: " << i.getHttpversion() << std::endl
+	<< R << "/* ************************************************************************** */" <<  std::endl << "/* "
+	<< B << "headers: " << std::endl;
+	for(iterator it = headers.begin(); it != headers.end(); ++it)
+		o << "\t\t" << it->first << " : " << it->second << std::endl << R << "/* ";
+	o << R << "/* ************************************************************************** */" << std::endl << "/* "
+	<< P << "body: " << std::endl
+	<< i.getBody() << std::endl
+	<< R << "/* ************************************************************************** */" << Reset << std::endl;
 	return o;
 }

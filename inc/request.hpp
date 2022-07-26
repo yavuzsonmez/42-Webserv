@@ -4,9 +4,11 @@
 # include <iostream>
 # include <string>
 # include <map>
+# include <sstream>
+# include "colors.hpp"
 
-enum method { GET, POST, DELETE };
-enum protocol { http, https };
+enum method { GET, POST, DELETE, UNKNOWN };
+enum protocol { HTTP, OTHER };
 
 class Request
 {
@@ -14,33 +16,48 @@ class Request
 	public:
 
 		Request();
+		Request( std::string const &req );
 		Request( Request const & src );
 		~Request();
 
-		Request &		operator=( Request const & rhs );
+		//main parser
+		void parser(std::string const &req);
+
+		//getters
+		std::string getMethod() const;
+		std::string	getProtocol() const;
+		std::string getDomain() const;
+		std::string getPort() const;
+		std::string getScriptname() const;
+		std::string getPath() const;
+		std::string getQuerystring() const;
+		std::string getFragment() const;
+		std::string getHttpversion() const;
+		std::map <std::string, std::string> getHeaders() const;
+		std::string getBody() const;
 
 	private:
 
-		/* METHOD */
-		unsigned short _method; //method
+		// Method
+		unsigned short	const _method; //method
 
-		/* URL */
-		std::string _protocol;
-		std::string _domain;
-		unsigned int _port;
-		std::string _scriptName;
-		std::string _path;
-		std::string _queryString;
-		std::string _fragment;
+		// Url
+		unsigned short	const _protocol;
+		std::string		const _domain;
+		unsigned int	const _port;
+		std::string		const _scriptName;
+		std::string		const _path;
+		std::string		const _queryString;
+		std::string		const _fragment;
 
-		/* HTTP VERSION */
-		std::string _httpVersion;
+		// Http version
+		std::string		const _httpVersion;
 
-		/* HEADERS */
-		std::map <std::string, std::string> _headers;
+		// Headers
+		std::map <std::string, std::string>	const _headers;
 
-		/* BODY */
-		std::string _body;
+		// Body
+		std::string		const _body;
 };
 
 std::ostream &			operator<<( std::ostream & o, Request const & i );
