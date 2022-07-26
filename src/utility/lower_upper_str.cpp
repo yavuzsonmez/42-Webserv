@@ -1,7 +1,6 @@
 
 #include "../../inc/utility.hpp"
 
-
 //lowercase a string, then we can also accept more inputs
 void lower_str(std::string &str)
 {
