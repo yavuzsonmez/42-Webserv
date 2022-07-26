@@ -16,5 +16,7 @@ bool is_file_accessible(std::string const &path);
 std::string get_file_content(std::string path);
 bool check_config_file(std::string const &path);
 std::string get_file_name(std::string const &path);
+std::string filter_characters(std::string characters);
+bool	validate_parantheses(std::string parantheses);
 
 #endif
