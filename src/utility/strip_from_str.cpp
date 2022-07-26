@@ -23,14 +23,15 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 
 }
 
-int	main(int argc, char**argv)
-{
 
-	std::string config_file = "hello world; #q powngfpoqwngpo\nlisten	8000;\n#hihihih;";
+// int	main(int argc, char**argv)
+// {
 
-	std::cout << config_file << std::endl;
-	std::cout << "____________________" << std::endl;
-	strip_from_str(config_file, '#', '\n');
-	std::cout << config_file << std::endl;
-	return (0);
-}
+// 	std::string config_file = "hello world; #q powngfpoqwngpo\nlisten	8000;\n#hihihih;";
+
+// 	std::cout << config_file << std::endl;
+// 	std::cout << "____________________" << std::endl;
+// 	strip_from_str(config_file, '#', '\n');
+// 	std::cout << config_file << std::endl;
+// 	return (0);
+// }
