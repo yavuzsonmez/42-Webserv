@@ -1,7 +1,7 @@
 #include <string>
 #include <stack>
 #include <iostream>
-
+//checks a string of parantheses for it's validity
 bool	validate_parantheses(std::string parantheses)
 {
 	std::stack<char>	bracket;

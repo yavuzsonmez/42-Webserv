@@ -1,12 +1,12 @@
 #include <string>
 #include <iterator>
 #include <iostream>
-
+//defines which character must be removed
 bool isx(char c)
 {
 	return (c != '(' && c != ')');
 }
-
+//returns a string where all characters are removed, defined by isx
 std::string filter_characters(std::string characters)
 {
 	std::string::iterator	it = characters.begin();
