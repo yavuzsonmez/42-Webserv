@@ -16,12 +16,9 @@ class Request
 	public:
 
 		Request();
-		Request( std::string const &req );
-		Request( Request const & src );
+		Request( std::string &req );
+		Request( const Request &src );
 		~Request();
-
-		//main parser
-		void parser(std::string const &req);
 
 		//getters
 		std::string getMethod() const;
@@ -36,28 +33,39 @@ class Request
 		std::map <std::string, std::string> getHeaders() const;
 		std::string getBody() const;
 
+		//main parser
+		void parser(std::string &req);
+		//setters for parser
+		void setMethod(std::string &req);
+		void setProtocol(std::string &req);
+		void setDomain(std::string &req);
+		void setPort(std::string &req);
+		void setScriptname(std::string &req);
+		void setPath(std::string &req);
+		void setQuerystring(std::string &req);
+		void setFragment(std::string &req);
+		void setHttpversion(std::string &req);
+		void setHeaders(std::string &req);
+		void setBody(std::string &req);
+
 	private:
 
 		// Method
-		unsigned short	const _method; //method
-
+		unsigned short	 _method; //method
 		// Url
-		unsigned short	const _protocol;
-		std::string		const _domain;
-		unsigned int	const _port;
-		std::string		const _scriptName;
-		std::string		const _path;
-		std::string		const _queryString;
-		std::string		const _fragment;
-
+		unsigned short	 _protocol;
+		std::string		 _domain;
+		unsigned int	 _port;
+		std::string		 _scriptName;
+		std::string		 _path;
+		std::string		 _queryString;
+		std::string		 _fragment;
 		// Http version
-		std::string		const _httpVersion;
-
+		std::string		 _httpVersion;
 		// Headers
-		std::map <std::string, std::string>	const _headers;
-
+		std::map <std::string, std::string>	_headers;
 		// Body
-		std::string		const _body;
+		std::string		_body;
 };
 
 std::ostream &			operator<<( std::ostream & o, Request const & i );

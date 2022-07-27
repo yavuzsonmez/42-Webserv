@@ -12,8 +12,9 @@ int main(int argc, char **argv)
 	//Request httpRequest_1;
 	//std::cout << httpRequest << std::endl;
 
+	std::string request = get_file_content("./sample/http_request_get");
+	Request httpRequestGet(request);
+	std::cout << httpRequestGet << std::endl;
 
-	std::cout << get_file_content("./http_request.sample") << std::endl;
-	//Request httpRequest_2(get_file_content("./http_request.sample"));
-	//std::cout << httpRequest << std::endl;
+	std::cout << request << std::endl;
 }
