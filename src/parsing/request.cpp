@@ -1,6 +1,8 @@
 
 #include "../../inc/request.hpp"
 
+/* **********************************************************/
+
 Request::Request() :
 	_method(UNKNOWN),
 	_protocol(HTTP),
@@ -8,14 +10,14 @@ Request::Request() :
 	_port(80),
 	_httpVersion("HTTP/1.1") {}
 
-Request::Request(std::string const &req) :
+Request::Request(std::string &req) :
 	_method(UNKNOWN),
 	_protocol(HTTP),
 	_domain("/"),
 	_port(80),
 	_httpVersion("HTTP/1.1") { parser(req); }
 
-Request::Request( const Request & src ) :
+Request::Request( const Request &src ) :
 	_method(src._method),
 	_protocol(src._protocol),
 	_port(src._port),
@@ -29,10 +31,7 @@ Request::Request( const Request & src ) :
 
 Request::~Request() {}
 
-void Request::parser(std::string const &req)
-{
-	return ;
-}
+/* **********************************************************/
 
 std::string Request::getMethod() const {
 	if (_method == GET)
@@ -76,6 +75,44 @@ std::map <std::string, std::string> Request::getHeaders() const {
 
 std::string Request::getBody() const { return _body; }
 
+/* **********************************************************/
+
+void Request::parser(std::string &req)
+{
+	setMethod(req);
+	setPath(req);
+}
+
+void Request::setMethod(std::string &req)
+{
+	size_t pos = 0;
+	std::string tmp;
+
+	pos = req.find(" ");
+	if (pos != std::string::npos)
+		tmp = req.substr(0, pos);
+	if (!tmp.compare("GET"))
+		_method = GET;
+	else if (!tmp.compare("POST"))
+		_method = POST;
+	else if (!tmp.compare("DELETE"))
+		_method = DELETE;
+	else
+		_method = UNKNOWN;
+	req.erase(0, pos + 1);
+}
+
+void Request::setPath(std::string &req)
+{
+	size_t pos = 0;
+
+	pos = req.find(" ");
+	_path = req.substr(0, pos);
+	req.erase(0, pos + 1);
+}
+
+/* **********************************************************/
+
 std::ostream &			operator<<( std::ostream & o, Request const & i )
 {
 
@@ -104,3 +141,5 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	<< R << "/* ************************************************************************** */" << Reset << std::endl;
 	return o;
 }
+
+/* **********************************************************/
