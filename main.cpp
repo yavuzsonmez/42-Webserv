@@ -13,8 +13,9 @@ int main(int argc, char **argv)
 	//std::cout << httpRequest << std::endl;
 
 	std::string request = get_file_content("./sample/http_request_get");
+	//std::cout << request << std::endl;
 	Request httpRequestGet(request);
 	std::cout << httpRequestGet << std::endl;
 
-	std::cout << request << std::endl;
+	//std::cout << request << std::endl;
 }
