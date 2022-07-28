@@ -8,8 +8,19 @@
 # include <utility>
 # include "colors.hpp"
 
+// The only member attribute which requires a method coz with support multiple method
 enum method { GET, POST, DELETE, UNKNOWN };
-typedef std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>> vect_headrs_pairs;
+
+// Every member attribute of the request class is stored as pair like that [value, flag]
+// (*) Value is the raw parsed http element, (*) Flag is to know if webserv support the request or not.
+// (true, 1, supported); (false, 0, not supported)
+// value can be a string or number and flag is a boolean
+typedef std::pair < std::string, bool >						str_flag;
+typedef std::pair < unsigned int, bool >					ui_flag;
+// headers is a vector of key-value (raw header and directive).
+// header and directive are a pair of value-flag as well
+typedef std::vector < std::pair < str_flag, str_flag > >	headr_dirctiv;
+
 
 class Request
 {
@@ -17,51 +28,57 @@ class Request
 	public:
 
 		Request();
-		Request( std::string &req );
+		Request( std::string &req ); // prefered constructor where the raw request is passed
 		Request( const Request &src );
 		~Request();
 
 		//getters
-		std::pair <method, bool>				getMethod(void) const;
-		std::pair <std::string, bool>			getProtocol(void) const;
-		std::pair <std::string, bool>			getDomain(void) const;
-		std::pair <unsigned int, bool>			getPort(void) const;
-		std::pair <std::string, bool>			getScriptname() const;
-		std::pair <std::string, bool>			getPath(void) const;
-		std::pair <std::string, bool>			getQuerystring(void) const;
-		std::pair <std::string, bool>			getFragment(void) const;
-		std::pair <std::string, bool>			getHttpversion(void) const;
-		vect_headrs_pairs						getHeaders(void) const;
-		std::pair <std::string, bool>			getBody(void) const;
+		ui_flag				getMethod(void) const;
+		str_flag			getProtocol(void) const;
+		str_flag			getDomain(void) const;
+		ui_flag				getPort(void) const;
+		str_flag			getScriptname() const;
+		str_flag			getPath(void) const;
+		str_flag			getQuerystring(void) const;
+		str_flag			getFragment(void) const;
+		str_flag			getHttpversion(void) const;
+		headr_dirctiv		getHeaders(void) const;
+		str_flag			getBody(void) const;
 
-		void									parser(std::string &req);
-		void									setMethod(std::string &req);
-		void									setProtocol(std::string &req);
-		void									setDomain(std::string &req);
-		void									setPort(std::string &req);
-		void									setScriptname(std::string &req);
-		void									setPath(std::string &req);
-		void									setQuerystring(std::string &req);
-		void									setFragment(std::string &req);
-		void									setHttpversion(std::string &req);
-		void									setHeaders(std::string &req);
-		void									setBody(std::string &req);
+		// main parsing
+		void				parser(std::string &req);
+		// sub-parsing
+		void				setMethod(std::string &req);
+		void				setProtocol(std::string &req);
+		void				setDomain(std::string &req);
+		void				setPort(std::string &req);
+		void				setScriptname(std::string &req);
+		void				setPath(std::string &req);
+		void				setQuerystring(std::string &req);
+		void				setFragment(std::string &req);
+		void				setHttpversion(std::string &req);
+		void				setHeaders(std::string &req);
+		void				setBody(std::string &req);
 
 	private:
 
-		std::pair<method, bool>					_method;
-		std::pair<std::string, bool>			_protocol;
-		std::pair<std::string, bool>			_domain;
-		std::pair<unsigned int, bool>			_port;
-		std::pair<std::string, bool>			_scriptName;
-		std::pair<std::string, bool>			_path;
-		std::pair<std::string, bool>			_queryString;
-		std::pair<std::string, bool>			_fragment;
-		std::pair<std::string, bool>			_httpVersion;
-		vect_headrs_pairs						_headers;
-		std::pair<std::string, bool>			_body;
+		// <value, flag>
+		// value = raw value
+		// flag = check if supported - compatible or not 1 yes, 0 no
+		ui_flag				_method;
+		str_flag			_protocol;
+		str_flag			_domain;
+		ui_flag				_port;
+		str_flag			_scriptName;
+		str_flag			_path;
+		str_flag			_queryString;
+		str_flag			_fragment;
+		str_flag			_httpVersion;
+		headr_dirctiv		_headers;
+		str_flag			_body;
 };
 
+// overload to print the request
 std::ostream &			operator<<( std::ostream & o, Request const & i );
 
 #endif /* ********************************************************* REQUEST_H */
