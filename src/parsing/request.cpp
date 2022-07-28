@@ -4,31 +4,31 @@
 /* **********************************************************/
 
 Request::Request() :
-	_method.first(UNKNOWN), _method.second(false),
-	_protocol.first("HTTP"), _protocol.second(true),
-	_domain.first("/"), _domain.second(true),
-	_port.first(80), _port.second(true),
-	_scriptName.second(false),
-	_path.second(false),
-	_queryString.second(false),
-	_fragment.second(false),
-	_httpVersion.first("HTTP/1.1"), _httpVersion.second(true),
-	_headers((NULL, false), (NULL, false)),
-	_body.second(false)
+	_method(UNKNOWN, false),
+	_protocol("HTTP", true),
+	_domain("/", true),
+	_port(80, true),
+	_scriptName("", false),
+	_path("", false),
+	_queryString("", false),
+	_fragment("", false),
+	_httpVersion("HTTP/1.1", true),
+	_headers(),
+	_body("", false)
 	{}
 
 Request::Request(std::string &req) :
-	_method.first(UNKNOWN), _method.second(false),
-	_protocol.first("HTTP"), _protocol.second(true),
-	_domain.first("/"), _domain.second(true),
-	_port.first(80), _port.second(true),
-	_scriptName.second(false),
-	_path.second(false),
-	_queryString.second(false),
-	_fragment.second(false),
-	_httpVersion.first("HTTP/1.1"), _httpVersion.second(true),
-	_headers((NULL, false), (NULL, false)),
-	_body.second(false)
+	_method(UNKNOWN, false),
+	_protocol("HTTP", true),
+	_domain("/", true),
+	_port(80, true),
+	_scriptName("", false),
+	_path("", false),
+	_queryString("", false),
+	_fragment("", false),
+	_httpVersion("HTTP/1.1", true),
+	_headers(),
+	_body("", false)
 	{ parser(req); }
 
 Request::Request( const Request &src ) :
@@ -113,37 +113,54 @@ void Request::setHttpversion(std::string &req)
 std::ostream &			operator<<( std::ostream & o, Request const & i )
 {
 
-	typedef std::map<std::string, std::string>::const_iterator iterator;
+	std::pair<method, bool>			method = i.getMethod();
+	std::string method_str;
+	if (method.first == GET)
+		method_str = "GET";
+	else if (method.first == POST)
+		method_str = "POST";
+	else if (method.first == DELETE)
+		method_str = "DELETE";
+	else
+		method_str = "UKNOWN";
+	std::pair<std::string, bool>	protocol = i.getProtocol();
+	std::pair<std::string, bool>	domain = i.getDomain();
+	std::pair<unsigned int, bool>	port = i.getPort();
+	std::pair<std::string, bool>	scriptName = i.getScriptname();
+	std::pair<std::string, bool>	path = i.getPath();
+	std::pair<std::string, bool>	queryString = i.getQuerystring();
+	std::pair<std::string, bool>	fragment = i.getFragment();
+	std::pair<std::string, bool>	httpVersion = i.getHttpversion();
+	std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>
+									headers = i.getHeaders();
+	std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>::const_iterator it = headers.begin();
+	std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>::const_iterator ite = headers.end();
+	std::pair<std::string, bool>	body = i.getBody();
 
-	std::map<std::string, std::string> headers(i.getHeaders());
-	o << R << "/* ************************************************************************** */" << std::endl << "/* "
-	<< G << "method: " << i.getMethod() << std::endl
-	<< R << "/* ************************************************************************** */"  << std::endl << "/* "
-	<< B << "protocol: " << i.getProtocol() << std::endl << R << "/* "
-	<< P << "domain: " << i.getDomain() << std::endl << R << "/* "
-	<< Y << "port: " << i.getPort() << std::endl << R << "/* "
-	<< G << "script name: " << i.getScriptname() << std::endl << R << "/* "
-	<< B << "path: " << i.getPath() << std::endl << R << "/* "
-	<< P << "query string: " << i.getQuerystring() << std::endl << R << "/* "
-	<< Y << "fragment: " << i.getFragment() << std::endl
-	<< R << "/* ************************************************************************** */" <<  std::endl << "/* "
-	<< G << "http version: " << i.getHttpversion() << std::endl
-	<< R << "/* ************************************************************************** */" <<  std::endl << "/* "
-	<< B << "headers: " << std::endl;
-	for(iterator it = headers.begin(); it != headers.end(); ++it)
-		o << "\t\t" << it->first << " : " << it->second << std::endl << R << "/* ";
-	o << R << "/* ************************************************************************** */" << std::endl << "/* "
-	<< P << "body: " << std::endl
-	<< i.getBody() << std::endl
-	<< R << "/* ************************************************************************** */" << Reset << std::endl;
+
+	o << P << "/* ************************************************************************** */" << std::endl << "/* "
+	<< Y << "ELEMENT			SUPPORTED? ( 1 yes / 0 no)										"	<< std::endl
+	<< P << "/* ************************************************************************** */" << std::endl << "/* "
+	<< R << "method:\t\t" << B << method_str << "\t\t" << Reset << method.second << std::endl
+	<< P << "/* ************************************************************************** */"  << std::endl << "/* "
+	<< R << "protocol:\t\t" << B << protocol.first << "\t\t" << Reset << protocol.second << std::endl << P << "/* "
+	<< R << "domain:\t\t" << B << domain.first << "\t\t" << Reset << domain.second << std::endl << P << "/* "
+	<< R << "port:\t\t" << B << port.first << "\t\t" << Reset << port.second << std::endl << P << "/* "
+	<< R << "script name:\t\t" << B << scriptName.first << Reset << "\t\t" << scriptName.second << std::endl << P << "/* "
+	<< R << "path:\t\t" << B << path.first << "\t\t" << Reset << path.second << std::endl << P << "/* "
+	<< R << "queryString:\t\t" << B << queryString.first << Reset << "\t\t" << queryString.second << std::endl << P << "/* "
+	<< R << "fragment:\t\t" << B << fragment.first << "\t\t" << Reset << fragment.second << std::endl
+	<< P << "/* ************************************************************************** */" <<  std::endl << "/* "
+	<< R << "http version:\t" << B << httpVersion.first << Reset << "\t" << httpVersion.second << std::endl
+	<< P << "/* ************************************************************************** */" <<  std::endl << "/* "
+	<< R << "headers:" << std::endl;
+		for (; it != ite; ++it)
+		{
+			o << R << "\t" << B << (*it).first.first << Reset << "\t" << (*it).first.second << " : "
+			<< "\t" << B << (*it).second.first << Reset << "\t" << (*it).second.second << std::endl;
+		}
+	o << P << "/* ************************************************************************** */" <<  std::endl << "/* "
+	<< R << "body:\t" << B << body.first << Reset << "\t" << body.second << std::endl
+	<< P << "/* ************************************************************************** */" <<  std::endl;
 	return o;
 }
-
-/* **********************************************************/
-
-
-
-	// std::string port;
-	// std::stringstream ss;
-	// ss << _port;
-	// ss >> port;
