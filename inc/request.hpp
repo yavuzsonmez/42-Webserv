@@ -3,12 +3,13 @@
 
 # include <iostream>
 # include <string>
-# include <map>
+# include <vector>
 # include <sstream>
+# include <utility>
 # include "colors.hpp"
 
 enum method { GET, POST, DELETE, UNKNOWN };
-enum protocol { HTTP, OTHER };
+typedef std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>> vect_headrs_pairs;
 
 class Request
 {
@@ -16,48 +17,49 @@ class Request
 	public:
 
 		Request();
-		Request( std::string const &req );
-		Request( Request const & src );
+		Request( std::string &req );
+		Request( const Request &src );
 		~Request();
 
-		//main parser
-		void parser(std::string const &req);
-
 		//getters
-		std::string getMethod() const;
-		std::string	getProtocol() const;
-		std::string getDomain() const;
-		std::string getPort() const;
-		std::string getScriptname() const;
-		std::string getPath() const;
-		std::string getQuerystring() const;
-		std::string getFragment() const;
-		std::string getHttpversion() const;
-		std::map <std::string, std::string> getHeaders() const;
-		std::string getBody() const;
+		std::pair <method, bool>				getMethod(void) const;
+		std::pair <std::string, bool>			getProtocol(void) const;
+		std::pair <std::string, bool>			getDomain(void) const;
+		std::pair <unsigned int, bool>			getPort(void) const;
+		std::pair <std::string, bool>			getScriptname() const;
+		std::pair <std::string, bool>			getPath(void) const;
+		std::pair <std::string, bool>			getQuerystring(void) const;
+		std::pair <std::string, bool>			getFragment(void) const;
+		std::pair <std::string, bool>			getHttpversion(void) const;
+		vect_headrs_pairs						getHeaders(void) const;
+		std::pair <std::string, bool>			getBody(void) const;
+
+		void									parser(std::string &req);
+		void									setMethod(std::string &req);
+		void									setProtocol(std::string &req);
+		void									setDomain(std::string &req);
+		void									setPort(std::string &req);
+		void									setScriptname(std::string &req);
+		void									setPath(std::string &req);
+		void									setQuerystring(std::string &req);
+		void									setFragment(std::string &req);
+		void									setHttpversion(std::string &req);
+		void									setHeaders(std::string &req);
+		void									setBody(std::string &req);
 
 	private:
 
-		// Method
-		unsigned short	const _method; //method
-
-		// Url
-		unsigned short	const _protocol;
-		std::string		const _domain;
-		unsigned int	const _port;
-		std::string		const _scriptName;
-		std::string		const _path;
-		std::string		const _queryString;
-		std::string		const _fragment;
-
-		// Http version
-		std::string		const _httpVersion;
-
-		// Headers
-		std::map <std::string, std::string>	const _headers;
-
-		// Body
-		std::string		const _body;
+		std::pair<method, bool>					_method;
+		std::pair<std::string, bool>			_protocol;
+		std::pair<std::string, bool>			_domain;
+		std::pair<unsigned int, bool>			_port;
+		std::pair<std::string, bool>			_scriptName;
+		std::pair<std::string, bool>			_path;
+		std::pair<std::string, bool>			_queryString;
+		std::pair<std::string, bool>			_fragment;
+		std::pair<std::string, bool>			_httpVersion;
+		vect_headrs_pairs						_headers;
+		std::pair<std::string, bool>			_body;
 };
 
 std::ostream &			operator<<( std::ostream & o, Request const & i );
