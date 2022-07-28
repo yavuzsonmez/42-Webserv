@@ -6,7 +6,7 @@
 
 Request::Request() :
 	_method(UNKNOWN, false),
-	_protocol("HTTP", true),
+	_protocol("http", true),
 	_domain("/", true),
 	_port(80, true),
 	_scriptName("", false),
@@ -20,7 +20,7 @@ Request::Request() :
 
 Request::Request(std::string &req) :
 	_method(UNKNOWN, false),
-	_protocol("HTTP", true),
+	_protocol("http", true),
 	_domain("/", true),
 	_port(80, true),
 	_scriptName("", false),
@@ -62,37 +62,18 @@ str_flag			Request::getBody() const		{ return _body; }
 
 // Parsing
 
-void Request::parser(std::string &req)
-{
-	// method
+void Request::parser(std::string &req) {
 	setMethod(req);
-
-	// URL
-	setProtocol(req);
-	setDomain(req);
-	setPort(req);
-	setScriptname(req);
-	setPath(req);
-	setQuerystring(req);
-	setFragment(req);
-
-	// HTTP Version
+	setUrl(req);
 	setHttpversion(req);
-
-	// Headers
 	setHeaders(req);
-
-	// Body
 	setBody(req);
 }
 
 // method
-void Request::setMethod(std::string &req)
-{
-	size_t pos = 0;
+void Request::setMethod(std::string &req) {
 	std::string tmp;
-
-	pos = req.find(" ");
+	size_t pos = req.find(" ");
 	if (pos != std::string::npos)
 		tmp = req.substr(0, pos);
 	if (!tmp.compare("GET"))			{ _method.first = GET; _method.second = true; }
@@ -103,30 +84,53 @@ void Request::setMethod(std::string &req)
 	req.erase(0, pos + 1);
 }
 
+// TODO check std::string::npos before substr qnd erase
+
 // URL
-void Request::setProtocol(std::string &req) { return; }
-void Request::setDomain(std::string &req) { return; }
-void Request::setPort(std::string &req) { return; }
-void Request::setScriptname(std::string &req) { return; }
-
-void Request::setPath(std::string &req)
-{
-	size_t pos = 0;
-	pos = req.find(" ");
-
-	_path.first = req.substr(0, pos);
-
+void Request::setUrl(std::string &req) {
+	size_t pos = req.find(" ");
+	std::string url = req.substr(0, pos);
 	req.erase(0, pos + 1);
+
+	setProtocol(url);
+
+	//setDomain(url);
+	//setPort(url);
+	//setScriptname(url);
+	//setPath(url);
 }
 
-void Request::setQuerystring(std::string &req) { return; }
-void Request::setFragment(std::string &req) { return; }
+void Request::setProtocol(std::string &url) {
+
+	size_t pos = url.find("://");
+	if (pos == std::string::npos)
+		return ;
+	_protocol.first = url.substr(0, pos);
+	if (_protocol.first.compare("http"))
+		_protocol.second = false;
+	url.erase(0, pos + 1);
+}
+
+void Request::setDomain(std::string &url) { return; }
+void Request::setPort(std::string &url) { return; }
+void Request::setScriptname(std::string &url) { return; }
+
+void Request::setPath(std::string &url)
+{
+/* 	size_t pos = url.find(" ");
+
+	_path.first = url.substr(0, pos);
+
+	url.erase(0, pos + 1); */
+}
+
+void Request::setQuerystring(std::string &url) { return; }
+void Request::setFragment(std::string &url) { return; }
 
 // HTTP version
 void Request::setHttpversion(std::string &req)
 {
-	size_t pos = 0;
-	pos = req.find("\n");
+	size_t pos = req.find("\n");
 
 	_httpVersion.first = req.substr(0, pos);
 	if(!_httpVersion.first.compare("HTTP/1.1"))
@@ -140,9 +144,8 @@ void Request::setHttpversion(std::string &req)
 // Headers
 void Request::setHeaders(std::string &req)
 {
-	size_t pos = 0;
 	str_flag hdr, direct;
-	pos = req.find(":");
+	size_t pos = req.find(":");
 	while (pos != std::string::npos)
 	{
 		hdr = std::make_pair(req.substr(0, pos), true);
