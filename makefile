@@ -92,7 +92,6 @@ fclean			:		clean
 						@echo "$(R)logs have been removed$(Reset)"
 
 all				:		$(NAME)
-						$(NAME)
 
 re				:		fclean all
 

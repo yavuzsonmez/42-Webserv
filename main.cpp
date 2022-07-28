@@ -9,13 +9,13 @@ int main(int argc, char **argv)
 		return (1);
 	}
 
-	//Request httpRequest_1;
-	//std::cout << httpRequest << std::endl;
 
-	std::string request = get_file_content("./sample/http_request_get");
-	//std::cout << request << std::endl;
-	Request httpRequestGet(request);
-	std::cout << httpRequestGet << std::endl;
+	std::string get = get_file_content("./sample/http_request_get");
+	std::string post = get_file_content("./sample/http_request_post");
+	std::string del = get_file_content("./sample/http_request_delete");
 
-	//std::cout << request << std::endl;
+	Request httpRequest(post);
+	std::cout << httpRequest << std::endl;
+	std::cout << post << std::endl;
+
 }

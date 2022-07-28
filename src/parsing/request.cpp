@@ -47,18 +47,17 @@ Request::~Request() {}
 
 /* **********************************************************/
 
-std::pair<method, bool>			Request::getMethod() const { return _method; }
-std::pair<std::string, bool>	Request::getProtocol() const { return _protocol; }
-std::pair<std::string, bool>	Request::getDomain() const { return _domain; }
-std::pair<unsigned int, bool>	Request::getPort() const { return _port; }
-std::pair<std::string, bool>	Request::getScriptname() const { return _scriptName; }
-std::pair<std::string, bool>	Request::getPath() const { return _path; }
-std::pair<std::string, bool>	Request::getQuerystring() const { return _queryString; }
-std::pair<std::string, bool>	Request::getFragment() const { return _fragment; }
-std::pair<std::string, bool>	Request::getHttpversion() const { return _httpVersion; }
-std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>
-								Request::getHeaders() const { return _headers; }
-std::pair<std::string, bool>	Request::getBody() const { return _body; }
+std::pair<method, bool>			Request::getMethod() const		{ return _method; }
+std::pair<std::string, bool>	Request::getProtocol() const	{ return _protocol; }
+std::pair<std::string, bool>	Request::getDomain() const		{ return _domain; }
+std::pair<unsigned int, bool>	Request::getPort() const		{ return _port; }
+std::pair<std::string, bool>	Request::getScriptname() const	{ return _scriptName; }
+std::pair<std::string, bool>	Request::getPath() const		{ return _path; }
+std::pair<std::string, bool>	Request::getQuerystring() const	{ return _queryString; }
+std::pair<std::string, bool>	Request::getFragment() const	{ return _fragment; }
+std::pair<std::string, bool>	Request::getHttpversion() const	{ return _httpVersion; }
+vect_headrs_pairs				Request::getHeaders() const		{ return _headers; }
+std::pair<std::string, bool>	Request::getBody() const		{ return _body; }
 
 /* **********************************************************/
 
@@ -67,6 +66,9 @@ void Request::parser(std::string &req)
 	setMethod(req);
 	setPath(req);
 	setHttpversion(req);
+
+	setHeaders(req);
+	setBody(req);
 }
 
 void Request::setMethod(std::string &req)
@@ -108,6 +110,32 @@ void Request::setHttpversion(std::string &req)
 	req.erase(0, pos + 1);
 }
 
+//support presence of ':' inside body
+void Request::setHeaders(std::string &req)
+{
+	size_t pos = 0;
+	std::pair<std::string, bool> hdr, direct;
+	pos = req.find(":");
+	while (pos != std::string::npos)
+	{
+		hdr = std::make_pair(req.substr(0, pos), true);
+		req.erase(0, pos + 1);
+		pos = req.find("\n");
+		direct = std::make_pair(req.substr(0, pos), true);
+		_headers.push_back(std::make_pair(hdr, direct));
+		req.erase(0, pos + 1);
+		pos = req.find(":");
+	}
+}
+
+void Request::setBody(std::string &req)
+{
+	size_t pos = req.find("\n");
+	_body = std::make_pair(req.substr(pos + 1), true);
+	if (req.length())
+		req.erase(pos);
+}
+
 /* **********************************************************/
 
 std::ostream &			operator<<( std::ostream & o, Request const & i )
@@ -137,7 +165,6 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>::const_iterator ite = headers.end();
 	std::pair<std::string, bool>	body = i.getBody();
 
-
 	o << P << "/* ************************************************************************** */" << std::endl << "/* "
 	<< Y << "ELEMENT			SUPPORTED? ( 1 yes / 0 no)										"	<< std::endl
 	<< P << "/* ************************************************************************** */" << std::endl << "/* "
@@ -154,13 +181,13 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	<< R << "http version:\t" << B << httpVersion.first << Reset << "\t" << httpVersion.second << std::endl
 	<< P << "/* ************************************************************************** */" <<  std::endl << "/* "
 	<< R << "headers:" << std::endl;
-		for (; it != ite; ++it)
-		{
-			o << R << "\t" << B << (*it).first.first << Reset << "\t" << (*it).first.second << " : "
-			<< "\t" << B << (*it).second.first << Reset << "\t" << (*it).second.second << std::endl;
-		}
+	for (; it != ite; ++it)
+	{
+		o << B << (*it).first.first << Reset << " " << (*it).first.second << " : "
+		<< B << (*it).second.first << Reset << " " << (*it).second.second << std::endl;
+	}
 	o << P << "/* ************************************************************************** */" <<  std::endl << "/* "
-	<< R << "body:\t" << B << body.first << Reset << "\t" << body.second << std::endl
+	<< R << "body:\t\t" << B << body.first << Reset << "\t\t" << body.second << std::endl
 	<< P << "/* ************************************************************************** */" <<  std::endl;
 	return o;
 }
