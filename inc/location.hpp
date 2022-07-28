@@ -3,7 +3,7 @@
 
 class	location
 {
-
+	
 };
 
 # endif;
