@@ -13,9 +13,14 @@ int main(int argc, char **argv)
 	std::string get = get_file_content("./sample/http_request_get");
 	std::string post = get_file_content("./sample/http_request_post");
 	std::string del = get_file_content("./sample/http_request_delete");
+	std::string unknwn = get_file_content("./sample/http_request_delete");
 
-	Request httpRequest(post);
-	std::cout << httpRequest << std::endl;
-	std::cout << post << std::endl;
+	//Request httpRequestPost(post);
+	Request httpRequestGet(get);
+	//Request httpRequestDelete(del);
+	//Request httpRequestDelete(unknwn);
+
+	std::cout << httpRequestGet << std::endl;
+	std::cout << get << std::endl;
 
 }

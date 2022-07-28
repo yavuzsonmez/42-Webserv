@@ -1,7 +1,8 @@
 
 #include "../../inc/request.hpp"
 
-/* **********************************************************/
+
+// Constructors
 
 Request::Request() :
 	_method(UNKNOWN, false),
@@ -45,47 +46,68 @@ Request::Request( const Request &src ) :
 
 Request::~Request() {}
 
-/* **********************************************************/
+// Getters
 
-std::pair<method, bool>			Request::getMethod() const		{ return _method; }
-std::pair<std::string, bool>	Request::getProtocol() const	{ return _protocol; }
-std::pair<std::string, bool>	Request::getDomain() const		{ return _domain; }
-std::pair<unsigned int, bool>	Request::getPort() const		{ return _port; }
-std::pair<std::string, bool>	Request::getScriptname() const	{ return _scriptName; }
-std::pair<std::string, bool>	Request::getPath() const		{ return _path; }
-std::pair<std::string, bool>	Request::getQuerystring() const	{ return _queryString; }
-std::pair<std::string, bool>	Request::getFragment() const	{ return _fragment; }
-std::pair<std::string, bool>	Request::getHttpversion() const	{ return _httpVersion; }
-vect_headrs_pairs				Request::getHeaders() const		{ return _headers; }
-std::pair<std::string, bool>	Request::getBody() const		{ return _body; }
+ui_flag				Request::getMethod() const		{ return _method; }
+str_flag			Request::getProtocol() const	{ return _protocol; }
+str_flag			Request::getDomain() const		{ return _domain; }
+ui_flag				Request::getPort() const		{ return _port; }
+str_flag			Request::getScriptname() const	{ return _scriptName; }
+str_flag			Request::getPath() const		{ return _path; }
+str_flag			Request::getQuerystring() const	{ return _queryString; }
+str_flag			Request::getFragment() const	{ return _fragment; }
+str_flag			Request::getHttpversion() const	{ return _httpVersion; }
+headr_dirctiv		Request::getHeaders() const		{ return _headers; }
+str_flag			Request::getBody() const		{ return _body; }
 
-/* **********************************************************/
+// Parsing
 
 void Request::parser(std::string &req)
 {
+	// method
 	setMethod(req);
+
+	// URL
+	setProtocol(req);
+	setDomain(req);
+	setPort(req);
+	setScriptname(req);
 	setPath(req);
+	setQuerystring(req);
+	setFragment(req);
+
+	// HTTP Version
 	setHttpversion(req);
 
+	// Headers
 	setHeaders(req);
+
+	// Body
 	setBody(req);
 }
 
+// method
 void Request::setMethod(std::string &req)
 {
 	size_t pos = 0;
 	std::string tmp;
-	pos = req.find(" ");
 
+	pos = req.find(" ");
 	if (pos != std::string::npos)
 		tmp = req.substr(0, pos);
-	if (!tmp.compare("GET")) { _method.first = GET; _method.second = true; }
-	else if (!tmp.compare("POST")) { _method.first = POST; _method.second = true; }
-	else if (!tmp.compare("DELETE")) { _method.first = DELETE; _method.second = true; }
-	else { _method.first = UNKNOWN; _method.second = false;}
+	if (!tmp.compare("GET"))			{ _method.first = GET; _method.second = true; }
+	else if (!tmp.compare("POST"))		{ _method.first = POST; _method.second = true; }
+	else if (!tmp.compare("DELETE"))	{ _method.first = DELETE; _method.second = true; }
+	else								{ _method.first = UNKNOWN; _method.second = false;}
 
 	req.erase(0, pos + 1);
 }
+
+// URL
+void Request::setProtocol(std::string &req) { return; }
+void Request::setDomain(std::string &req) { return; }
+void Request::setPort(std::string &req) { return; }
+void Request::setScriptname(std::string &req) { return; }
 
 void Request::setPath(std::string &req)
 {
@@ -97,6 +119,10 @@ void Request::setPath(std::string &req)
 	req.erase(0, pos + 1);
 }
 
+void Request::setQuerystring(std::string &req) { return; }
+void Request::setFragment(std::string &req) { return; }
+
+// HTTP version
 void Request::setHttpversion(std::string &req)
 {
 	size_t pos = 0;
@@ -110,11 +136,12 @@ void Request::setHttpversion(std::string &req)
 	req.erase(0, pos + 1);
 }
 
-//support presence of ':' inside body
+// TODO support presence of ':' inside body
+// Headers
 void Request::setHeaders(std::string &req)
 {
 	size_t pos = 0;
-	std::pair<std::string, bool> hdr, direct;
+	str_flag hdr, direct;
 	pos = req.find(":");
 	while (pos != std::string::npos)
 	{
@@ -128,6 +155,7 @@ void Request::setHeaders(std::string &req)
 	}
 }
 
+// Body
 void Request::setBody(std::string &req)
 {
 	size_t pos = req.find("\n");
@@ -136,12 +164,12 @@ void Request::setBody(std::string &req)
 		req.erase(pos);
 }
 
-/* **********************************************************/
+// Overlaod to print the Request
 
 std::ostream &			operator<<( std::ostream & o, Request const & i )
 {
 
-	std::pair<method, bool>			method = i.getMethod();
+	ui_flag method = i.getMethod();
 	std::string method_str;
 	if (method.first == GET)
 		method_str = "GET";
@@ -151,19 +179,18 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 		method_str = "DELETE";
 	else
 		method_str = "UKNOWN";
-	std::pair<std::string, bool>	protocol = i.getProtocol();
-	std::pair<std::string, bool>	domain = i.getDomain();
-	std::pair<unsigned int, bool>	port = i.getPort();
-	std::pair<std::string, bool>	scriptName = i.getScriptname();
-	std::pair<std::string, bool>	path = i.getPath();
-	std::pair<std::string, bool>	queryString = i.getQuerystring();
-	std::pair<std::string, bool>	fragment = i.getFragment();
-	std::pair<std::string, bool>	httpVersion = i.getHttpversion();
-	std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>
-									headers = i.getHeaders();
-	std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>::const_iterator it = headers.begin();
-	std::vector<std::pair<std::pair<std::string, bool>, std::pair<std::string, bool>>>::const_iterator ite = headers.end();
-	std::pair<std::string, bool>	body = i.getBody();
+	str_flag		protocol = i.getProtocol();
+	str_flag		domain = i.getDomain();
+	ui_flag		port = i.getPort();
+	str_flag		scriptName = i.getScriptname();
+	str_flag		path = i.getPath();
+	str_flag		queryString = i.getQuerystring();
+	str_flag		fragment = i.getFragment();
+	str_flag		httpVersion = i.getHttpversion();
+	headr_dirctiv	headers = i.getHeaders();
+		headr_dirctiv::const_iterator it = headers.begin();
+		headr_dirctiv::const_iterator ite = headers.end();
+	str_flag	body = i.getBody();
 
 	o << P << "/* ************************************************************************** */" << std::endl << "/* "
 	<< Y << "ELEMENT			SUPPORTED? ( 1 yes / 0 no)										"	<< std::endl
