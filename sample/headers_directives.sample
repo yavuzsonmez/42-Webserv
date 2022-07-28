@@ -1,34 +1,35 @@
-Accept-Encoding:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
+(Request) Accept-Encoding:		https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
 								possible directives: gzip, compress, deflate, br, identity, *, ;q=
 
-Accept-Language:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language
+(Request) Accept-Language:		https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language
 								<language>, *, ;q=
 
-Allow:							https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Allow
+(Response) Allow:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Allow
 								<http-methods>
+								GET, POST, DELETE
 
 
-Authorization:					https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+(Request) Authorization:		https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 								<Basic <credentials>>, <Digest <scheme>>
 
 
 
-Content-Language:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language
+(Response) Content-Language:	https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language
 								language-tag
 
 
-Content-Length:					https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length
+(Request and Response) Content-Length: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length
 								<length>
 
-Content-Location:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location
+(Response) Content-Location: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location
 								<url>
 
 
-Content-Type:					https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
+(Request and Response) Content-Type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
 								<media-type (MIME type)>; charset; boundary
 
 
-Host:							https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Host
+(Request) Host:					https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Host
 								<host>:<port(optional)>
 
 
