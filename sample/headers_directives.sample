@@ -1,0 +1,61 @@
+Accept-Encoding:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
+								possible directives: gzip, compress, deflate, br, identity, *, ;q=
+
+Accept-Language:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language
+								<language>, *, ;q=
+
+Allow:							https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Allow
+								<http-methods>
+
+
+Authorization:					https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+								<Basic <credentials>>, <Digest <scheme>>
+
+
+
+Content-Language:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language
+								language-tag
+
+
+Content-Length:					https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length
+								<length>
+
+Content-Location:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location
+								<url>
+
+
+Content-Type:					https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
+								<media-type (MIME type)>; charset; boundary
+
+
+Host:							https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Host
+								<host>:<port(optional)>
+
+
+(Response) Last-Modified:		https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified
+								<day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
+
+
+(Response) Location:			https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
+								<url>
+
+Referer:						https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer
+								<url>
+
+(Response) Retry-After:			https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After
+								<http-date> or <delay-seconds>
+
+(Response) Server:				https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server
+								Webserv
+
+(Response) Transfer-Encoding:	https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding
+								chunked, compress, deflate, gzip
+
+(Request) User-Agent:			https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+								<product> / <product-version> <comment>
+
+(Response) WWW-Authenticate:	https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate
+								<auth-scheme>, realm=<realm>(optional), <token68>
+
+
+X-*	Header custom header, that can be sent to CGI
