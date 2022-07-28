@@ -45,20 +45,20 @@ class Request
 		headr_dirctiv		getHeaders(void) const;
 		str_flag			getBody(void) const;
 
-		// main parsing
+		// parsing
 		void				parser(std::string &req);
-		// sub-parsing
-		void				setMethod(std::string &req);
-		void				setProtocol(std::string &req);
-		void				setDomain(std::string &req);
-		void				setPort(std::string &req);
-		void				setScriptname(std::string &req);
-		void				setPath(std::string &req);
-		void				setQuerystring(std::string &req);
-		void				setFragment(std::string &req);
-		void				setHttpversion(std::string &req);
-		void				setHeaders(std::string &req);
-		void				setBody(std::string &req);
+			void				setMethod(std::string &req);
+			void				setUrl(std::string &req);
+				void				setProtocol(std::string &url);
+				void				setDomain(std::string &url);
+				void				setPort(std::string &url);
+				void				setScriptname(std::string &url);
+				void				setPath(std::string &url);
+				void				setQuerystring(std::string &url);
+				void				setFragment(std::string &url);
+			void				setHttpversion(std::string &req);
+			void				setHeaders(std::string &req);
+			void				setBody(std::string &req);
 
 	private:
 
