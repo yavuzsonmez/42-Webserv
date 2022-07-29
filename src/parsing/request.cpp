@@ -1,5 +1,5 @@
 
-#include "../../inc/request.hpp"
+#include "../../inc/Request.hpp"
 
 
 // Constructors
@@ -15,7 +15,8 @@ Request::Request() :
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
 	_headers(),
-	_body("", false)
+	_body("", false),
+	_status("")
 	{}
 
 Request::Request(std::string &req) :
@@ -29,7 +30,8 @@ Request::Request(std::string &req) :
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
 	_headers(),
-	_body("", false)
+	_body("", false),
+	_status("")
 	{ parser(req); }
 
 Request::Request( const Request &src ) :
@@ -48,10 +50,10 @@ Request::~Request() {}
 
 // Getters
 
-ui_flag				Request::getMethod() const		{ return _method; }
+i_flag				Request::getMethod() const		{ return _method; }
 str_flag			Request::getProtocol() const	{ return _protocol; }
 str_flag			Request::getDomain() const		{ return _domain; }
-ui_flag				Request::getPort() const		{ return _port; }
+i_flag				Request::getPort() const		{ return _port; }
 str_flag			Request::getScriptname() const	{ return _scriptName; }
 str_flag			Request::getPath() const		{ return _path; }
 str_flag			Request::getQuerystring() const	{ return _queryString; }
@@ -63,7 +65,14 @@ str_flag			Request::getBody() const		{ return _body; }
 // Parsing
 
 void Request::parser(std::string &req) {
+	if (req.empty())
+	{
+		_status = Bad_Request;
+		return ;
+	}
 	setMethod(req);
+	if (!_status.empty())
+		return ;
 	setUrl(req);
 	setHttpversion(req);
 	setHeaders(req);
@@ -74,13 +83,16 @@ void Request::parser(std::string &req) {
 void Request::setMethod(std::string &req) {
 	std::string tmp;
 	size_t pos = req.find(" ");
-	if (pos != std::string::npos)
-		tmp = req.substr(0, pos);
+	if (pos == std::string::npos)
+	{
+		_status = Bad_Request;
+		return ;
+	}
+	tmp = req.substr(0, pos);
 	if (!tmp.compare("GET"))			{ _method.first = GET; _method.second = true; }
 	else if (!tmp.compare("POST"))		{ _method.first = POST; _method.second = true; }
 	else if (!tmp.compare("DELETE"))	{ _method.first = DELETE; _method.second = true; }
-	else								{ _method.first = UNKNOWN; _method.second = false;}
-
+	else { _method.first = UNKNOWN; _method.second = false; _status =  Method_Not_Allowed; }
 	req.erase(0, pos + 1);
 }
 
@@ -89,13 +101,15 @@ void Request::setMethod(std::string &req) {
 // URL
 void Request::setUrl(std::string &req) {
 	size_t pos = req.find(" ");
+	if (pos == std::string::npos)
+	{
+		_status = Bad_Request;
+		return ;
+	}
 	std::string url = req.substr(0, pos);
 	req.erase(0, pos + 1);
-
 	setProtocol(url);
-
-	//setDomain(url);
-	//setPort(url);
+	setDomain(url);
 	//setScriptname(url);
 	//setPath(url);
 }
@@ -111,8 +125,33 @@ void Request::setProtocol(std::string &url) {
 	url.erase(0, pos + 1);
 }
 
-void Request::setDomain(std::string &url) { return; }
-void Request::setPort(std::string &url) { return; }
+void Request::setDomain(std::string &url) {
+	setPort(url);
+	size_t pos = url.find(":");
+	if (pos != std::string::npos)
+		setPort(url);
+
+	_protocol.first = url.substr(0, pos);
+	if (_protocol.first.compare("http"))
+		_protocol.second = false;
+	url.erase(0, pos + 1);
+return;
+
+}
+
+void Request::setPort(std::string &url) {
+	size_t pos = url.find(":");
+	if (pos == std::string::npos)
+		return;
+	url.erase(0, pos + 1);
+	pos = url.find("/");
+	std::string port = url.substr(0, pos);
+	std::stringstream ss(port);
+	ss >> _port;
+	if (_port < 0)
+		_status = Bad_Request;
+}
+
 void Request::setScriptname(std::string &url) { return; }
 
 void Request::setPath(std::string &url)
@@ -172,7 +211,7 @@ void Request::setBody(std::string &req)
 std::ostream &			operator<<( std::ostream & o, Request const & i )
 {
 
-	ui_flag method = i.getMethod();
+	i_flag method = i.getMethod();
 	std::string method_str;
 	if (method.first == GET)
 		method_str = "GET";
@@ -184,7 +223,7 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 		method_str = "UKNOWN";
 	str_flag		protocol = i.getProtocol();
 	str_flag		domain = i.getDomain();
-	ui_flag		port = i.getPort();
+	i_flag			port = i.getPort();
 	str_flag		scriptName = i.getScriptname();
 	str_flag		path = i.getPath();
 	str_flag		queryString = i.getQuerystring();
