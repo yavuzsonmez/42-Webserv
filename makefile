@@ -1,91 +1,29 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ysonmez <ysonmez@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/26 12:54:41 by ysonmez          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME	=	webserv
 
-Reset			=		\033[0m						# Text Reset
-R				=		\033[0;31m					# Red
-G				=		\033[0;32m					# Green
-B				=		\033[0;34m					# Blue
-P				=		\033[0;35m					# Purple
+SRCS	=	main.cpp \
+			src/classes/configuration.cpp \
+			src/classes/location.cpp \
+			src/classes/server.cpp \
+			src/classes/tcp_socket.cpp \
 
-NAME			=		webserv
+OBJS	=	$(SRCS:.cpp=.o)
 
-HDRS			=		/inc/
+FLAGS	=	-Wall -Werror -Wextra -std=c++98
 
-SRCS			=		/src/utility/get_file_content.cpp \
-						/src/utility/is_file_accessible.cpp \
-						/src/utility/lower_upper_str.cpp \
-						/src/utility/check_config_file.cpp \
-						/src/utility/strip_from_str.cpp \
-						/src/utility/get_file_name.cpp \
+.c.o	:
+			c++ $(CFLAGS) -c $< -o $(<:.c=.o)
 
-OBJS			=		$(SRCS:.cpp=.o)
+$(NAME)	:	$(OBJS)
+			c++ $(FLAGS) $(OBJS) -o $(NAME)
 
-DEBUG			=		-g -fsanitize=address
+clean	:
+			rm -f $(OBJS)
 
-FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98
+fclean	:	clean
+			rm -f $(NAME)
 
-.c.o			:
-						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)
+all		:	$(NAME)
 
-$(NAME)			:		$(OBJS) $(HDRS) | silence
-						@c++ $(FLAGS) $(OBJS) -o $(NAME)
-						@echo "$(G)$(NAME) has been created$(Reset)"
+re		:	fclean all
 
-dev				:		$(OBJS) $(HDRS) | silence
-						@c++ $(OBJS) -o $(NAME)
-						@echo "$(R)Compiling without flags WARNING !$(Reset)"
-						@echo "$(G)$(NAME) has been created$(Reset)"
-
-debug				:	$(OBJS) $(HDRS) | silence
-						@c++ $(OBJS) $(DEBUG) -o $(NAME)
-						@echo "$(P)DEBUG MODE : address sanitizer$(Reset)"
-						@echo "$(G)$(NAME) has been created$(Reset)"
-						$(NAME) > debug.log
-						@echo "$(B)Debug logged in 'debug.log'$(Reset)"
-
-test_util			:
-						@c++ src/utility/get_file_content.cpp -o get_file_content.out
-						@c++ src/utility/is_file_accessible.cpp -o  is_file_accessible.out
-						@c++ src/utility/lower_upper_str.cpp -o lower_upper_str.out
-						@c++ src/utility/check_config_file.cpp -o check_config_file.out
-						@c++ src/utility/strip_from_str.cpp -o strip_comment_from_file.out
-						@c++ src/utility/get_file_name.cpp -o get_file_name.out
-						@echo "$(P)Unit test for utilities functions built$(Reset)"
-
-rm_util				:
-						@rm *.out
-						@echo "$(R)Removed utilities unit test binaries$(Reset)"
-
-silence:
-						@:
-
-valgrind			:	$(NAME)
-						@echo "$(B)Checking for memory leaks..$(Reset)"
-						@valgrind --leak-check=full $(NAME)
-
-clean			:
-						@rm -f $(OBJS)
-						@echo "$(R)Objects have been removed$(Reset)"
-
-fclean			:		clean
-						@rm -f $(NAME)
-						@echo "$(R)$(NAME) has been removed$(Reset)"
-						@rm -f debug.log
-						@rm -f leaks.log
-						@echo "$(R)logs have been removed$(Reset)"
-
-all				:		$(NAME)
-						$(NAME)
-
-re				:		fclean all
-
-.PHONY			:		clean fclean all re
+.PHONY	:	clean fclean all re
