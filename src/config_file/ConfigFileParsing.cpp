@@ -2,7 +2,7 @@
 #include "../../inc/utility.hpp"
 
 ConfigFileParsing::ConfigFileParsing() {
-
+	
 }
 
 ConfigFileParsing::ConfigFileParsing( const ConfigFileParsing &src ) {
@@ -19,12 +19,13 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
 
 /**
  * @brief Parses the given content from the content file
- * 
+ * @note Removes all the comments from a configuration file. (a comment starts with #)
  * @param file_content 
  * @return true 
  * @return false or an throw exception if the configuration file is faulty.
  */
 bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
+	strip_from_str(file_content, '#', '\n');
 	if (file_content.empty()) {
 		throw InvalidConfigurationFile();
 	}

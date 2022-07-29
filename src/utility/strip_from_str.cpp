@@ -1,6 +1,5 @@
-
-#include "../../inc/utility.hpp"
-
+#include <string>
+#include <iostream>
 
 //Remove in file_content everything between start (included) to end (excluded)
 //Remove comment (starting with #) from file content
