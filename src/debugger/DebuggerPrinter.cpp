@@ -1,33 +1,35 @@
 #include "../../inc/DebuggerPrinter.hpp"
 
-DebuggerPrinter::DebuggerPrinter() {
+DebuggerPrinter::DebuggerPrinter()
+{
 
-};
+}
 DebuggerPrinter::DebuggerPrinter( const DebuggerPrinter &src )
 {
 
 }
-~DebuggerPrinter::DebuggerPrinter()
+
+DebuggerPrinter::~DebuggerPrinter()
 {
 
 }
-DebuggerPrinter::DebuggerPrinter & operator = (const DebuggerPrinter &src)
-{
 
+DebuggerPrinter & DebuggerPrinter::operator = (const DebuggerPrinter &src) {
+	return (*this);
 }
 
 /**
- * @brief Prints message with color code and levek prefix
+ * @brief Prints message with color code and level prefix
  * 
  * @param message 
  */
-DebuggerPrinter::printString( std::string &message, LogLevel level ) {
+void DebuggerPrinter::printString( std::string &message, LogLevel level ) {
 	std::string prefix = "";
 	switch (level) {
-		case LogLevel::INFO:
+		case INFO:
 			prefix = "\033[0;34m[INFO]\033[0m";
 			break;
-		case LogLevel::WARNING:
+		case WARNING:
 			prefix = "\033[0;31m[WARNING]\033[0m";
 		default:
 			prefix = "[UNKNOWN]";
@@ -40,8 +42,8 @@ DebuggerPrinter::printString( std::string &message, LogLevel level ) {
  * 
  * @param message 
  */
-DebuggerPrinter::info( std::string &message ) {
-	printString(message, LogLevel::INFO);
+void DebuggerPrinter::info( std::string &message ) {
+	printString(message, INFO);
 }
 
 /**
@@ -49,6 +51,6 @@ DebuggerPrinter::info( std::string &message ) {
  * 
  * @param message 
  */
-DebuggerPrinter::warning( std::string &message ) {
-	printString(message, LogLevel::WARNING);
+void DebuggerPrinter::warning( std::string &message ) {
+	printString(message, WARNING);
 }

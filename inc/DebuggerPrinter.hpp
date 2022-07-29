@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 /**
  * @brief Loglevel of the enums
@@ -26,5 +27,5 @@ class DebuggerPrinter {
 		void info( std::string &message );
 		void warning( std::string &message );
 	private:
-		void printString( std::string &message );
+		void printString( std::string &message, LogLevel level );
 };
