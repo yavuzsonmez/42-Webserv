@@ -43,11 +43,9 @@ bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
  * @return true if file is faulty
  */
 bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
-	if (file_content.empty()) {
+	if (file_content.empty() == true) {
 		throw true;
 	}
-	if (validate_parantheses(file_content)) {
-		throw true;
-	}
+	// add parantheses check. currently paranthesis check is causing a crash.
 	return false;
 }

@@ -24,17 +24,19 @@ int main(int argc, char **argv)
 {
 	if (!check_arguments_and_filename(argc, argv)) return (1);
 
-	ConfigFileParsing configurationFileParsing;
+	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	file_content = get_file_content(argv[1]);
 
 	std::cout << argv[1] << std::endl;
 	try {
-		configurationFileParsing.parseConfigFile(file_content);
+		configurationFileParsing->parseConfigFile(file_content);
 	} catch (const std::exception& e) {
 		std::cout << "TEST";
 		std::cout << "error: " << e.what() << std::endl;
 		return (1);
 	}
+
+	delete configurationFileParsing;
 	return (0);
 }
