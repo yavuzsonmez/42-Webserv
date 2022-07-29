@@ -20,7 +20,6 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 		it_s = file_content.begin() + start_index;
 		it_e = file_content.begin() + end_index;
 	}
-
 }
 
 

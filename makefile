@@ -6,7 +6,7 @@
 #    By: ysonmez <ysonmez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/26 17:21:02 by ysonmez          ###   ########.fr        #
+#    Updated: 2022/07/29 15:15:32 by ysonmez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,9 @@ Y				=		\033[33;1m					# Yellow
 NAME			=		webserv
 
 HDRS			=		./inc/utility.hpp \
-						./inc/request.hpp \
+						./inc/Request.hpp \
 
-PARSING			=		./src/parsing/request.cpp \
+PARSING			=		./src/parsing/Request.cpp \
 
 UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/is_file_accessible.cpp \

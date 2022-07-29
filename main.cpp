@@ -1,5 +1,5 @@
 #include "inc/utility.hpp"
-#include "inc/request.hpp"
+#include "inc/Request.hpp"
 
 int main(int argc, char **argv)
 {
@@ -21,6 +21,5 @@ int main(int argc, char **argv)
 	//Request httpRequestDelete(unknwn);
 
 	std::cout << httpRequestGet << std::endl;
-	std::cout << get << std::endl;
 
 }
