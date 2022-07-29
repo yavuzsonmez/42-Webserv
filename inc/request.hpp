@@ -38,13 +38,14 @@ class Request
 		str_flag			getProtocol(void) const;
 		str_flag			getDomain(void) const;
 		i_flag				getPort(void) const;
-		str_flag			getScriptname() const;
+		str_flag			getScript() const;
 		str_flag			getPath(void) const;
-		str_flag			getQuerystring(void) const;
+		str_flag			getQuery(void) const;
 		str_flag			getFragment(void) const;
 		str_flag			getHttpversion(void) const;
 		headr_dirctiv		getHeaders(void) const;
 		str_flag			getBody(void) const;
+		std::string			getStatus(void) const;
 
 		// parsing
 		void				parser(std::string &req);
@@ -53,9 +54,9 @@ class Request
 				void				setProtocol(std::string &url);
 				void				setDomain(std::string &url);
 				void				setPort(std::string &url);
-				void				setScriptname(std::string &url);
+				void				setScript(std::string &url);
 				void				setPath(std::string &url);
-				void				setQuerystring(std::string &url);
+				void				setQuery(std::string &url);
 				void				setFragment(std::string &url);
 			void				setHttpversion(std::string &req);
 			void				setHeaders(std::string &req);
@@ -70,9 +71,9 @@ class Request
 		str_flag			_protocol;
 		str_flag			_domain;
 		i_flag				_port;
-		str_flag			_scriptName;
+		str_flag			_script;
 		str_flag			_path;
-		str_flag			_queryString;
+		str_flag			_query;
 		str_flag			_fragment;
 		str_flag			_httpVersion;
 		headr_dirctiv		_headers;

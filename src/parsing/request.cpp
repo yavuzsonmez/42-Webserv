@@ -9,9 +9,9 @@ Request::Request() :
 	_protocol("http", true),
 	_domain("/", true),
 	_port(80, true),
-	_scriptName("", false),
+	_script("", false),
 	_path("", false),
-	_queryString("", false),
+	_query("", false),
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
 	_headers(),
@@ -24,9 +24,9 @@ Request::Request(std::string &req) :
 	_protocol("http", true),
 	_domain("/", true),
 	_port(80, true),
-	_scriptName("", false),
+	_script("", false),
 	_path("", false),
-	_queryString("", false),
+	_query("", false),
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
 	_headers(),
@@ -38,9 +38,9 @@ Request::Request( const Request &src ) :
 	_method(src._method),
 	_protocol(src._protocol),
 	_port(src._port),
-	_scriptName(src._scriptName),
+	_script(src._script),
 	_path(src._path),
-	_queryString(src._queryString),
+	_query(src._query),
 	_fragment(src._fragment),
 	_httpVersion(src._httpVersion),
 	_headers(src._headers),
@@ -54,13 +54,14 @@ i_flag				Request::getMethod() const		{ return _method; }
 str_flag			Request::getProtocol() const	{ return _protocol; }
 str_flag			Request::getDomain() const		{ return _domain; }
 i_flag				Request::getPort() const		{ return _port; }
-str_flag			Request::getScriptname() const	{ return _scriptName; }
+str_flag			Request::getScript() const		{ return _script; }
 str_flag			Request::getPath() const		{ return _path; }
-str_flag			Request::getQuerystring() const	{ return _queryString; }
+str_flag			Request::getQuery() const		{ return _query; }
 str_flag			Request::getFragment() const	{ return _fragment; }
 str_flag			Request::getHttpversion() const	{ return _httpVersion; }
 headr_dirctiv		Request::getHeaders() const		{ return _headers; }
 str_flag			Request::getBody() const		{ return _body; }
+std::string			Request::getStatus() const		{ return _status; }
 
 // Parsing
 
@@ -110,8 +111,9 @@ void Request::setUrl(std::string &req) {
 	req.erase(0, pos + 1);
 	setProtocol(url);
 	setDomain(url);
-	//setScriptname(url);
+	//setScript(url);
 	//setPath(url);
+	//setQuery(url);
 }
 
 void Request::setProtocol(std::string &url) {
@@ -122,37 +124,40 @@ void Request::setProtocol(std::string &url) {
 	_protocol.first = url.substr(0, pos);
 	if (_protocol.first.compare("http"))
 		_protocol.second = false;
-	url.erase(0, pos + 1);
+	url.erase(0, pos + 3);
 }
 
 void Request::setDomain(std::string &url) {
 	setPort(url);
-	size_t pos = url.find(":");
-	if (pos != std::string::npos)
-		setPort(url);
-
-	_protocol.first = url.substr(0, pos);
-	if (_protocol.first.compare("http"))
-		_protocol.second = false;
+	size_t pos = url.find("/");
+	if (pos == std::string::npos)
+	{
+		_domain.first.clear();
+		_domain.second = false;
+		_status = Bad_Request;
+		return ;
+	}
+	_domain.first = url.substr(0, pos);
 	url.erase(0, pos + 1);
-return;
-
 }
 
 void Request::setPort(std::string &url) {
-	size_t pos = url.find(":");
-	if (pos == std::string::npos)
+	size_t x = url.find(":");
+	size_t y = url.find("/");
+	if (x == std::string::npos || y == std::string::npos)
 		return;
-	url.erase(0, pos + 1);
-	pos = url.find("/");
-	std::string port = url.substr(0, pos);
+	std::string port = url.substr(x + 1, y - x - 1);
 	std::stringstream ss(port);
-	ss >> _port;
-	if (_port < 0)
+	ss >> _port.first;
+	if (_port.first < 0)
+	{
 		_status = Bad_Request;
+		_port.second = false;
+	}
+	url.erase(x, y - x );
 }
 
-void Request::setScriptname(std::string &url) { return; }
+void Request::setScript(std::string &url) { return; }
 
 void Request::setPath(std::string &url)
 {
@@ -163,7 +168,7 @@ void Request::setPath(std::string &url)
 	url.erase(0, pos + 1); */
 }
 
-void Request::setQuerystring(std::string &url) { return; }
+void Request::setQuery(std::string &url) { return; }
 void Request::setFragment(std::string &url) { return; }
 
 // HTTP version
@@ -224,9 +229,9 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	str_flag		protocol = i.getProtocol();
 	str_flag		domain = i.getDomain();
 	i_flag			port = i.getPort();
-	str_flag		scriptName = i.getScriptname();
+	str_flag		script = i.getScript();
 	str_flag		path = i.getPath();
-	str_flag		queryString = i.getQuerystring();
+	str_flag		query = i.getQuery();
 	str_flag		fragment = i.getFragment();
 	str_flag		httpVersion = i.getHttpversion();
 	headr_dirctiv	headers = i.getHeaders();
@@ -237,17 +242,17 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	o << P << "/* ************************************************************************** */" << std::endl << "/* "
 	<< Y << "ELEMENT			SUPPORTED? ( 1 yes / 0 no)										"	<< std::endl
 	<< P << "/* ************************************************************************** */" << std::endl << "/* "
-	<< R << "method:\t\t" << B << method_str << "\t\t" << Reset << method.second << std::endl
+	<< R << "method:\t" << B << method_str << "\t\t\t\t" << Reset << method.second << std::endl
 	<< P << "/* ************************************************************************** */"  << std::endl << "/* "
-	<< R << "protocol:\t\t" << B << protocol.first << "\t\t" << Reset << protocol.second << std::endl << P << "/* "
-	<< R << "domain:\t\t" << B << domain.first << "\t\t" << Reset << domain.second << std::endl << P << "/* "
-	<< R << "port:\t\t" << B << port.first << "\t\t" << Reset << port.second << std::endl << P << "/* "
-	<< R << "script name:\t\t" << B << scriptName.first << Reset << "\t\t" << scriptName.second << std::endl << P << "/* "
-	<< R << "path:\t\t" << B << path.first << "\t\t" << Reset << path.second << std::endl << P << "/* "
-	<< R << "queryString:\t\t" << B << queryString.first << Reset << "\t\t" << queryString.second << std::endl << P << "/* "
-	<< R << "fragment:\t\t" << B << fragment.first << "\t\t" << Reset << fragment.second << std::endl
+	<< R << "protocol:\t" << B << protocol.first << "\t\t\t\t" << Reset << protocol.second << std::endl << P << "/* "
+	<< R << "domain:\t" << B << domain.first << "\t\t" << Reset << domain.second << std::endl << P << "/* "
+	<< R << "port:\t" << B << port.first << "\t\t\t\t" << Reset << port.second << std::endl << P << "/* "
+	<< R << "script name:\t" << B << script.first << Reset << "\t\t\t\t" << script.second << std::endl << P << "/* "
+	<< R << "path:\t" << B << path.first << "\t\t\t\t" << Reset << path.second << std::endl << P << "/* "
+	<< R << "queryString:\t" << B << query.first << Reset << "\t\t\t\t" << query.second << std::endl << P << "/* "
+	<< R << "fragment:\t" << B << fragment.first << "\t\t\t\t" << Reset << fragment.second << std::endl
 	<< P << "/* ************************************************************************** */" <<  std::endl << "/* "
-	<< R << "http version:\t" << B << httpVersion.first << Reset << "\t" << httpVersion.second << std::endl
+	<< R << "http version:\t" << B << httpVersion.first << Reset << "\t\t" << httpVersion.second << std::endl
 	<< P << "/* ************************************************************************** */" <<  std::endl << "/* "
 	<< R << "headers:" << std::endl;
 	for (; it != ite; ++it)
@@ -256,7 +261,8 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 		<< B << (*it).second.first << Reset << " " << (*it).second.second << std::endl;
 	}
 	o << P << "/* ************************************************************************** */" <<  std::endl << "/* "
-	<< R << "body:\t\t" << B << body.first << Reset << "\t\t" << body.second << std::endl
-	<< P << "/* ************************************************************************** */" <<  std::endl;
+	<< R << "body:\t" << B << body.first << Reset << "\t\t\t\t" << body.second << std::endl
+	<< P << "/* ************************************************************************** */" <<  std::endl
+	<< G << i.getStatus() << Reset << std::endl;
 	return o;
 }
