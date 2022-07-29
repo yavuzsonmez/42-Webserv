@@ -1,6 +1,12 @@
 #include "../../inc/utility.hpp"
 
-//check everything related to the webserver config file
+/**
+ * @brief Checks the filename of the config file and if it is accessible
+ * 
+ * @param path 
+ * @return true if successful
+ * @return false 
+ */
 bool check_config_file(std::string const &path)
 {
 	std::string file_name;

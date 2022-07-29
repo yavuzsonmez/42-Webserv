@@ -1,15 +1,18 @@
 #include "../../inc/ConfigFileParsing.hpp"
 #include "../../inc/utility.hpp"
 
-ConfigFileParsing::ConfigFileParsing() {
+ConfigFileParsing::ConfigFileParsing()
+{
 	
 }
 
-ConfigFileParsing::ConfigFileParsing( const ConfigFileParsing &src ) {
+ConfigFileParsing::ConfigFileParsing( const ConfigFileParsing &src )
+{
 
 }
 
-ConfigFileParsing::~ConfigFileParsing() {
+ConfigFileParsing::~ConfigFileParsing()
+{
 
 }
 
