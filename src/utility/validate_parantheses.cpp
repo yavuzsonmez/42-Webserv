@@ -2,7 +2,6 @@
 #include <stack>
 #include <iostream>
 
-
 bool	validate_parantheses(std::string parantheses)
 {
 	std::stack<char>	bracket;
