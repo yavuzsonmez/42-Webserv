@@ -28,7 +28,9 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
  * @return false or an throw exception if the configuration file is faulty.
  */
 bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
+	std::cout << "Cleaning configuration file..." << file_content << std::endl;
 	strip_from_str(file_content, '#', '\n');
+	std::cout << "After cleaning configuration file..." << std::endl << file_content << std::endl;
 	if (isGeneralFaultyFile(file_content)) {
 		return false;
 	}
