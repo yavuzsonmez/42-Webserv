@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysonmez <ysonmez@student.42.fr>            +#+  +:+       +#+         #
+#    By: jfritz <jfritz@student.42heilbronn.de>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/26 17:21:02 by ysonmez          ###   ########.fr        #
+#    Updated: 2022/07/29 12:54:57 by jfritz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ HDRS			=		./inc/utility.hpp \
 						./inc/request.hpp \
 
 PARSING			=		./src/parsing/request.cpp \
+
+CONFIG_FILE		=		.src/config_file/ConfigFileParsing.cpp \
 
 UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/is_file_accessible.cpp \
