@@ -20,7 +20,7 @@ bool	validate_parantheses(std::string parantheses)
 			default: ;
 		}
 	}
-	return bracket.empty() ;
+	return bracket.empty();
 }
 
 // int	main()

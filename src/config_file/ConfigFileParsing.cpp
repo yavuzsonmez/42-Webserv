@@ -29,8 +29,8 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
  */
 bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
 	strip_from_str(file_content, '#', '\n');
-	if (file_content.empty()) {
-		throw InvalidConfigurationFile();
+	if (isGeneralFaultyFile(file_content)) {
+		return false;
 	}
 	return true;
 }
@@ -49,4 +49,5 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 	if (validate_parantheses(file_content)) {
 		throw true;
 	}
+	return false;
 }
