@@ -19,7 +19,7 @@ void	tcp_socket::launch(void)
 {
 	_addrlen = sizeof(_address);
 
-	std::string	hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+	//_response._response = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 
 	// Creating socket file descriptor
 	if ((_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -55,12 +55,16 @@ void	tcp_socket::launch(void)
 			exit(EXIT_FAILURE);
 		}
 
-		char buffer[30000] = {0};
-		_valread = read( _new_socket , buffer, 30000);
-		printf("%s\n",buffer );
-		write(_new_socket , hello.c_str() , hello.length());
+		char request[30000] = {0};
+		_valread = read( _new_socket , request, 30000);
+		printf("%s\n",request );
+		_response.test_image();
+		//_response.test_html();
+		//_response.test_text();
+		write(_new_socket , _response.get_response().c_str() , _response.get_response().length());
+		usleep(1000);
 		printf("------------------Hello message sent-------------------");
-		close(_new_socket);
+		//close(_new_socket);
 	}
 	return ;
 }

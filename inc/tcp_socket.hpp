@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <string>
 #include <iostream>
+#include "response.hpp"
 
 
 class tcp_socket
@@ -26,6 +27,8 @@ class tcp_socket
 	long	_valread;
 	struct sockaddr_in _address;
 	int		_addrlen;
+
+	response	_response;
 };
 
 # endif

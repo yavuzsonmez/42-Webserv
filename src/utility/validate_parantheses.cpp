@@ -22,10 +22,11 @@ bool	validate_parantheses(std::string parantheses)
 	}
 	return bracket.empty() ;
 }
-int	main()
-{
-	std::string parantheses = "[[]{}]()";
-	bool check = validate_parantheses(parantheses);
-	std::cout << "valid? " << check << std::endl;
-	return (0);
-}
+
+// int	main()
+// {
+// 	std::string parantheses = "[[]{}]()";
+// 	bool check = validate_parantheses(parantheses);
+// 	std::cout << "valid? " << check << std::endl;
+// 	return (0);
+// }
