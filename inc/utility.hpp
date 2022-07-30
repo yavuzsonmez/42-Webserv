@@ -17,4 +17,12 @@ std::string get_file_content(std::string path);
 bool check_config_file(std::string const &path);
 std::string get_file_name(std::string const &path);
 
+template <typename T>
+std::string	to_str(T input)
+{
+	std::stringstream	ss;
+	ss << input;
+	return ss.str();
+}
+
 #endif

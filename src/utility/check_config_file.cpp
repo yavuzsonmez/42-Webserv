@@ -14,14 +14,14 @@ bool check_config_file(std::string const &path)
 	return (true);
 }
 
-int	main(int argc, char**argv)
-{
-	if (argc != 2)
-		return 1;
-	std::string my_file = &argv[1][0];
-	if (check_config_file(my_file))
-		std::cout << "The config file is fine." << std::endl;
-	else
-		std::cout << "Something wrong with config file." << std::endl;
-	return (0);
-}
+// int	main(int argc, char**argv)
+// {
+// 	if (argc != 2)
+// 		return 1;
+// 	std::string my_file = &argv[1][0];
+// 	if (check_config_file(my_file))
+// 		std::cout << "The config file is fine." << std::endl;
+// 	else
+// 		std::cout << "Something wrong with config file." << std::endl;
+// 	return (0);
+// }
