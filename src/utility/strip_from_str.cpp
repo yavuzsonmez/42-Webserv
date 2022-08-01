@@ -28,10 +28,7 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 		if (line.find(start) == 0)
 			continue;
 		start_index = line.find(start);
-		std::cout << start_index << " to " << line.length() << std::endl;
-		std::cout << line << std::endl;
 		line.replace(start_index, line.length(), "\n");
-		std::cout << line << std::endl;
 		result += line;
 	}
 	file_content = result;
