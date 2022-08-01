@@ -31,6 +31,7 @@ void DebuggerPrinter::printString( std::string &message, LogLevel level ) {
 			break;
 		case WARNING:
 			prefix = "\033[0;31m[WARNING]\033[0m";
+			break;
 		default:
 			prefix = "[UNKNOWN]";
 	}

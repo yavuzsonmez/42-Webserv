@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include "Singleton.hpp"
 
 /**
  * @brief Loglevel of the enums
@@ -18,7 +19,7 @@ enum LogLevel {
  * @note	LEVEL INFO - info message
  * 			LEVEL WARNING - warning message
  */
-class DebuggerPrinter {
+class DebuggerPrinter: public Singleton {
 	public:
 		DebuggerPrinter();
 		DebuggerPrinter( const DebuggerPrinter &src );
