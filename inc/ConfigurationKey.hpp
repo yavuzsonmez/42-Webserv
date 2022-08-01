@@ -2,6 +2,16 @@
 #include <vector>
 
 /**
+ * All keys which can be used in the configuration file are defined here.
+ */
+
+# define	KEY_LOCATION	        "location"
+# define	KEY_INDEX	            "index"
+# define	KEY_ROOT	            "root"
+# define	KEY_SERVER_NAMES	    "server_names"
+# define	KEY_LISTEN	            "listen"
+
+/**
  * Defines the type of information a configuration key holds.
  * Lists all available configuration types.
  * Can be extended easily.

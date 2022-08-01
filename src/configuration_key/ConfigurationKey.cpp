@@ -38,3 +38,14 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
 ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue raw) {
     return INVALID;
 }
+
+/**
+ * If the internal_keyvalue is of type SERVER_NAME this will return true and set the according values
+ * in the class.
+ * If not, it will not set anything and just return false.
+ */
+bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
+    if (raw.first == "server_name") {
+        
+    }
+}
