@@ -1,6 +1,7 @@
 #include "inc/utility.hpp"
 #include "inc/request.hpp"
 #include "inc/ConfigFileParsing.hpp"
+#include "inc/DebuggerPrinter.hpp"
 
 /**
  * @brief Checks the argument count of the program and the filename of the configuration
@@ -27,6 +28,7 @@ int main(int argc, char **argv)
 	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	file_content = get_file_content(argv[1]);
+	std::string test = "Test";
 
 	std::cout << argv[1] << std::endl;
 	try {
