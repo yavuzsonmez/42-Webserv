@@ -74,6 +74,7 @@ class ConfigurationKey {
 
         // Attributes of the configuration types
         std::vector <std::string> indexes; // indexes, if type is INDEX. sorted by relevance and position within the key.
+        std::vector <std::string> server_names; // server_names, if type is SERVER_NAMES. sorted by relevance and position within the key.
         std::string root; // returns the path of the root
         std::string location; // returns the locationpath of the location
         std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
