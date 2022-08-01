@@ -28,7 +28,9 @@ int main(int argc, char **argv)
 	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	file_content = get_file_content(argv[1]);
-	std::string test = "Test";
+	std::string test = "testing string";
+	DebuggerPrinter debugger = debugger.getInstance();
+	debugger.warning(test);
 
 	std::cout << argv[1] << std::endl;
 	try {

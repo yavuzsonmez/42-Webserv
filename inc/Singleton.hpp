@@ -2,12 +2,13 @@
  * A singleton is a design pattern that restricts the instantiation of a class to one object.
  * This is very useful, as example when you want to use the same Debugger instance everywhere.
  */
+template<typename X>
 class Singleton
 {
     public:
-        static Singleton& getInstance()
+        static X& getInstance()
         {
-            static Singleton    instance;
+            static X    instance;
             return instance;
         }
         Singleton() {}
