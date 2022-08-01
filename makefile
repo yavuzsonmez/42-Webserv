@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ysonmez <ysonmez@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/29 15:15:32 by ysonmez          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 Reset			=		\033[0m						# Text Reset
 R				=		\033[0;31m					# Red
 G				=		\033[0;32m					# Green
@@ -24,16 +12,21 @@ HDRS			=		./inc/utility.hpp \
 
 PARSING			=		./src/parsing/Request.cpp \
 
+DEBUGGER		=		./src/debugger/DebuggerPrinter.cpp \
+
+CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
+
 UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/is_file_accessible.cpp \
 						./src/utility/lower_upper_str.cpp \
 						./src/utility/check_config_file.cpp \
 						./src/utility/strip_from_str.cpp \
 						./src/utility/get_file_name.cpp \
+						./src/utility/validate_parantheses.cpp \
 
 ENTRY			=		./main.cpp
 
-SRCS			=		$(UTILS) $(PARSING) $(ENTRY)
+SRCS			=		$(UTILS) $(PARSING) $(ENTRY) $(DEBUGGER) $(CONFIG_FILE)
 
 OBJS			=		$(SRCS:.cpp=.o)
 
