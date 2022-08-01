@@ -19,6 +19,8 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 			result += line + "\n";
 			continue;
 		}
+		if (line.find("#") == 0)
+			continue;
 		start_index = line.find('#');
 		std::cout << start_index << " to " << line.length() << std::endl;
 		std::cout << line << std::endl;
