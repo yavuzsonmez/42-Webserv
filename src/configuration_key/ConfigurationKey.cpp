@@ -1,10 +1,11 @@
 #include "../../inc/ConfigurationKey.hpp"
+#include "../../inc/DebuggerPrinter.hpp"
 
 /**
  * Default constructor
  */
 ConfigurationKey::ConfigurationKey() {
-    throw{"Unsupported constructor. Use key value constructor instead!"};
+    throw("Unsupported constructor. Use key value constructor instead!");
 }
 
 ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
@@ -12,7 +13,8 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 }
 
 ConfigurationKey::~ConfigurationKey() {
-
+    DebuggerPrinter debugger = debugger.getInstance();
+    debugger.info("Deconstructed configuration key.");
 }
 
 ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
@@ -25,6 +27,8 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * This calls detectConfigurationType.
  */
 ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
+    DebuggerPrinter debugger = debugger.getInstance();
+    debugger.info("Constructed configuration key.");
     internal_keyvalue raw(key, value);
     ConfigurationKeyType configurationType = detectConfigurationType(raw);
 }
@@ -43,9 +47,11 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
  * If the internal_keyvalue is of type SERVER_NAME this will return true and set the according values
  * in the class.
  * If not, it will not set anything and just return false.
+ * - It checks if server_name is correct.
+ * - Then it checks if the following 
  */
 bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
-    if (raw.first == KEY_SERVER_NAMES) {
-
-    }
+    if (raw.first != KEY_SERVER_NAMES)
+        return false
+    
 }
