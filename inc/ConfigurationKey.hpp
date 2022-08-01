@@ -51,6 +51,8 @@ typedef std::pair <std::string, std::string>	internal_keyvalue;
  * 
  * @note Internal handling in ConfigurationKey class is done with internal_keyvalue Pair typedef for readabiliy.
  * 
+ * Later the ConfigurationKey will be stored as a ServerBlock, which itself is stored in a vector of server blocks.
+ * 
  */
 class ConfigurationKey {
     public:
