@@ -45,7 +45,7 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
  * If not, it will not set anything and just return false.
  */
 bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
-    if (raw.first == "server_name") {
-        
+    if (raw.first == KEY_SERVER_NAMES) {
+
     }
 }
