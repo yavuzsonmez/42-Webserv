@@ -15,11 +15,14 @@ enum LogLevel {
 /**
  * @brief	Simple debugger printer class.
  * 			Will only print out debug stuff during debug mode.
+ * 			SINGLETON CLASS! DO NOT INITIALIZE. Use it like this:
+ * 			DebuggerPrinter debugger = debugger.getInstance();
+ * 			
  * 
  * @note	LEVEL INFO - info message
  * 			LEVEL WARNING - warning message
  */
-class DebuggerPrinter: public Singleton {
+class DebuggerPrinter: public Singleton<DebuggerPrinter> {
 	public:
 		DebuggerPrinter();
 		DebuggerPrinter( const DebuggerPrinter &src );
