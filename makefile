@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jfritz <jfritz@student.42heilbronn.de>     +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/07/21 13:57:17 by ysonmez           #+#    #+#              #
-#    Updated: 2022/07/29 14:54:50 by jfritz           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 Reset			=		\033[0m						# Text Reset
 R				=		\033[0;31m					# Red
 G				=		\033[0;32m					# Green
@@ -20,9 +8,9 @@ Y				=		\033[33;1m					# Yellow
 NAME			=		webserv
 
 HDRS			=		./inc/utility.hpp \
-						./inc/request.hpp \
+						./inc/Request.hpp \
 
-PARSING			=		./src/parsing/request.cpp \
+PARSING			=		./src/parsing/Request.cpp \
 
 DEBUGGER		=		./src/debugger/DebuggerPrinter.cpp \
 
