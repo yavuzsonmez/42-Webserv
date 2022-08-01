@@ -5,7 +5,7 @@
 /**
  * Iterates through every character in the string.
  * When it finds the matching comment character (at beginning or within the string)
- * it replaces everything with the end character.
+ * it replaces everything with the newline character.
  * 
  * Recommended usage:
  * strip_from_str(config_file, '#', '\n');
@@ -30,7 +30,7 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 		start_index = line.find(start);
 		std::cout << start_index << " to " << line.length() << std::endl;
 		std::cout << line << std::endl;
-		line.replace(start_index, line.length(), end);
+		line.replace(start_index, line.length(), "\n");
 		std::cout << line << std::endl;
 		result += line;
 	}
