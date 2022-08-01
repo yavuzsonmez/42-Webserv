@@ -25,7 +25,8 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * This calls detectConfigurationType.
  */
 ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
-
+    internal_keyvalue raw(key, value);
+    ConfigurationKeyType configurationType = detectConfigurationType(raw);
 }
 
 /**
