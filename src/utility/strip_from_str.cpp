@@ -30,16 +30,16 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 }
 
 
-int	main(int argc, char**argv)
-{
+// int	main(int argc, char**argv)
+// {
 
-	std::string config_file = "TEST MESSAGE\n"
-	"TEST MESSAGE2 # TEST\n"
-	"#TEST MESSAGE3 # TEST\n"
-	"TEST MESSAGE4";
-	std::cout << config_file << std::endl;
-	std::cout << "DONE ____________________ DONE" << std::endl;
-	strip_from_str(config_file, '#', '\n');
-	std::cout << config_file << std::endl;
-	return (0);
-}
+// 	std::string config_file = "TEST MESSAGE\n"
+// 	"TEST MESSAGE2 # TEST\n"
+// 	"#TEST MESSAGE3 # TEST\n"
+// 	"TEST MESSAGE4";
+// 	std::cout << config_file << std::endl;
+// 	std::cout << "DONE ____________________ DONE" << std::endl;
+// 	strip_from_str(config_file, '#', '\n');
+// 	std::cout << config_file << std::endl;
+// 	return (0);
+// }
