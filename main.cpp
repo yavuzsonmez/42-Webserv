@@ -1,25 +1,46 @@
+#include <string>
 #include "inc/utility.hpp"
+#include "inc/ConfigFileParsing.hpp"
+#include "inc/DebuggerPrinter.hpp"
 #include "inc/Request.hpp"
 
+/**
+ * @brief Checks the argument count of the program and the filename of the configuration
+ * Returns true on success.
+ */
+bool check_arguments_and_filename(int argc, char**argv)
+{
+	if (argc != 2 || !check_config_file(argv[1]))
+	{
+		std::cout << "usage: ./webserv [path/webserv.conf]" << std::endl;
+		return (false);
+	}
+	return (true);
+}
+
+/**
+ * Entrypoint
+ * Validates input and then starts the configuration file parsing.
+ */
 int main(int argc, char **argv)
 {
-	if (argc != 2 || !check_config_file(&argv[1][0]))
-	{
-		std::cout << "./webserv [path/webserv.conf]" << std::endl;
+	DebuggerPrinter debugger = debugger.getInstance();
+	debugger.info("Starting...");
+ 	if (!check_arguments_and_filename(argc, argv)) return (1);
+
+	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
+	std::string file_content;
+	file_content = get_file_content(argv[1]);
+
+	std::cout << argv[1] << std::endl;
+	try {
+		configurationFileParsing->parseConfigFile(file_content);
+	} catch (const std::exception& e) {
+		debugger.warning("INVALID CONFIGURATION FILE!");
+		std::cout << "error: " << e.what() << std::endl;
 		return (1);
 	}
 
-
-	std::string get = get_file_content("./sample/http_request_get");
-	std::string post = get_file_content("./sample/http_request_post");
-	std::string del = get_file_content("./sample/http_request_delete");
-	std::string unknwn = get_file_content("./sample/http_request_delete");
-
-	//Request httpRequestPost(post);
-	Request httpRequestGet(get);
-	//Request httpRequestDelete(del);
-	//Request httpRequestDelete(unknwn);
-
-	std::cout << httpRequestGet << std::endl;
-
+	delete configurationFileParsing;
+	return (0);
 }

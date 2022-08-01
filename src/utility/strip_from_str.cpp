@@ -1,35 +1,49 @@
+#include <string>
+#include <iostream>
+#include <sstream>
 
-#include "../../inc/utility.hpp"
-
-
-//Remove in file_content everything between start (included) to end (excluded)
-//Remove comment (starting with #) from file content
+/**
+ * Iterates through every character in the string.
+ * When it finds the matching comment character (at beginning or within the string)
+ * it replaces everything with the newline character.
+ * 
+ * Recommended usage:
+ * strip_from_str(config_file, '#', '\n');
+ * - Will remove all comments from a file, no matter if they are after a keyword/parameter or not.
+ */
 void strip_from_str(std::string &file_content, const char start, const char end)
 {
-	size_t start_index = file_content.find(start);
-	size_t end_index = file_content.find(end);
+	size_t start_index;
+	size_t end_index;
+	std::istringstream iss(file_content);
+	std::string result;
 
-	std::string::iterator it_s = file_content.begin() + start_index;
-	std::string::iterator it_e = file_content.begin() + end_index;
-
-	while ( start_index != std::string::npos)
+	for (std::string line; std::getline(iss, line); )
 	{
-		file_content.replace(it_s, it_e, "\n");
-		start_index = file_content.find(start);
-		end_index = file_content.find(end);
-		it_s = file_content.begin() + start_index;
-		it_e = file_content.begin() + end_index;
+		if (line.find(start) == -1)
+		{
+			result += line + end;
+			continue;
+		}
+		if (line.find(start) == 0)
+			continue;
+		start_index = line.find(start);
+		line.replace(start_index, line.length(), "\n");
+		result += line;
 	}
+	file_content = result;
 }
 
 
 // int	main(int argc, char**argv)
 // {
 
-// 	std::string config_file = "hello world; #q powngfpoqwngpo\nlisten	8000;\n#hihihih;";
-
+// 	std::string config_file = "TEST MESSAGE\n"
+// 	"TEST MESSAGE2 # TEST\n"
+// 	"#TEST MESSAGE3 # TEST\n"
+// 	"TEST MESSAGE4";
 // 	std::cout << config_file << std::endl;
-// 	std::cout << "____________________" << std::endl;
+// 	std::cout << "DONE ____________________ DONE" << std::endl;
 // 	strip_from_str(config_file, '#', '\n');
 // 	std::cout << config_file << std::endl;
 // 	return (0);
