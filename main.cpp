@@ -1,3 +1,4 @@
+#include <string>
 #include "inc/utility.hpp"
 #include "inc/request.hpp"
 #include "inc/ConfigFileParsing.hpp"
@@ -23,14 +24,13 @@ bool check_arguments_and_filename(int argc, char**argv)
  */
 int main(int argc, char **argv)
 {
+	DebuggerPrinter debugger = debugger.getInstance();
+	debugger.info("Starting...");
 	if (!check_arguments_and_filename(argc, argv)) return (1);
 
 	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	file_content = get_file_content(argv[1]);
-	std::string test = "testing string";
-	DebuggerPrinter debugger = debugger.getInstance();
-	debugger.warning(test);
 
 	std::cout << argv[1] << std::endl;
 	try {
