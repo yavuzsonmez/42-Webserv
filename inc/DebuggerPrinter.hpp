@@ -28,8 +28,8 @@ class DebuggerPrinter: public Singleton<DebuggerPrinter> {
 		DebuggerPrinter( const DebuggerPrinter &src );
 		~DebuggerPrinter();
 		DebuggerPrinter & operator = (const DebuggerPrinter &src);
-		void info( std::string &message );
-		void warning( std::string &message );
+		void info( const std::string &message );
+		void warning( const std::string &message );
 	private:
-		void printString( std::string &message, LogLevel level );
+		void printString( const std::string &message, LogLevel level );
 };

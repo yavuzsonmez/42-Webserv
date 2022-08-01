@@ -23,7 +23,7 @@ DebuggerPrinter & DebuggerPrinter::operator = (const DebuggerPrinter &src) {
  * 
  * @param message 
  */
-void DebuggerPrinter::printString( std::string &message, LogLevel level ) {
+void DebuggerPrinter::printString( const std::string &message, LogLevel level ) {
 	std::string prefix = "";
 	switch (level) {
 		case INFO:
@@ -43,7 +43,7 @@ void DebuggerPrinter::printString( std::string &message, LogLevel level ) {
  * 
  * @param message 
  */
-void DebuggerPrinter::info( std::string &message ) {
+void DebuggerPrinter::info( const std::string &message ) {
 	printString(message, INFO);
 }
 
@@ -52,6 +52,6 @@ void DebuggerPrinter::info( std::string &message ) {
  * 
  * @param message 
  */
-void DebuggerPrinter::warning( std::string &message ) {
+void DebuggerPrinter::warning( const std::string &message ) {
 	printString(message, WARNING);
 }
