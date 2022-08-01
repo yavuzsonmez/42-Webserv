@@ -75,7 +75,8 @@ class ConfigurationKey {
         std::string root; // returns the path of the root
         std::string location; // returns the locationpath of the location
         std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
+        std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
     private:
         ConfigurationKeyType detectConfigurationType(internal_keyvalue raw);
         bool isServerNameKeyType(internal_keyvalue raw);
-}
+};
