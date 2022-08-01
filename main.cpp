@@ -1,8 +1,8 @@
 #include <string>
 #include "inc/utility.hpp"
-#include "inc/request.hpp"
 #include "inc/ConfigFileParsing.hpp"
 #include "inc/DebuggerPrinter.hpp"
+#include "inc/Request.hpp"
 
 /**
  * @brief Checks the argument count of the program and the filename of the configuration

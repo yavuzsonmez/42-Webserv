@@ -1,4 +1,4 @@
-GET http://www.placeholder.com:80/cgi-bin/index.php/display.html?key1=value1&key2=value2#test HTTP/1.1
+GET http://www.placeholder.com:4242/cgi-bin/index.php/display.html?key1=value1&key2=value2#test HTTP/1.1
 Host: localhost:8080
 Connection: keep-alive
 sec-ch-ua: ".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"
