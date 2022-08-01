@@ -2,9 +2,15 @@
 #include <iostream>
 #include <sstream>
 
-
-//Remove in file_content everything between start (included) to end (excluded)
-//Remove comment (starting with #) from file content
+/**
+ * Iterates through every character in the string.
+ * When it finds the matching comment character (at beginning or within the string)
+ * it replaces everything with the end character.
+ * 
+ * Recommended usage:
+ * strip_from_str(config_file, '#', '\n');
+ * - Will remove all comments from a file, no matter if they are after a keyword/parameter or not.
+ */
 void strip_from_str(std::string &file_content, const char start, const char end)
 {
 	size_t start_index;
@@ -14,17 +20,17 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 
 	for (std::string line; std::getline(iss, line); )
 	{
-		if (line.find("#") == -1)
+		if (line.find(start) == -1)
 		{
-			result += line + "\n";
+			result += line + end;
 			continue;
 		}
-		if (line.find("#") == 0)
+		if (line.find(start) == 0)
 			continue;
-		start_index = line.find('#');
+		start_index = line.find(start);
 		std::cout << start_index << " to " << line.length() << std::endl;
 		std::cout << line << std::endl;
-		line.replace(start_index, line.length(), "\n");
+		line.replace(start_index, line.length(), end);
 		std::cout << line << std::endl;
 		result += line;
 	}
