@@ -25,7 +25,6 @@ bool check_arguments_and_filename(int argc, char**argv)
 int main(int argc, char **argv)
 {
 	DebuggerPrinter debugger = debugger.getInstance();
-	debugger.info("Starting...");
  	if (!check_arguments_and_filename(argc, argv)) return (1);
 
 	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
@@ -35,6 +34,7 @@ int main(int argc, char **argv)
 	std::cout << argv[1] << std::endl;
 	try {
 		configurationFileParsing->parseConfigFile(file_content);
+		debugger.info("CONFIG FILE OK");
 	} catch (const std::exception& e) {
 		debugger.warning("INVALID CONFIGURATION FILE!");
 		std::cout << "error: " << e.what() << std::endl;
