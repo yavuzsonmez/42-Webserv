@@ -1,5 +1,8 @@
 #include "../../inc/ConfigurationKey.hpp"
 #include "../../inc/DebuggerPrinter.hpp"
+#include <vector>
+#include <string>
+#include <sstring>
 
 /**
  * Default constructor
@@ -48,10 +51,21 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
  * in the class.
  * If not, it will not set anything and just return false.
  * - It checks if server_name is correct.
- * - Then it checks if the following 
+ * Then it adds server names, seperated by spaces.
  */
 bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
     if (raw.first != KEY_SERVER_NAMES)
-        return false
+        return false;
     
+    std::stringstream stringstream(raw.second);
+    while (stringstream.good())
+    {
+        std::string substr;
+        std::getline( ss, substr, ' ' );
+        if (!substr.empty())
+            this->server_names.push_back( substr );
+        else
+            return false;
+    }
+    return true;
 }
