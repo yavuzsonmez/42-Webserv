@@ -2,8 +2,9 @@
 #include "../../inc/Request.hpp"
 
 
-// Constructors
-
+/**
+ * @brief Default constructor, default values for testing
+ */
 Request::Request() :
 	_method(UNKNOWN, false),
 	_protocol("http", true),
@@ -19,6 +20,10 @@ Request::Request() :
 	_status("")
 	{}
 
+/**
+ * @brief Prefered constructor, default values
+ * @param req, raw request sent by the client
+ */
 Request::Request(std::string &req) :
 	_method(UNKNOWN, false),
 	_protocol("http", true),
@@ -34,6 +39,9 @@ Request::Request(std::string &req) :
 	_status("")
 	{ parser(req); }
 
+/**
+ * @brief Copy constructor
+ */
 Request::Request( const Request &src ) :
 	_method(src._method),
 	_protocol(src._protocol),
@@ -48,8 +56,9 @@ Request::Request( const Request &src ) :
 
 Request::~Request() {}
 
-// Getters
-
+/**
+ * @brief Getters functions, read only
+ */
 i_flag				Request::getMethod() const		{ return _method; }
 str_flag			Request::getProtocol() const	{ return _protocol; }
 str_flag			Request::getDomain() const		{ return _domain; }
@@ -63,8 +72,11 @@ headr_dirctiv		Request::getHeaders() const		{ return _headers; }
 str_flag			Request::getBody() const		{ return _body; }
 std::string			Request::getStatus() const		{ return _status; }
 
-// Parsing
-
+/**
+ * @brief Main parsing function, each subfunction will
+ * parse and store a specific element of the request and erase it
+ * in the request string.
+ */
 void Request::parser(std::string &req) {
 	if (req.empty())
 	{
@@ -80,7 +92,9 @@ void Request::parser(std::string &req) {
 	setBody(req);
 }
 
-// method
+/**
+ * @brief Check the method in the request, and verify if supported
+ */
 void Request::setMethod(std::string &req) {
 	std::string tmp;
 	size_t pos = req.find(" ");
@@ -99,7 +113,9 @@ void Request::setMethod(std::string &req) {
 
 // TODO check std::string::npos before substr qnd erase
 
-// URL
+/**
+ * @brief Separate the different element in the URL of the request
+ */
 void Request::setUrl(std::string &req) {
 	size_t pos = req.find(" ");
 	if (pos == std::string::npos)
@@ -116,6 +132,10 @@ void Request::setUrl(std::string &req) {
 	//setQuery(url);
 }
 
+/**
+ * @brief Check if the protocol is described in the request
+ * if yes, check if we support it (only http)
+ */
 void Request::setProtocol(std::string &url) {
 
 	size_t pos = url.find("://");
@@ -127,6 +147,9 @@ void Request::setProtocol(std::string &url) {
 	url.erase(0, pos + 3);
 }
 
+/**
+ * @brief Store the domain name of the request
+ */
 void Request::setDomain(std::string &url) {
 	setPort(url);
 	size_t pos = url.find("/");
@@ -141,6 +164,10 @@ void Request::setDomain(std::string &url) {
 	url.erase(0, pos + 1);
 }
 
+/**
+ * @brief Check if a port is provided in the URL of the request,
+ * if not use the default http port (80)
+ */
 void Request::setPort(std::string &url) {
 	size_t x = url.find(":");
 	size_t y = url.find("/");
@@ -157,8 +184,15 @@ void Request::setPort(std::string &url) {
 	url.erase(x, y - x );
 }
 
+/**
+ * @brief
+ */
 void Request::setScript(std::string &url) { return; }
 
+
+/**
+ * @brief
+ */
 void Request::setPath(std::string &url)
 {
 /* 	size_t pos = url.find(" ");
@@ -168,10 +202,19 @@ void Request::setPath(std::string &url)
 	url.erase(0, pos + 1); */
 }
 
+/**
+ * @brief
+ */
 void Request::setQuery(std::string &url) { return; }
+
+/**
+ * @brief
+ */
 void Request::setFragment(std::string &url) { return; }
 
-// HTTP version
+/**
+ * @brief Check the HTTP version used in the request. Webserv support only HTTP/1.1
+ */
 void Request::setHttpversion(std::string &req)
 {
 	size_t pos = req.find("\n");
@@ -185,7 +228,12 @@ void Request::setHttpversion(std::string &req)
 }
 
 // TODO support presence of ':' inside body
-// Headers
+/**
+ * @brief Store every single header in a vector of pair
+ * vector -> <header: directive>
+ * 			header -> <header, flag>
+ *			directive -> <directive, flag>
+ */
 void Request::setHeaders(std::string &req)
 {
 	str_flag hdr, direct;
@@ -202,7 +250,9 @@ void Request::setHeaders(std::string &req)
 	}
 }
 
-// Body
+/**
+ * @brief Store the eventual body (POST request) of the request
+ */
 void Request::setBody(std::string &req)
 {
 	size_t pos = req.find("\n");
@@ -211,8 +261,10 @@ void Request::setBody(std::string &req)
 		req.erase(pos);
 }
 
-// Overlaod to print the Request
-
+/**
+ * @brief Overload that print all information of the parsed request
+ *	for debugging
+ */
 std::ostream &			operator<<( std::ostream & o, Request const & i )
 {
 
