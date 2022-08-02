@@ -9,20 +9,32 @@
 # include "colors.hpp"
 # include "status.hpp"
 
-// The only member attribute which requires a method coz with support multiple method
+/**
+ * @note Because we have to support multiple method we need enum
+ * because they are easier to work with than strings
+ */
 enum method { GET, POST, DELETE, UNKNOWN };
 
-// Every member attribute of the request class is stored as pair like that [value, flag]
-// (*) Value is the raw parsed http element, (*) Flag is to know if webserv support the request or not.
-// (true, 1, supported); (false, 0, not supported)
-// value can be a string or number and flag is a boolean
+/**
+ * @note Every member attribute of the request class is stored as pair like that [value, flag]
+ * (*) Value is the raw parsed http element, (*) Flag is to know if webserv support the request or not.
+ * value can be a string or number and flag is a boolean
+ */
 typedef std::pair < std::string, bool >						str_flag;
 typedef std::pair < int, bool >								i_flag;
-// headers is a vector of key-value (raw header and directive).
-// header and directive are a pair of value-flag as well
+/**
+ * @note headers is a vector of key-value (raw header and directive).
+ *  header and directive are a pair of value-flag as well
+ */
 typedef std::vector < std::pair < str_flag, str_flag > >	headr_dirctiv;
 
 
+
+/**
+ * @brief Request class who get the request as raw string and
+ * store separately every element of the request in order to process it.
+ * Set _status if Method not allowed (405) or Bad Request (400)
+ */
 class Request
 {
 
@@ -33,7 +45,6 @@ class Request
 		Request( const Request &src );
 		~Request();
 
-		//getters
 		i_flag				getMethod(void) const;
 		str_flag			getProtocol(void) const;
 		str_flag			getDomain(void) const;
@@ -47,7 +58,6 @@ class Request
 		str_flag			getBody(void) const;
 		std::string			getStatus(void) const;
 
-		// parsing
 		void				parser(std::string &req);
 			void				setMethod(std::string &req);
 			void				setUrl(std::string &req);
@@ -64,9 +74,6 @@ class Request
 
 	private:
 
-		// <value, flag>
-		// value = raw value
-		// flag = check if supported - compatible or not 1 yes, 0 no
 		i_flag				_method;
 		str_flag			_protocol;
 		str_flag			_domain;
@@ -82,7 +89,9 @@ class Request
 		std::string			_status;
 };
 
-// overload to print the request
+/**
+ * @brief overload to print the fully parsed Request
+ */
 std::ostream &			operator<<( std::ostream & o, Request const & i );
 
 #endif /* ********************************************************* REQUEST_H */
