@@ -8,10 +8,10 @@
 Request::Request() :
 	_method(UNKNOWN, false),
 	_protocol("http", true),
-	_domain("/", true),
+	_domain("", true),
 	_port(80, true),
 	_script("", false),
-	_path("", false),
+	_path("/", true),
 	_query("", false),
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
@@ -27,10 +27,10 @@ Request::Request() :
 Request::Request(std::string &req) :
 	_method(UNKNOWN, false),
 	_protocol("http", true),
-	_domain("/", true),
+	_domain("", true),
 	_port(80, true),
 	_script("", false),
-	_path("", false),
+	_path("/", true),
 	_query("", false),
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
@@ -127,9 +127,8 @@ void Request::setUrl(std::string &req) {
 	req.erase(0, pos + 1);
 	setProtocol(url);
 	setDomain(url);
-	//setScript(url);
-	//setPath(url);
-	//setQuery(url);
+	setScript(url);
+	setPath(url);
 }
 
 /**
@@ -185,9 +184,21 @@ void Request::setPort(std::string &url) {
 }
 
 /**
- * @brief
+ * @brief check if client requests a CGI
  */
-void Request::setScript(std::string &url) { return; }
+void Request::setScript(std::string &url) {
+	size_t pos = url.find_last_of("/");
+	if (pos == std::string::npos)
+		return ;
+	_script.first = url.substr(0, pos);
+	if (_script.first.substr(0, _script.first.find("/")).compare("cgi")) // check if cgi the client request the CGI in the cgi/ folder
+		_script.second = false;
+	else
+		_script.second = true;
+	url.erase(0, pos + 1);
+	// TODO check if URL containes something after script like /cgi/index.php/ or /cgi/index.php
+	// fix research based on last / for script
+}
 
 
 /**
@@ -195,22 +206,39 @@ void Request::setScript(std::string &url) { return; }
  */
 void Request::setPath(std::string &url)
 {
-/* 	size_t pos = url.find(" ");
+	setFragment(url);
+	setQuery(url);
 
-	_path.first = url.substr(0, pos);
-
-	url.erase(0, pos + 1); */
+	if (url.length())
+		_path.first = url.substr(0, url.length());
+	url.erase(0, url.length());
 }
 
 /**
  * @brief
  */
-void Request::setQuery(std::string &url) { return; }
+void Request::setQuery(std::string &url) {
+	size_t pos = url.find("?");
+	if (pos != std::string::npos)
+	{
+		_query.first = url.substr(pos + 1, url.length());
+		url.erase(pos, url.length());
+		_query.second = true;
+	}
+}
 
 /**
  * @brief
  */
-void Request::setFragment(std::string &url) { return; }
+void Request::setFragment(std::string &url) {
+	size_t pos = url.find("#");
+	if (pos != std::string::npos)
+	{
+		_fragment.first = url.substr(pos + 1, url.length());
+		url.erase(pos, url.length());
+		_fragment.second = true;
+	}
+}
 
 /**
  * @brief Check the HTTP version used in the request. Webserv support only HTTP/1.1
@@ -299,9 +327,9 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	<< R << "protocol:\t" << B << protocol.first << "\t\t\t\t" << Reset << protocol.second << std::endl << P << "/* "
 	<< R << "domain:\t" << B << domain.first << "\t\t" << Reset << domain.second << std::endl << P << "/* "
 	<< R << "port:\t" << B << port.first << "\t\t\t\t" << Reset << port.second << std::endl << P << "/* "
-	<< R << "script name:\t" << B << script.first << Reset << "\t\t\t\t" << script.second << std::endl << P << "/* "
+	<< R << "script:\t" << B << script.first << Reset << "\t\t\t\t" << script.second << std::endl << P << "/* "
 	<< R << "path:\t" << B << path.first << "\t\t\t\t" << Reset << path.second << std::endl << P << "/* "
-	<< R << "queryString:\t" << B << query.first << Reset << "\t\t\t\t" << query.second << std::endl << P << "/* "
+	<< R << "query:\t" << B << query.first << Reset << "\t\t\t\t" << query.second << std::endl << P << "/* "
 	<< R << "fragment:\t" << B << fragment.first << "\t\t\t\t" << Reset << fragment.second << std::endl
 	<< P << "/* ************************************************************************** */" <<  std::endl << "/* "
 	<< R << "http version:\t" << B << httpVersion.first << Reset << "\t\t" << httpVersion.second << std::endl
