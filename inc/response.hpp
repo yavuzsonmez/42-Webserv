@@ -6,11 +6,11 @@
 # include <ctime>
 # include "utility.hpp"
 
-class response
+class Response
 {
 	public:
-	response();
-	~response(void);
+	Response();
+	~Response(void);
 
 	std::string	get_response(void);
 	void	create_response(void);
@@ -18,7 +18,8 @@ class response
 	void	test_text(void);
 	void	test_html(void);
 	void	test_image(void);
-	void	read_html(std::string path);
+
+	std::string	get_image_format(void);
 
 	private:
 	std::string	_protocol;
@@ -32,6 +33,7 @@ class response
 	std::string	_content_length;
 	std::string _html;
 	std::string _plain;
+	std::string _image;
 
 	std::string	_response;
 

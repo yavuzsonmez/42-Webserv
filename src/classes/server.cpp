@@ -1,30 +1,30 @@
-#include "../../inc/server.hpp"
+#include "../../inc/Server.hpp"
 
-server::server(std::string serv_config) : _config(serv_config)
+Server::Server(std::string serv_config) : _config(serv_config)
 {
 	parse_serv();
 }
 
-server::~server(void)
+Server::~Server(void)
 {
 
 }
 
-bool	server::parse_serv(void)
+bool	Server::parse_serv(void)					//parses the server configuration and initializes the related membervariables
 {
 	int	port = 8080;
-	_tcp_socket = tcp_socket(port);
+	_tcp_socket = Tcp_socket(port);					//constructs the Tcp_socket object with the given port
 
 	_server_name = "PetRoulette";
 	_body_size = 100;
 
 	std::string	loc_config;
-	_locations.push_back(location(loc_config));
+	_locations.push_back(Location(loc_config));		//constructs the Location objects taking the configuration as parameter
 
 	return (true);
 }
 
-void	server::launch(void)
+void	Server::launch(void)
 {
-	_tcp_socket.launch();
+	_tcp_socket.launch();							//launches the Tcp_socket object
 }

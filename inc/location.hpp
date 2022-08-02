@@ -3,11 +3,11 @@
 
 # include <string>
 
-class	location
+class	Location
 {
 	public:
-	location(std::string loc_config);
-	~location(void);
+	Location(std::string loc_config);
+	~Location(void);
 
 	bool	parse_loc(void);
 
