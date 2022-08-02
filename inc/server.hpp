@@ -3,25 +3,25 @@
 
 # include <string>
 # include <vector>
-# include "tcp_socket.hpp"
-# include "location.hpp"
+# include "Tcp_socket.hpp"
+# include "Location.hpp"
 
-class server
+class Server
 {
 	public:
-	server(std::string serv_config);
-	~server(void);
+	Server(std::string serv_config);
+	~Server(void);
 
-	bool	parse_serv(void);
+	bool	parse_serv(void);				//parses the configuration
 
 	void	launch(void);
 
 	private:
-	std::string				_config;
-	tcp_socket				_tcp_socket;
+	std::string				_config;		//string of the configuration
+	Tcp_socket				_tcp_socket;	//Tcp_socket object
 	std::string				_server_name;
 	int						_body_size;
-	std::vector<location>	_locations;
+	std::vector<Location>	_locations;		//vector of all given Location objects
 };
 
 # endif

@@ -1,29 +1,29 @@
-#include "../../inc/configuration.hpp"
+#include "../../inc/Configuration.hpp"
 
-configuration::configuration(std::string path) : _path(path)
+Configuration::Configuration(std::string path) : _path(path)
 {
 	parse_config();
 
 }
 
-configuration::~configuration(void)
+Configuration::~Configuration(void)
 {
 
 }
 
-bool	configuration::parse_config(void)
+bool	Configuration::parse_config(void)
 {
-	std::string	serv_config;		//string of config for every single server
-	_servers.push_back(server(serv_config));	//push every server in the vector with their config
+	std::string	serv_config;					//string of config for every single server
+	_servers.push_back(Server(serv_config));	//constructs a Server object, taking their config as a parameter and pushes it in the vector
 	return (true);
 }
 
-void	configuration::launch(void)
+void	Configuration::launch(void)
 {
 	//std::vector<server>::iterator	it = _servers.begin();
-	std::vector<server>::iterator	ite = _servers.end();
+	std::vector<Server>::iterator	ite = _servers.end();
 
-	for (std::vector<server>::iterator	it = _servers.begin(); it != ite; it++)
+	for (std::vector<Server>::iterator	it = _servers.begin(); it != ite; it++)	//launches every constructed Server object in the vector
 	{
 		(*it).launch();
 	}

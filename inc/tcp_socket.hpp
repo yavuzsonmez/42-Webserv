@@ -8,15 +8,15 @@
 #include <netinet/in.h>
 #include <string>
 #include <iostream>
-#include "response.hpp"
+#include "Response.hpp"
 
 
-class tcp_socket
+class Tcp_socket
 {
 	public:
-	tcp_socket(void);
-	tcp_socket(int port);
-	~tcp_socket(void);
+	Tcp_socket(void);
+	Tcp_socket(int port);
+	~Tcp_socket(void);
 
 	void	launch(void);
 
@@ -28,7 +28,7 @@ class tcp_socket
 	struct sockaddr_in _address;
 	int		_addrlen;
 
-	response	_response;
+	Response	_response;
 };
 
 # endif

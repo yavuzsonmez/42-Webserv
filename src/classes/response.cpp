@@ -1,35 +1,48 @@
-# include "../../inc/response.hpp"
+# include "../../inc/Response.hpp"
 
-response::response(void)
+Response::Response(void)
 {
 
 }
 
-response::~response(void)
+Response::~Response(void)
 {
 
 }
 
-std::string	response::get_response(void)
+std::string	Response::get_response(void)
 {
 	return _response;
 }
 
-void	response::create_response(void)
+void	Response::create_response(void)
 {
-	_response = _protocol + " " + _status_code + " " + _status_text + "\n";
-	_response += "server: " + _server + "\n";
+	_response = _protocol + " " + _status_code + " " + _status_text + "\r\n";
+	_response += "server: " + _server + "\r\n";
 	if (!_content_type.empty())
-		_response += "content-type: " + _content_type + "\n";
+		_response += "content-type: " + _content_type + "\r\n";
 	if (!_content_length.empty())
-		_response += "content-length: " + _content_length + "\n";
+		_response += "content-length: " + _content_length + "\r\n";
 	if (!_html.empty())
-		_response += "\n" + _html;
+		_response += "\r\n" + _html;
 	if (!_plain.empty())
-		_response += "\n" + _plain;
+		_response += "\r\n" + _plain;
+	if (!_image.empty())
+		_response += "\r\n" + _image;
 }
 
-void	response::test_text(void)
+std::string	Response::get_image_format(void)
+{
+	if (_image.find("PNG") != -1)
+		return ("image/png");
+	if (_image.find("JFIF") != -1)
+		return ("image/jpeg");
+	if (_image.find("GIF") != -1)
+		return ("image/gif");
+	return("no valid format");
+}
+
+void	Response::test_text(void)
 {
 	_protocol = "HTTP/1.1";
 	_status_code = "200";
@@ -42,7 +55,7 @@ void	response::test_text(void)
 	create_response();
 }
 
-void	response::test_html(void)
+void	Response::test_html(void)
 {
 	_protocol = "HTTP/1.1";
 	_status_code = "200";
@@ -50,24 +63,22 @@ void	response::test_html(void)
 
 	_server = "PetRoulette";
 	_content_type = "text/html";
-	read_html("html/index.html");
+	_html = get_file_content("html/index.html");
+	_content_length = to_str(_html.length());
 	create_response();
 }
 
-void	response::test_image(void)
+void	Response::test_image(void)
 {
 	_protocol = "HTTP/1.1";
 	_status_code = "200";
 	_status_text = "OK";
 
 	_server = "PetRoulette";
-	_content_type = "image/png";
-	read_html("images/petroulette.png");
-	create_response();
-}
+	//_content_type = "image/png";
+	_image = get_file_content("images/Rotating_earth_(large).gif");
+	_content_type = get_image_format();
+	_content_length = to_str(_image.length());
 
-void	response::read_html(std::string path)
-{
-	_html = get_file_content(path);
-	_content_length = to_str(_html.length());
+	create_response();
 }

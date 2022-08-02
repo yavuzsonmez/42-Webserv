@@ -1,16 +1,16 @@
-#include "../../inc/location.hpp"
+#include "../../inc/Location.hpp"
 
-location::location(std::string loc_config) : _config(loc_config)
+Location::Location(std::string loc_config) : _config(loc_config)
 {
 
 }
 
-location::~location(void)
+Location::~Location(void)
 {
 
 }
 
-bool	location::parse_loc(void)
+bool	Location::parse_loc(void)	
 {
 	return (true);
 }

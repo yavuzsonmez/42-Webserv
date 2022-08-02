@@ -1,10 +1,10 @@
-#include "inc/configuration.hpp"
+#include "inc/Configuration.hpp"
 
 int	main(int argc, char **argv)
 {
 	(void)argc;
-	configuration	petroulette = configuration(argv[1]);
-	petroulette.launch();
+	Configuration	petroulette = Configuration(argv[1]);	//constructs a Configuration object, taking the configfile as parameter
+	petroulette.launch();									//launches the the initialized Configuration object
 
 	return 0;
 }

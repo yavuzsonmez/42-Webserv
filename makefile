@@ -1,11 +1,11 @@
 NAME	=	webserv
 
 SRCS	=	main.cpp \
-			src/classes/configuration.cpp \
-			src/classes/location.cpp \
-			src/classes/response.cpp \
-			src/classes/server.cpp \
-			src/classes/tcp_socket.cpp \
+			src/classes/Configuration.cpp \
+			src/classes/Location.cpp \
+			src/classes/Response.cpp \
+			src/classes/Server.cpp \
+			src/classes/Tcp_socket.cpp \
 
 UTIL	=	src/utility/check_config_file.cpp \
 			src/utility/filter_characters.cpp \
