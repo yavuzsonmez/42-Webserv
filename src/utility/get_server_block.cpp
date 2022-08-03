@@ -12,7 +12,9 @@
  * Takes in the last read line and skips all until it hits line positon
  * 
  * @param filecontent of the fiel
- * @param position of the line to skip to or -1 if the end was reached
+ * @param position  of the line to skip to or 0 if the end was reached
+ *                  if -1 is being returned, an error occurred.
+ * 
  * 
  * @note We start counting at 0
  */
@@ -29,30 +31,64 @@ int getNextServerPrefix(std::string file_content, int position) {
             continue;
         }
         // Check for server {
-        if (line == "server {")
-            return i;
+        if (line.find("server {") == 0)
+        {
+            if (line == "server {")
+                return i;
+            return -2;
+        }
         i++;
 	};
-    return -1;
+    return 0;
 }
 
 /**
- * Counts how many server blocks are in the configuration file
+ * Returns the line where the bracket of the server {
+ * on the
+ * @param line
+ * gets closed.
+ * 
+ * @returns the line of the closing bracket for server block at line line
  */
-int getCountOfServerBlocks(std::string file_content) {
+int findClosingBracket(std::string file_content, int line) {
 
 }
 
 /**
  * Returns the server blocks as strings.
  * Each block returned represents a server block.
+ * 
  * @param file_content
  * @return server_blocks as string vector
+ * 
+ * Will read in file line by line.
+ * If a server_block is being found, it sets the bool in_server_block = true;
+ * Then we keep iterating until the server block is being closed.
+ * 
  */
 std::vector<std::string> get_server_blocks(std::string &file_content)
 {
     std::vector<std::string> servers;
+    bool in_server_block = false;
 
+    std::istringstream iss(file_content);
+	std::string result;
+    int i = 0;
+    for (std::string line; std::getline(iss, line); )
+	{
+        // Check if server block closes
+        if (line.find("{") == 0) {
+
+        }
+        // Check for server {
+        if (line.find("server {") == 0)
+        {
+            if (line == "server {")
+                in_server_block = true;
+            else
+                throw("Invalid configuration file!");
+        }
+	};
 
     return servers;
 }
