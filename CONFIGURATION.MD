@@ -11,5 +11,4 @@ Serverblock needs to start with the line
 
 ``server {``
 
-and need to close the bracket accordingly.
 There can be no other symbol in the server block prefix.
