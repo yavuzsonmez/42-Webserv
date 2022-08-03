@@ -39,7 +39,7 @@ int getNextServerPrefix(std::string file_content, int position) {
 /**
  * Counts how many server blocks are in the configuration file
  */
-int getCoutnOfServerBlocks(std::string file_content) {
+int getCountOfServerBlocks(std::string file_content) {
 
 }
 
