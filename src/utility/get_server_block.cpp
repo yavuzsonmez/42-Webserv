@@ -14,20 +14,21 @@
  * @param filecontent of the fiel
  * @param position of the line to skip to or -1 if the end was reached
  * 
- * @note We start counting at 0!
+ * @note We start counting at 0
  */
 int getNextServerPrefix(std::string file_content, int position) {
     std::istringstream iss(file_content);
 	std::string result;
     int i = 0;
-    // skip all characters before position
 	for (std::string line; std::getline(iss, line); )
 	{
+        // skip all characters before position
         if (position >= i)
         {
-            i++;
+            i++; 
             continue;
         }
+        // Check for server {
         if (line == "server {")
             return i;
         i++;
