@@ -1,6 +1,8 @@
 #include "../../inc/utility.hpp"
 #include <vector>
 #include <string>
+#include <stack>
+#include <iostream>
 
 /**
  * Jumps to the next server prefix to get the server block.
@@ -51,7 +53,24 @@ int getNextServerPrefix(std::string file_content, int position) {
  * @returns the line of the closing bracket for server block at line line
  */
 int findClosingBracket(std::string file_content, int line) {
+    std::stack <char>	bracket;
+	char	c;
 
+	for (size_t i = 0; i < file_content.length(); i++)
+	{
+		c = file_content[i];
+		switch (c)
+		{
+			case '{': bracket.push(c); break;
+			case '}': 
+                if (bracket.empty() || bracket.top()!='{') 
+                    return false; 
+                else bracket.pop(); 
+                    break;
+			default: ;
+		}
+	}
+	return bracket.empty();
 }
 
 /**
