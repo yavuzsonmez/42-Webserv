@@ -7,6 +7,11 @@ bool isx(char c)
 	return (c != '(' && c != ')');
 }
 
+/**
+ * Filters out all characters which are in the given string.
+ * @param characters to remove
+ * @return cleaned string
+ */
 std::string filter_characters(std::string characters)
 {
 	std::string::iterator	it = characters.begin();
