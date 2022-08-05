@@ -21,27 +21,27 @@
  * @note We start counting at 0
  */
 int getNextServerPrefix(std::string file_content, int position) {
-    std::istringstream iss(file_content);
+	std::istringstream iss(file_content);
 	std::string result;
-    int i = 0;
+	int i = 0;
 	for (std::string line; std::getline(iss, line); )
 	{
-        // skip all characters before position
-        if (position >= i)
-        {
-            i++; 
-            continue;
-        }
-        // Check for server {
-        if (line.find("server {") == 0)
-        {
-            if (line == "server {")
-                return i;
-            return -2;
-        }
-        i++;
+		// skip all characters before position
+		if (position >= i)
+		{
+			i++; 
+			continue;
+		}
+		// Check for server {
+		if (line.find("server {") == 0)
+		{
+			if (line == "server {")
+				return i;
+			return -2;
+		}
+		i++;
 	};
-    return 0;
+	return 0;
 }
 
 /**
@@ -52,21 +52,25 @@ int getNextServerPrefix(std::string file_content, int position) {
  * 
  * @returns the line of the closing bracket for server block at line line
  */
-int findClosingBracket(std::string file_content, int line) {
-    std::stack <char>	bracket;
+int findClosingBracket(std::string file_content) {
+	std::stack <char>	bracket;
 	char	c;
 
 	for (size_t i = 0; i < file_content.length(); i++)
 	{
 		c = file_content[i];
-		switch (c)
+		switch (c) // keep iterating over every line
 		{
-			case '{': bracket.push(c); break;
-			case '}': 
-                if (bracket.empty() || bracket.top()!='{') 
-                    return false; 
-                else bracket.pop(); 
-                    break;
+			case '{':
+				bracket.push(c); 
+				break;
+			case '}':
+				if (bracket.empty() || bracket.top()!='{') 
+					return false; 
+				else bracket.pop();
+					if (bracket.empty())
+						return i;
+					break;
 			default: ;
 		}
 	}
@@ -87,38 +91,40 @@ int findClosingBracket(std::string file_content, int line) {
  */
 std::vector<std::string> get_server_blocks(std::string &file_content)
 {
-    std::vector<std::string> servers;
-    bool in_server_block = false;
+	std::vector<std::string> servers;
+	bool in_server_block = false;
 
-    std::istringstream iss(file_content);
+	std::istringstream iss(file_content);
 	std::string result;
-    int i = 0;
-    for (std::string line; std::getline(iss, line); )
+	int i = 0;
+	for (std::string line; std::getline(iss, line); )
 	{
-        // Check if server block closes
-        if (line.find("{") == 0) {
+		// Check if server block closes
+		if (line.find("{") == 0) {
 
-        }
-        // Check for server {
-        if (line.find("server {") == 0)
-        {
-            if (line == "server {")
-                in_server_block = true;
-            else
-                throw("Invalid configuration file!");
-        }
+		}
+		// Check for server {
+		if (line.find("server {") == 0)
+		{
+			if (line == "server {")
+				in_server_block = true;
+			else
+				throw("Invalid configuration file!");
+		}
 	};
 
-    return servers;
+	return servers;
 }
 
 
 
-// int main() {
-//     int line = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", 0);
-//     std::cout << line << std::endl;
-//     int line2 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", line);
-//     std::cout << line2 << std::endl;
-//     int line3 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57rLinne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", line2);
-//     std::cout << line3 << std::endl;
-// }
+ int main() {
+	int closingBracket = findClosingBracket("{{asdff}asfasdf}");
+	std::cout << closingBracket << std::endl;
+	// int line = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", 0);
+	// std::cout << line << std::endl;
+	// int line2 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", line);
+	// std::cout << line2 << std::endl;
+	// int line3 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57rLinne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", line2);
+	// std::cout << line3 << std::endl;
+ }
