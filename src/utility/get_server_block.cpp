@@ -45,12 +45,8 @@ int getNextServerPrefix(std::string file_content, int position) {
 }
 
 /**
- * Returns the line where the bracket of the server {
- * on the
- * @param line
- * gets closed.
- * 
- * @returns the line of the closing bracket for server block at line line
+ * Returns the index where the first bracket of the string gets closed.
+ * @returns the index of the closing bracket
  */
 int findClosingBracket(std::string file_content) {
 	std::stack <char>	bracket;
