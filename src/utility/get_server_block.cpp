@@ -62,7 +62,7 @@ int findClosingBracket(std::string file_content) {
 				break;
 			case '}':
 				if (bracket.empty() || bracket.top()!='{') 
-					return false; 
+					return -1; 
 				else bracket.pop();
 					if (bracket.empty())
 						return i;
@@ -70,7 +70,7 @@ int findClosingBracket(std::string file_content) {
 			default: ;
 		}
 	}
-	return bracket.empty();
+	return -1;
 }
 
 /**
