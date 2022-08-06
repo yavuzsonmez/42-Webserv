@@ -112,6 +112,7 @@ void Request::setMethod(std::string &req) {
 }
 
 // TODO check std::string::npos before substr qnd erase
+// TODO domain is case insensitive
 
 /**
  * @brief Separate the different element in the URL of the request
