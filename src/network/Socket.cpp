@@ -5,57 +5,42 @@
 #include <unistd.h>
 #include <cstring>
 
-#define PORT 8080
+#define BACKLOG 10 // maximum number of allowed incoming connection in the queue until being accept()
+
 int main(int argc, char const *argv[])
 {
-	int server_fd, new_socket;
-	long valread;
-	struct sockaddr_in address;
-	int addrlen = sizeof(address);
+	int server_fd, forward;
+	struct sockaddr_in server, client;
 
-	// Only this line has been changed. Everything is same.
-	char *hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+	server_fd = socket(AF_INET, SOCK_STREAM, 0);
+	// if socket return -1 throw error + perror
+	my_addr.sin_family = AF_INET;
+	my_addr.sin_port = htons(80);
+	my_addr.sin_addr.s_addr = INADDR_ANY;
+	bzero(&(my_addr.sin_zero), 8);
 
-	// Creating socket file descriptor
-	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
+	bind(server_fd, (struct sockaddr *)&server, sizeof(struct sockaddr));
+	// if bind return -1 throw error + perror
+
+	listen(server_fd, BACKLOG);
+	// if bind return -1 throw error + perror
+
+	forward = accept(server_fd, &client, sizeof(struct sockaddr_in));
+	// if accept return -1 throw error
+
+	char *response = "Hello World!\n"; //exemple of sending comething with error checking
+	size_t len, bytes_send;
+	len = strlen(response);
+	bytes_send = 0;
+	// if bytes_send < len we have to handle it and keep send until everything was sent
+	while (bytes_send < len)
 	{
-		perror("In socket");
-		exit(EXIT_FAILURE);
+		if (bytes_send == -1)
+			// if send return -1, throw error; + perror
+		bytes_send = send(forward, response + bytes_send, len - bytes_send, 0);
 	}
 
+	//if close(server) //throw error; + perror
 
-	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons( PORT );
-
-	memset(address.sin_zero, '\0', sizeof address.sin_zero);
-
-
-	if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0)
-	{
-		perror("In bind");
-		exit(EXIT_FAILURE);
-	}
-	if (listen(server_fd, 10) < 0)
-	{
-		perror("In listen");
-		exit(EXIT_FAILURE);
-	}
-	while(1)
-	{
-		printf("\n+++++++ Waiting for new connection ++++++++\n\n");
-		if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0)
-		{
-			perror("In accept");
-			exit(EXIT_FAILURE);
-		}
-
-		char buffer[30000] = {0};
-		valread = read( new_socket , buffer, 30000);
-		printf("%s\n",buffer );
-		write(new_socket , hello , strlen(hello));
-		printf("------------------Hello message sent-------------------");
-		close(new_socket);
-	}
 	return 0;
 }
