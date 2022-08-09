@@ -7,6 +7,26 @@
 
 #define BACKLOG 10 // maximum number of allowed incoming connection in the queue until being accept()
 
+
+
+Socket::Socket(unsigned short port, unsigned int address)
+{
+	int error;
+
+	_fd = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
+	if (_fd < 0)
+		throw SocketCreationError();
+	_socket.sin_family = AF_INET;
+	_socket.sin_port = htons(port); //host byte order to network byte order
+	_socket.sin_addr.s_addr = address;
+	bzero(&(_socket.sin_zero), 8);
+
+	if (bind(_fd, (struct sockaddr *)&_socket, sizeof(struct sockaddr));)
+		throw SocketCreationError();
+	if (listen(_fd, BACKLOG);)
+		throw SocketCreationError();
+}
+
 int main(int argc, char const *argv[])
 {
 	int server_fd, forward;
