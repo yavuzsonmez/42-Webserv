@@ -1,5 +1,6 @@
 #include "../../inc/ConfigFileParsing.hpp"
 #include "../../inc/utility.hpp"
+#include "../../inc/ConfigurationKey.hpp"
 
 ConfigFileParsing::ConfigFileParsing()
 {
@@ -32,6 +33,7 @@ bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
 	if (isGeneralFaultyFile(file_content)) {
 		return false;
 	}
+	determineConfigurationKeys(file_content);
 	return true;
 }
 
@@ -51,4 +53,22 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 	}
 	// add parantheses check. currently paranthesis check is causing a crash.
 	return false;
+}
+
+/**
+ * Determines the configuration for a entry line by line.
+ * Takes file_content and prints out the detected ConfigurationType.
+ * When iterating, it trims the string from the left side.
+ * Still in testing.
+ * @TODO: This function should take into account that there can be multiple servers. Currently it is not doing that!
+ */
+void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
+	std::istringstream iss(file_content);
+	std::string result;
+
+	for (std::string line; std::getline(iss, line); )
+	{
+		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
+		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
+	}
 }
