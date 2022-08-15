@@ -79,6 +79,6 @@ void DebuggerPrinter::debug( const std::string &message ) {
  * 
  * @param message 
  */
-void DebuggerPrinter::debug( const std::string &message ) {
-	printString(message, DEBUG);
+void DebuggerPrinter::error( const std::string &message ) {
+	printString(message, ERROR);
 }
