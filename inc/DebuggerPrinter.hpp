@@ -13,6 +13,7 @@
 enum LogLevel { 
 	INFO = 'I', 
 	WARNING = 'W',
+	DEBUG = 'D',
 };
 
 /**
@@ -33,6 +34,7 @@ class DebuggerPrinter: public Singleton<DebuggerPrinter> {
 		DebuggerPrinter & operator = (const DebuggerPrinter &src);
 		void info( const std::string &message );
 		void warning( const std::string &message );
+		void debug( const std::string &message );
 	private:
 		void printString( const std::string &message, LogLevel level );
 };
