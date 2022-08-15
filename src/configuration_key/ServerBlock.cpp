@@ -44,6 +44,25 @@ std::vector<unsigned int> ServerBlock::getAllServerPorts() {
 }
 
 /**
+ * Returns all indexes in the correct order
+ * 
+ * - Iterates over all vectors
+ * - adds the member of the vector indexes of the configuration key
+ * 	 to the result indexes of getAllIndexes
+ */
+std::vector<std::string> ServerBlock::getAllIndexes() {
+
+	std::vector<ConfigurationKey>::iterator i = this->configurationKeys.begin();
+	std::vector<std::string> indexes;
+
+	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
+		if ((*i).configurationType == SERVER_NAME)
+			indexes.insert(indexes.end(), begin((*i).indexes), end((*i).indexes));;
+	}
+	return indexes;
+}
+
+/**
  * Returns all server names in the correct order
  * 
  * - Iterates over all vectors
