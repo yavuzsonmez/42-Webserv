@@ -31,14 +31,14 @@ ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
  * - adds the member of the vector ports of the configuration key
  * 	 to the result ports of getAllServerPorts
  */
-std::vector<std::string> ServerBlock::getAllServerPorts() {
+std::vector<unsigned int> ServerBlock::getAllServerPorts() {
 
 	std::vector<ConfigurationKey>::iterator i = this->configurationKeys.begin();
-	std::vector<std::string> ports;
+	std::vector<unsigned int> ports;
 
 	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
 		if ((*i).configurationType == LISTEN)
-			server_names.insert(ports.end(), begin((*i).ports), end((*i).ports));;
+			ports.insert(ports.end(), begin((*i).ports), end((*i).ports));;
 	}
 	return ports;
 }
