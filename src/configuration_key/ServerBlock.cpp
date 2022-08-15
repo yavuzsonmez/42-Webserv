@@ -25,6 +25,16 @@ ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
 }
 
 /**
+ * @brief Add another configuration key to this server block.
+ * Server block configuration keys are sorted and their order cannot be changed.
+ * 
+ * @returns nothing
+ */
+void ServerBlock::addConfigurationKey(ConfigurationKey configurationKey) {
+	this->configurationKeys.push_back(configurationKey);
+}
+
+/**
  * Returns all ports in the correct order
  * 
  * - Iterates over all vectors
