@@ -15,6 +15,8 @@ PARSING			=		./src/parsing/Request.cpp \
 DEBUGGER		=		./src/debugger/DebuggerPrinter.cpp \
 
 CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
+						./src/configuration_key/ConfigurationKey.cpp \
+						./src/configuration_key/ServerBlock.cpp \
 
 UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/is_file_accessible.cpp \

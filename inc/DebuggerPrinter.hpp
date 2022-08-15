@@ -1,3 +1,6 @@
+#ifndef DEBUGGERPRINTER
+# define DEBUGGERPRINTER
+
 #include <string>
 #include <iostream>
 #include "Singleton.hpp"
@@ -33,3 +36,5 @@ class DebuggerPrinter: public Singleton<DebuggerPrinter> {
 	private:
 		void printString( const std::string &message, LogLevel level );
 };
+
+#endif
