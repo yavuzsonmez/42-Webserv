@@ -114,13 +114,9 @@ std::vector<std::string> get_server_blocks(std::string &file_content)
 
 
 
- int main() {
-	int closingBracket = findClosingBracket("{{asdff}asfasdf}");
-	std::cout << closingBracket << std::endl;
-	// int line = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", 0);
-	// std::cout << line << std::endl;
-	// int line2 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", line);
-	// std::cout << line2 << std::endl;
-	// int line3 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57rLinne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", line2);
-	// std::cout << line3 << std::endl;
- }
+// int main() {
+// 	int line2 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", 0);
+// 	std::cout << line2 << std::endl;
+// 	int line3 = getNextServerPrefix("Linne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57rLinne Line Line Line Linne\nserver {\niyasgdfoiugyasgyu\n\nserver {\negtriryg87w4eo57r", line2);
+// 	std::cout << line3 << std::endl;
+//  }
