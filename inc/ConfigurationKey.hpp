@@ -15,6 +15,9 @@
  * Defines the type of information a configuration key holds.
  * Lists all available configuration types.
  * Can be extended easily.
+ * 
+ * SERVERBLOCK indicates that a new server block starts. This value will not actually be used in ConfigurationKey and
+ * is just an indicator for the parser.
  */
 enum ConfigurationKeyType { 
 	INDEX, 
@@ -22,7 +25,8 @@ enum ConfigurationKeyType {
     LISTEN,
     LOCATION,
     ROOT,
-    INVALID
+    INVALID,
+    SERVERBLOCK
 };
 
 /**
