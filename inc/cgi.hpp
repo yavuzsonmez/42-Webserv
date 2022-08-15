@@ -10,6 +10,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <map>
+# include "utility.hpp"
 
 class	CGI
 {
@@ -19,9 +21,10 @@ class	CGI
 
 	void	execute(void);
 	std::string	get_buf(void);
+	char	**create_envp(void);
 
 	private:
-	char	*env[17];
+	std::map<std::string, std::string>	_env;
 	std::string	_buf;
 	FILE	*_tmp;
 	int		_fd;

@@ -20,24 +20,42 @@ CGI::CGI(/*Request &request*/)
 	// env[15] = strcat("CONTENT_TYPE=", request.content_type);			//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	// env[16] = strcat("CONTENT_LENGTH=", request.content_length;)		//The length of the said content as given by the client.
 	
-	env[0] = "SERVER_SOFTWARE=webserv";
-	env[1] = "SERVER_NAME=petroulette";
-	env[2] = "GATEWAY_INTERFACE=CGI/1.1";
-	env[3] = "SERVER_PROTOCOL=http/1.1";
-	env[4] = "SERVER_PORT=8080";
-	env[5] = "REQUEST_METHOD=GET";
-	env[6] = "PATH_INFO=CGI_bin/scrip";
-	env[7] = "PATH_TRANSLATED=Users/home/Projects/webserv/CGI_bin/script";
-	env[8] = "SCRIPT_NAME=CGI_bin/scrip";		
-	env[9] = "QUERY_STRING=parameters or information for the cgi script";
-	env[10] = "REMOTE_HOST=client";
-	env[11] = "REMOTE_ADDR=129.187.214.1";
-	env[12] = "AUTH_TYPE=Basic";
-	env[13] = "REMOTE_USER=REMOTE_USER";
-	env[14] = "REMOTE_IDENT=";
-	env[15] = "CONTENT_TYPE=";
-	env[16] = "CONTENT_LENGTH=";
-	env[17] = NULL;
+	// env[0] = "SERVER_SOFTWARE=webserv";
+	// env[1] = "SERVER_NAME=petroulette";
+	// env[2] = "GATEWAY_INTERFACE=CGI/1.1";
+	// env[3] = "SERVER_PROTOCOL=http/1.1";
+	// env[4] = "SERVER_PORT=8080";
+	// env[5] = "REQUEST_METHOD=GET";
+	// env[6] = "PATH_INFO=CGI_bin/scrip";
+	// env[7] = "PATH_TRANSLATED=Users/home/Projects/webserv/CGI_bin/script";
+	// env[8] = "SCRIPT_NAME=CGI_bin/scrip";		
+	// env[9] = "QUERY_STRING=parameters or information for the cgi script";
+	// env[10] = "REMOTE_HOST=client";
+	// env[11] = "REMOTE_ADDR=129.187.214.1";
+	// env[12] = "AUTH_TYPE=Basic";
+	// env[13] = "REMOTE_USER=REMOTE_USER";
+	// env[14] = "REMOTE_IDENT=";
+	// env[15] = "CONTENT_TYPE=";
+	// env[16] = "CONTENT_LENGTH=";
+	// env[17] = NULL;
+
+	_env["SERVER_SOFTWARE"] = "webserv";
+	_env["SERVER_NAME"] = "petroulette";
+	_env["GATEWAY_INTERFACE"] = "CGI/1.1";
+	_env["SERVER_PROTOCOL"] = "http/1.1";
+	_env["SERVER_PORT"] = "8080";
+	_env["REQUEST_METHOD"] = "GET";
+	_env["PATH_INFO"] = "CGI_bin/script";
+	_env["PATH_TRANSLATED"] = "Users/home/Projects/webserv/CGI_bin/script";
+	_env["QUERY_STRING"] = "parameters or information for the cgi script";
+	_env["REMOTE_HOST"] = "client";
+	_env["REMOTE_ADDR"] = "129.187.214.1";
+	_env["AUTH_TYPE"] = "Basic";
+	_env["REMOTE_USER"] = "REMOTE_USER";
+	_env["REMOTE_IDENT"] = "";
+	_env["CONTENT_TYPE"] = "";
+	_env["CONTENT_LENGTH"] = "";
+
 }
 
 CGI::~CGI()
@@ -59,7 +77,7 @@ void	CGI::execute(void)
 	{
 		dup2(_fd, STDOUT_FILENO);								//stdout now points to the tmpfile
 		char	*argv[3] = {"/usr/bin/php", "index.php", NULL};	//creating the arguments for execve
-		int i = execve(argv[0], argv, env);						//executes the executable with its arguments
+		int i = execve(argv[0], argv, map_to_array(_env));						//executes the executable with its arguments
 		std::cout << "execve: " << i << std::endl;				//check if execve failes
 		exit(1);												//exit the childprocess
 	}
@@ -75,6 +93,19 @@ void	CGI::execute(void)
 		return;
 	}
 
+}
+
+char	**CGI::create_envp(void)
+{
+	char	*envp[_env.size() + 1];
+	int	i = 0;
+	for(std::map<std::string, std::string>::iterator it = _env.begin(); it != _env.end(); ++it)
+	{
+		envp[i] = strdup((it->first + "=" + it->second).c_str());
+		++i;
+	}
+	envp[i] = NULL;
+	return envp;
 }
 
 std::string	CGI::get_buf(void)

@@ -8,6 +8,7 @@
 # include <string>
 # include <cctype>
 # include <algorithm>
+# include <map>
 
 void strip_from_str(std::string &file_content, const char start, const char end);
 void upper_str(std::string &str);
@@ -25,4 +26,20 @@ std::string	to_str(T input)
 	return ss.str();
 }
 
-#endif
+template <typename key, typename value>
+char **map_to_array(std::map<key, value> map)
+{
+	typename std::map<key, value>::iterator	it;
+	
+	char	*array[map.size() + 1];
+	int	i = 0;
+	for (it = map.begin(); it != map.end(); ++it)
+	{
+		array[i] = strdup((to_str(it->first) + "=" + to_str(it->second)).c_str());
+		++i;
+	}
+	array[i] = NULL;
+	return array;
+}
+
+# endif
