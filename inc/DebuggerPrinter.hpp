@@ -14,6 +14,7 @@ enum LogLevel {
 	INFO = 'I', 
 	WARNING = 'W',
 	DEBUG = 'D',
+	ERROR = 'E'
 };
 
 /**
@@ -23,8 +24,10 @@ enum LogLevel {
  * 			DebuggerPrinter debugger = debugger.getInstance();
  * 			
  * 
- * @note	LEVEL INFO - info message
+ * @note	LEVEL INFO - INFO message
  * 			LEVEL WARNING - warning message
+ * 			LEVEL DEBUG - DEBUG message
+ * 			LEVEL ERROR - ERROR message ON STDERR
  */
 class DebuggerPrinter: public Singleton<DebuggerPrinter> {
 	public:
@@ -34,6 +37,7 @@ class DebuggerPrinter: public Singleton<DebuggerPrinter> {
 		DebuggerPrinter & operator = (const DebuggerPrinter &src);
 		void info( const std::string &message );
 		void warning( const std::string &message );
+		void error( const std::string &message );
 		void debug( const std::string &message );
 	private:
 		void printString( const std::string &message, LogLevel level );

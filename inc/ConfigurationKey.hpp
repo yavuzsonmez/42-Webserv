@@ -60,6 +60,13 @@ typedef std::pair <std::string, std::string>	internal_keyvalue;
  */
 class ConfigurationKey {
     public:
+        // gets thrown if the configuration key is faulty.
+		class InvalidConfigurationFile : public std::exception {
+			public:
+				virtual const char* what() const throw() {
+					return "configuration file is faulty";
+				}
+		};
         ConfigurationKey();
 		ConfigurationKey( const ConfigurationKey &src );
 		~ConfigurationKey();
@@ -86,4 +93,8 @@ class ConfigurationKey {
     private:
         ConfigurationKeyType detectConfigurationType(internal_keyvalue raw);
         bool isServerNameKeyType(internal_keyvalue raw);
+        bool isListenKeyType(internal_keyvalue raw);
+
+        bool validatePort(unsigned int port);
+        void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
 };
