@@ -33,7 +33,7 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
     DebuggerPrinter debugger = debugger.getInstance();
     debugger.info("Constructed configuration key.");
     internal_keyvalue raw(key, value);
-    ConfigurationKeyType configurationType = detectConfigurationType(raw);
+    this->configurationType = detectConfigurationType(raw);
 }
 
 /**
@@ -45,8 +45,8 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
 ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue raw) {
     if (this->isServerNameKeyType(raw))
         return SERVER_NAME;
-    if (this->isServerNameKeyType(raw))
-        return SERVER_NAME;
+    if (this->isListenKeyType(raw))
+        return LISTEN;
 }
 
 /**
