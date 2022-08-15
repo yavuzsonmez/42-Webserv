@@ -25,6 +25,25 @@ ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
 }
 
 /**
+ * Returns all ports in the correct order
+ * 
+ * - Iterates over all vectors
+ * - adds the member of the vector ports of the configuration key
+ * 	 to the result ports of getAllServerPorts
+ */
+std::vector<std::string> ServerBlock::getAllServerPorts() {
+
+	std::vector<ConfigurationKey>::iterator i = this->configurationKeys.begin();
+	std::vector<std::string> ports;
+
+	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
+		if ((*i).configurationType == LISTEN)
+			server_names.insert(ports.end(), begin((*i).ports), end((*i).ports));;
+	}
+	return ports;
+}
+
+/**
  * Returns all server names in the correct order
  * 
  * - Iterates over all vectors
