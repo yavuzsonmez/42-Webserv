@@ -35,10 +35,16 @@ void DebuggerPrinter::printString( const std::string &message, LogLevel level ) 
 		case DEBUG:
 			prefix = "\033[0;36m[DEBUG]\033[0m";
 			break;
+		case ERROR:
+			prefix = "\033[0;31m[ERROR!]\033[0m";
+			break;
 		default:
 			prefix = "[UNKNOWN]";
 	}
-	std::cout << prefix << ":" << message << std::endl;
+	if (level != ERROR)
+		std::cout << prefix << ":" << message << std::endl;
+	else
+		std::cerr << prefix << ":" << message << std::endl;
 }
 
 /**
@@ -61,6 +67,15 @@ void DebuggerPrinter::warning( const std::string &message ) {
 
 /**
  * @brief Prints out an debug message
+ * 
+ * @param message 
+ */
+void DebuggerPrinter::debug( const std::string &message ) {
+	printString(message, DEBUG);
+}
+
+/**
+ * @brief Prints out an error message
  * 
  * @param message 
  */
