@@ -2,7 +2,7 @@
 #include "../../inc/DebuggerPrinter.hpp"
 #include <vector>
 #include <string>
-#include <sstring>
+#include <sstream>
 
 /**
  * Default constructor
@@ -57,8 +57,8 @@ bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
     if (raw.first != KEY_SERVER_NAMES)
         return false;
     
-    std::stringstream stringstream(raw.second);
-    while (stringstream.good())
+    std::stringstream ss(raw.second);
+    while (ss.good())
     {
         std::string substr;
         std::getline( ss, substr, ' ' );
