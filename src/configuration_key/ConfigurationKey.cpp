@@ -47,6 +47,7 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
         return SERVER_NAME;
     if (this->isListenKeyType(raw))
         return LISTEN;
+    return INVALID;
 }
 
 /**
