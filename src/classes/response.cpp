@@ -85,12 +85,12 @@ void	Response::test_image(void)
 	create_response();
 }
 
-void	Response::test_cgi(void)
+void	Response::test_cgi(std::string request)
 {
 	_protocol = "HTTP/1.1";
 	_status_code = "200";
 	_status_text = "OK";
-	CGI	cgi;
+	CGI	cgi(request);
 	cgi.execute();
 	_body = cgi.get_buf();
 	_server = "PetRoulette";
