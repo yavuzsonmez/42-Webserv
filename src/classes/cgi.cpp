@@ -1,6 +1,11 @@
 #include "../../inc/CGI.hpp"
 
-CGI::CGI(/*Request &request*/)
+CGI::CGI()
+{
+
+}
+
+CGI::CGI(/*Request &request*/std::string request)
 {
 	// env[0] = strcat("SERVER_SOFTWARE=", "webserv");						//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
 	// env[1] = strcat("SERVER_NAME=", "petroulette");						//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs. 
@@ -39,6 +44,14 @@ CGI::CGI(/*Request &request*/)
 	// env[16] = "CONTENT_LENGTH=";
 	// env[17] = NULL;
 
+
+	if (request.find("Referer") != request.npos)
+	{
+		std::string	tmp = request.substr(request.find("Referer") + 7);
+		_referer = get_query(tmp.substr(0, tmp.find('\n')));
+	}
+
+
 	_env["SERVER_SOFTWARE"] = "webserv";
 	_env["SERVER_NAME"] = "petroulette";
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";
@@ -47,7 +60,7 @@ CGI::CGI(/*Request &request*/)
 	_env["REQUEST_METHOD"] = "GET";
 	_env["PATH_INFO"] = "CGI_bin/script";
 	_env["PATH_TRANSLATED"] = "Users/home/Projects/webserv/CGI_bin/script";
-	_env["QUERY_STRING"] = "parameters or information for the cgi script";
+	_env["QUERY_STRING"] = "name=Steffen";
 	_env["REMOTE_HOST"] = "client";
 	_env["REMOTE_ADDR"] = "129.187.214.1";
 	_env["AUTH_TYPE"] = "Basic";
@@ -55,7 +68,6 @@ CGI::CGI(/*Request &request*/)
 	_env["REMOTE_IDENT"] = "";
 	_env["CONTENT_TYPE"] = "";
 	_env["CONTENT_LENGTH"] = "";
-
 }
 
 CGI::~CGI()
@@ -67,29 +79,35 @@ CGI::~CGI()
 void	CGI::execute(void)
 {
 	pid_t	pid;
-	_tmp = tmpfile();											//File pointer to a temporaryfile
-	_fd = fileno(_tmp);											//extract the filedescriptor from the file stream
+	_tmpout = tmpfile();											//File pointer to a temporaryfile
+	_fd = fileno(_tmpout);											//extract the filedescriptor from the file stream
+	_tmpin = tmpfile();
 	pid = fork();												//forks a new process
+
+	//std::cout << "referer: " << _referer << std::endl;
 
 	if (pid < 0)												//return in case it failes
 		return ;
 	else if (pid == 0)											//in the child process
 	{
+		//std::cout << "write: " << fwrite(_referer.c_str(), 1, _referer.length(), _tmpin) << std::endl;
+		//std::cout << "_referer: " << _referer << std::endl;
+		dup2(fileno(_tmpin), STDIN_FILENO);
 		dup2(_fd, STDOUT_FILENO);								//stdout now points to the tmpfile
-		char	*argv[3] = {"/usr/bin/php", "index.php", NULL};	//creating the arguments for execve
+		char	*argv[4] = {"php-cgi", "echo.php", "name=paul", NULL};	//creating the arguments for execve
 		int i = execve(argv[0], argv, map_to_array(_env));						//executes the executable with its arguments
-		std::cout << "execve: " << i << std::endl;				//check if execve failes
+		//std::cout << "execve: " << i << std::endl;				//check if execve failes
 		exit(1);												//exit the childprocess
 	}
 	else														//int the parent process
 	{
 		int	status;
 		waitpid(pid, &status, 0);								//wait until child terminates
-		fseek(_tmp, 0, SEEK_END);								//set the courser in the filestream to the end
-		_tmp_size = ftell(_tmp);								//assign the position of the courser to _tmp_size
-		rewind(_tmp);											//move the courser back to the beginning
+		fseek(_tmpout, 0, SEEK_END);								//set the courser in the filestream to the end
+		_tmp_size = ftell(_tmpout);								//assign the position of the courser to _tmp_size
+		rewind(_tmpout);											//move the courser back to the beginning
 		_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
-		fread((char*)(_buf.data()), 1, _tmp_size, _tmp);		//read the data from tmpfile into the char array of _buf
+		fread((char*)(_buf.data()), 1, _tmp_size, _tmpout);		//read the data from tmpfile into the char array of _buf
 		return;
 	}
 
@@ -112,4 +130,9 @@ std::string	CGI::get_buf(void)
 {
 	std::string	ret(_buf);
 	return ret;
+}
+
+std::string	CGI::get_query(std::string referer)
+{
+	return	referer.substr(referer.find('?') + 1);
 }

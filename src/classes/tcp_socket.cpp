@@ -58,7 +58,7 @@ void	Tcp_socket::launch(void)
 		char request[30000] = {0};
 		_valread = read( _new_socket , request, 30000);
 		printf("%s\n",request );
-		_response.test_cgi();
+		_response.test_cgi(request);
 		//_response.test_image();
 		//_response.test_html();
 		//_response.test_text();

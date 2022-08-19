@@ -19,7 +19,7 @@ class Response
 	void	test_text(void);
 	void	test_html(void);
 	void	test_image(void);
-	void	test_cgi(void);
+	void	test_cgi(std::string request);
 
 	std::string	get_image_format(void);
 
