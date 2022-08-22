@@ -7,5 +7,5 @@
 # define	B		"\033[0;34m" //Blue
 # define	P		"\033[0;35m" //Purple
 # define	Y		"\033[33;1m" //Yellow
-
+# define    C       "\033[0;36m" // cyan
 #endif
