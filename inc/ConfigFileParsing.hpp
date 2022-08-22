@@ -24,4 +24,5 @@ class ConfigFileParsing {
 		};
 	private:
 		bool isGeneralFaultyFile( std::string &file_content );
+		void determineConfigurationKeys( std::string &file_content );
 };
