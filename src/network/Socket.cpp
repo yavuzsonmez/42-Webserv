@@ -48,7 +48,7 @@ int main(int argc, char const *argv[])
 	forward = accept(server_fd, &client, sizeof(struct sockaddr_in));
 	// if accept return -1 throw error
 
-	char *response = "Hello World!\n"; //exemple of sending comething with error checking
+	char *response = "Hello World!\n"; //exemple of sending something with error checking
 	size_t len, bytes_send;
 	len = strlen(response);
 	bytes_send = 0;
