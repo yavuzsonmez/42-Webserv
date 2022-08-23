@@ -2,6 +2,7 @@
 #include "../../inc/utility.hpp"
 #include "../../inc/ConfigurationKey.hpp"
 #include "../../inc/DebuggerPrinter.hpp"
+#include "../../inc/colors.hpp"
 
 ConfigFileParsing::ConfigFileParsing()
 {
@@ -77,7 +78,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
-		debugger.debug("KEY TO USE" + key_value_raw[0] + "VALUE TO USE" + key_value_raw[1]);
+		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
 		lineNumber++;
 	}
 }

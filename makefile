@@ -25,6 +25,7 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/strip_from_str.cpp \
 						./src/utility/get_file_name.cpp \
 						./src/utility/validate_parantheses.cpp \
+						./src/utility/split_on_delimiter.cpp \
 
 ENTRY			=		./main.cpp
 
