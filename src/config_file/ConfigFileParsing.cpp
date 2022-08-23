@@ -141,6 +141,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		addConfigurationKeyToCurrentServerBlock(key);
 		lineNumber++;
 	}
+	printAllServerBlocks(this->serverBlocks);
 }
 
 /**

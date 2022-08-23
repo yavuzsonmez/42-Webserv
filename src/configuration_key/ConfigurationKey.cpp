@@ -11,8 +11,19 @@ ConfigurationKey::ConfigurationKey() {
 	throw("Unsupported constructor. Use key value constructor instead!");
 }
 
+/**
+ * @brief Copy constructor
+ * 
+ * @param src 
+ */
 ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
-
+	this->key = src.key;
+	this->value = src.value;
+	this->configurationType = src.configurationType;
+	this->ports = src.ports;
+	this->server_names = src.server_names;
+	this->root = src.root;
+	this->location	= src.location;
 }
 
 ConfigurationKey::~ConfigurationKey() {
