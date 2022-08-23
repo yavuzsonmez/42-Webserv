@@ -25,7 +25,7 @@ class ServerBlock
         std::vector<std::string> getAllServerNames();
         std::vector<unsigned int> getAllServerPorts();
         std::vector<std::string> getAllIndexes();
-        void addConfigurationKey(ConfigurationKey configurationKey);
+        void addConfigurationKey(ConfigurationKey &configurationKey);
     private:
         DebuggerPrinter debugger;
  };

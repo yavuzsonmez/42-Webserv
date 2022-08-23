@@ -34,7 +34,7 @@ class ConfigFileParsing {
 		void determineConfigurationKeys( std::string &file_content );
 		void addConfigurationKeyToCurrentServerBlock( ConfigurationKey &key );
 		bool shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition);
-		void printAllServerBlocks(std::vector<ServerBlock> serverBlocks);
+		void printAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
 };
 
 #endif
