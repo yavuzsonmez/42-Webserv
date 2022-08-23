@@ -37,6 +37,8 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
 	debugger.info("Constructed configuration key.");
 	internal_keyvalue raw(key, value);
 	this->configurationType = detectConfigurationType(raw);
+	this->key = raw.first;
+	this->value = raw.second;
 }
 
 /**
