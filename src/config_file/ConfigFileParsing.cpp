@@ -75,6 +75,10 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 	{
 		debugger.debug("Parsing line number " + std::to_string(lineNumber));
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
+		if (firstNotWhiteSpacePosition == std::string::npos) {
+			debugger.debug("Line is empty");
+			continue;
+		}
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
