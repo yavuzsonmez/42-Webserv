@@ -15,6 +15,7 @@
 # define	KEY_SERVER_NAMES			"server_names"
 # define	KEY_LISTEN					"listen"
 # define	KEY_INVALID					"INVALID"
+# define	KEY_METHODS					"METHODS"
 
 /**
  * Defines the type of information a configuration key holds.
@@ -31,7 +32,8 @@ enum ConfigurationKeyType {
 	LOCATION,
 	ROOT,
 	INVALID,
-	SERVERSTARTSEGMENT
+	SERVERSTARTSEGMENT,
+	METHODS
 };
 
 /**

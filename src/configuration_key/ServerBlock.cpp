@@ -14,12 +14,12 @@ ServerBlock::ServerBlock( const ServerBlock &src )
 {
 	this->debugger = debugger.getInstance();
 	this->configurationKeys = src.configurationKeys;
-	
+
 }
 
 ServerBlock::~ServerBlock()
 {
-
+	
 }
 
 ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
