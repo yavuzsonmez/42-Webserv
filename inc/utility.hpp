@@ -19,5 +19,6 @@ std::string get_file_name(std::string const &path);
 std::string filter_characters(std::string characters);
 bool	validate_parantheses(std::string parantheses);
 std::vector<std::string> split_on_delimiter(std::string &s, char delimiter);
+std::vector<std::string> split_once_on_delimiter(std::string &s, char delimiter);
 
 #endif
