@@ -24,6 +24,8 @@ enum LogLevel {
  * 			Will only print out debug stuff during debug mode.
  * 			SINGLETON CLASS! DO NOT INITIALIZE. Use it like this:
  * 			DebuggerPrinter debugger = debugger.getInstance();
+ * 			or (recommened):
+ * 			use the macro USE_DEBUGGER
  * 			
  * 
  * @note	LEVEL INFO - INFO message
