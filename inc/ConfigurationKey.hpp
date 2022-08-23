@@ -1,3 +1,6 @@
+#ifndef CONFIGURATIONKEY
+# define CONFIGURATIONKEY
+
 #include <string>
 #include <vector>
 
@@ -101,3 +104,5 @@ class ConfigurationKey {
 		bool validatePort(unsigned int port);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
 };
+
+#endif

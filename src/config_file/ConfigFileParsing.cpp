@@ -57,6 +57,7 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 	return false;
 }
 
+
 /**
  * Determines the configuration for a entry line by line.
  * Takes file_content and prints out the detected ConfigurationType.
