@@ -1,6 +1,7 @@
 #include "../../inc/ConfigFileParsing.hpp"
 #include "../../inc/utility.hpp"
 #include "../../inc/ConfigurationKey.hpp"
+#include "../../inc/DebuggerPrinter.hpp"
 
 ConfigFileParsing::ConfigFileParsing()
 {
@@ -63,12 +64,17 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
  * @TODO: This function should take into account that there can be multiple servers. Currently it is not doing that!
  */
 void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
+	DebuggerPrinter debugger = debugger.getInstance();
 	std::istringstream iss(file_content);
 	std::string result;
+	int lineNumber = 0;
 
+	debugger.debug("Starting to parse configuration file");
 	for (std::string line; std::getline(iss, line); )
 	{
+		debugger.debug("Parsing line number " + std::to_string(lineNumber));
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
+		debugger.debug("Trimmed string to to parse" + trimmedString);
 	}
 }

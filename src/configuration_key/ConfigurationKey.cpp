@@ -8,7 +8,7 @@
  * Default constructor
  */
 ConfigurationKey::ConfigurationKey() {
-    throw("Unsupported constructor. Use key value constructor instead!");
+	throw("Unsupported constructor. Use key value constructor instead!");
 }
 
 ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
@@ -16,8 +16,8 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 }
 
 ConfigurationKey::~ConfigurationKey() {
-    DebuggerPrinter debugger = debugger.getInstance();
-    debugger.info("Deconstructed configuration key.");
+	DebuggerPrinter debugger = debugger.getInstance();
+	debugger.info("Deconstructed configuration key.");
 }
 
 ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
@@ -30,10 +30,13 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * This calls detectConfigurationType, which sets the configuratio key type.
  */
 ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
-    DebuggerPrinter debugger = debugger.getInstance();
-    debugger.info("Constructed configuration key.");
-    internal_keyvalue raw(key, value);
-    this->configurationType = detectConfigurationType(raw);
+	DebuggerPrinter debugger = debugger.getInstance();
+	if (key.empty () || value.empty()) {
+		throwInvalidConfigurationFileExceptionWithMessage("Key or value of configuration key was empty!");
+	}
+	debugger.info("Constructed configuration key.");
+	internal_keyvalue raw(key, value);
+	this->configurationType = detectConfigurationType(raw);
 }
 
 /**
@@ -43,11 +46,11 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
  * be treated as fatal error.
  */
 ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue raw) {
-    if (this->isServerNameKeyType(raw))
-        return SERVER_NAME;
-    if (this->isListenKeyType(raw))
-        return LISTEN;
-    return INVALID;
+	if (this->isServerNameKeyType(raw))
+		return SERVER_NAME;
+	if (this->isListenKeyType(raw))
+		return LISTEN;
+	return INVALID;
 }
 
 /**
@@ -58,20 +61,34 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
  * Then it adds server names, seperated by spaces.
  */
 bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
-    if (raw.first != KEY_SERVER_NAMES)
-        return false;
-    
-    std::stringstream ss(raw.second);
-    while (ss.good())
-    {
-        std::string substr;
-        std::getline( ss, substr, ' ' );
-        if (!substr.empty())
-            this->server_names.push_back( substr );
-        else
-            return false;
-    }
-    return true;
+	if (raw.first != KEY_SERVER_NAMES)
+		return false;
+	
+	std::stringstream ss(raw.second);
+	while (ss.good())
+	{
+		std::string substr;
+		std::getline( ss, substr, ' ' );
+		if (!substr.empty())
+			this->server_names.push_back( substr );
+		else
+			return false;
+	}
+	return true;
+}
+
+/**
+ * @brief Is serverblock start segment
+ * Returns true if the next segment is a server block start segment.
+ * It looks like this: server {
+ * 
+ * @param raw 
+ * @return true or false
+ */
+bool ConfigurationKey::isServerStartSegment(internal_keyvalue raw) {
+	if (raw.first == "server" && raw.second == "{")
+		return true;
+	return false;
 }
 
 /**
@@ -82,29 +99,29 @@ bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
  * Then it adds server ports, seperated by spaces.
  */
 bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
-    
-    if (raw.first != KEY_LISTEN)
-        return false;
-    
-    std::stringstream ss(raw.second);
-    while (ss.good())
-    {
-        unsigned int val;
-        std::string substr;
-        std::getline( ss, substr, ' ' );
-        if (!substr.empty())
-        {
-            std::istringstream portToCheck(substr);
-            portToCheck >> val;
-            if (this->validatePort(val))
-                this->server_names.push_back( substr );
-            else
-                throw("Unsupported constructor. Use key value constructor instead!");
-        }
-        else
-            return false;
-    }
-    return true;
+	
+	if (raw.first != KEY_LISTEN)
+		return false;
+	
+	std::stringstream ss(raw.second);
+	while (ss.good())
+	{
+		unsigned int val;
+		std::string substr;
+		std::getline( ss, substr, ' ' );
+		if (!substr.empty())
+		{
+			std::istringstream portToCheck(substr);
+			portToCheck >> val;
+			if (this->validatePort(val))
+				this->server_names.push_back( substr );
+			else
+				throw("Unsupported constructor. Use key value constructor instead!");
+		}
+		else
+			return false;
+	}
+	return true;
 }
 
 /**
@@ -117,11 +134,11 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
  * @TODO: Check if anything else has to be checked
  */
 bool ConfigurationKey::validatePort(unsigned int port) {
-    if (port > 65535)
-        return false;
-    if (port <= 0)
-        return false;
-    return true;
+	if (port > 65535)
+		return false;
+	if (port <= 0)
+		return false;
+	return true;
 }
 
 /**
@@ -131,7 +148,29 @@ bool ConfigurationKey::validatePort(unsigned int port) {
  * @param message to print
  */
 void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::string message) {
-    DebuggerPrinter debugger = debugger.getInstance();
-    debugger.error(message);
-    throw InvalidConfigurationFile();
+	DebuggerPrinter debugger = debugger.getInstance();
+	debugger.error(message);
+	throw InvalidConfigurationFile();
 }
+
+//// Testing main and usage examples
+//int main() {
+//	// test for server name
+//	ConfigurationKey key("server_names", "localhost localhost.localdomain");
+
+//	// test for listen
+//	ConfigurationKey key2("listen", "8080 808080");
+
+//	// test for invalid key
+//	try {
+//		ConfigurationKey key3("invalid", "value");
+//	} catch (std::runtime_error error) {
+//		std::cout << "Error for invalid key as expected!" << std::endl;
+//	}
+
+//	// test for server start segment
+//	ConfigurationKey key4("server", "{");
+
+
+//	return 0;
+//}
