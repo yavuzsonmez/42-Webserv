@@ -72,8 +72,8 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 
 	// creating a new server
 	if (key.configurationType == SERVERSTARTSEGMENT) {
-		serverBlocks.push_back(ServerBlock());
 		currentServerIndex++;
+		serverBlocks.push_back(ServerBlock());
 	}
 	else
 	{
@@ -141,8 +141,6 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		addConfigurationKeyToCurrentServerBlock(key);
 		lineNumber++;
 	}
-
-	printAllServerBlocks(this->serverBlocks);
 }
 
 /**
@@ -150,13 +148,14 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
  * 
  * @param serverBlocks 
  */
-void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> serverBlocks)
+void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlocks)
 {
 	for (int i = 0; i < serverBlocks.size(); i++) {
 		std::cout << "SERVER BLOCK " << i << std::endl;
 		// print every configuration key
+		std::cout << serverBlocks[i].configurationKeys.size() << " CONFIGURATION KEYS" << std::endl;
 		for (int j = 0; j < serverBlocks[i].configurationKeys.size(); j++) {
-			std::cout << serverBlocks[i].configurationKeys[j].key << " " << serverBlocks[i].configurationKeys[j].value << std::endl;
+			std::cout << convert_configuration_key_type(serverBlocks[i].configurationKeys[j].configurationType) << " " << serverBlocks[i].configurationKeys[j].key << " " << serverBlocks[i].configurationKeys[j].value << std::endl;
 		}
 	}
 }

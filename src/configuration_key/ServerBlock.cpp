@@ -28,11 +28,11 @@ ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
  * @brief Add another configuration key to this server block.
  * Server block configuration keys are sorted and their order cannot be changed.
  * 
- * @param the configuraton key to be added
+ * @param configurationKey configuraton key to be added
  * 
  * @returns nothing
  */
-void ServerBlock::addConfigurationKey(ConfigurationKey configurationKey) {
+void ServerBlock::addConfigurationKey(ConfigurationKey &configurationKey) {
 	this->configurationKeys.push_back(configurationKey);
 }
 
