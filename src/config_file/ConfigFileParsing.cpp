@@ -60,12 +60,51 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 /**
  * @brief Adds a new configuration key to the current server block.
  * If block is SERVERSTARTSEGMENT, a new server will be created in the vector.
+ * All other keys will be added. If a keys is invalid, the program
+ * will stop exection immediately.
  * 
  * @param key ConfigurationKey from determineConfigurationKeys
  */
 void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKey key )
 {
+	USE_DEBUGGER;
+	int static currentServerIndex = 0;
 
+	// creating a new server
+	if (key.configurationType == SERVERSTARTSEGMENT) {
+		debugger.debug("CREATING NEW SERVER BLOCK ");
+		serverBlocks.push_back(ServerBlock());
+	}
+	else
+	{
+		debugger.debug("Adding key to server block " + std::to_string(currentServerIndex));
+		if (serverBlocks.size() == 0) {
+			debugger.error("No server block found or key is out of scope.");
+			throw InvalidConfigurationFile();
+		}
+		serverBlocks[currentServerIndex].addConfigurationKey(key);
+	}
+}
+
+/**
+ * @brief Determines if the line in the configuration file should be skipped or not
+ * - As to be skipped qualifies any line starting with a closing curly bracket: }
+ * or a line with only empty spaces
+ * @return true 
+ * @return false 
+ */
+bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition)
+{
+	USE_DEBUGGER;
+	if (firstNotWhiteSpacePosition == std::string::npos) {
+		debugger.debug("SKIPPING: Line is empty.");
+		return true;
+	}
+	if (line[firstNotWhiteSpacePosition] == '}') {
+		debugger.debug("SKIPPING: Line is a closing curly bracket.");
+		return true;
+	}
+	return false;
 }
 
 /**
@@ -88,9 +127,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 	{
 		debugger.debug("Parsing line number " + std::to_string(lineNumber));
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
-		// handle if the line is empty or starts with a bracket
-		if (firstNotWhiteSpacePosition == std::string::npos || line[firstNotWhiteSpacePosition] == '}') {
-			debugger.debug("Line is empty or is a closing bracket line");
+		if (shouldSkipLineInConfigurationFile(line, firstNotWhiteSpacePosition)) {
 			lineNumber++;
 			continue;
 		}
