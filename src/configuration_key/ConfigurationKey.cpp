@@ -13,10 +13,12 @@ ConfigurationKey::ConfigurationKey() {
 
 /**
  * @brief Copy constructor
+ * Add any new members to this constructor.
  * 
  * @param src 
  */
 ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
+	USE_DEBUGGER;
 	this->key = src.key;
 	this->value = src.value;
 	this->configurationType = src.configurationType;
@@ -24,11 +26,13 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->server_names = src.server_names;
 	this->root = src.root;
 	this->location	= src.location;
+	this->indexes	= src.indexes;
+	debugger.debug("Constructing new configuration key");
 }
 
 ConfigurationKey::~ConfigurationKey() {
 	DebuggerPrinter debugger = debugger.getInstance();
-	debugger.info("Deconstructed configuration key.");
+	debugger.debug("Deconstructing configuration key");
 }
 
 ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
