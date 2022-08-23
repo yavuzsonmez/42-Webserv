@@ -19,9 +19,24 @@ class Socket
 
 		Socket();
 		Socket( const Socket &src );
-		~Socket();
+		virtual ~Socket();
+
+
+		void acceptConnection();
+
+		// gets thrown if socket creation is faulty.
+		class SocketCreationError : public std::exception {
+			public:
+				virtual const char* what() const throw() {
+					return "socket couldn't be initialised properly, check errno.";
+				}
+		};
 
 	private:
+
+		int _fd;
+		struct sockaddr_in	_socket
+
 
 };
 
