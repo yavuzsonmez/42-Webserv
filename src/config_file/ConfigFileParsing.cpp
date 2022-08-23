@@ -60,6 +60,7 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 /**
  * Determines the configuration for a entry line by line.
  * Takes file_content and prints out the detected ConfigurationType.
+ * It skips empty lines automatically.
  * When iterating, it trims the string from the left side.
  * Still in testing.
  * @TODO: This function should take into account that there can be multiple servers. Currently it is not doing that!
@@ -77,6 +78,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
 		if (firstNotWhiteSpacePosition == std::string::npos) {
 			debugger.debug("Line is empty");
+			lineNumber++;
 			continue;
 		}
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
