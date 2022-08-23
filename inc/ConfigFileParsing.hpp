@@ -19,6 +19,9 @@ class ConfigFileParsing {
 		ConfigFileParsing & operator = (const ConfigFileParsing &src);
 		bool parseConfigFile( std::string &file_content );
 
+		// The server block vector which will provide the servers and their configurations
+		std::vector<ServerBlock> serverBlocks;
+
 		// gets thrown if the configuration file is faulty.
 		class InvalidConfigurationFile : public std::exception {
 			public:
@@ -29,6 +32,7 @@ class ConfigFileParsing {
 	private:
 		bool isGeneralFaultyFile( std::string &file_content );
 		void determineConfigurationKeys( std::string &file_content );
+		void addConfigurationKeyToCurrentServerBlock( ConfigurationKey key );
 };
 
 #endif
