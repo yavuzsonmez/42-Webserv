@@ -57,14 +57,25 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 	return false;
 }
 
+/**
+ * @brief Adds a new configuration key to the current server block.
+ * If block is SERVERSTARTSEGMENT, a new server will be created in the vector.
+ * 
+ * @param key ConfigurationKey from determineConfigurationKeys
+ */
+void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKey key )
+{
+
+}
 
 /**
+ * @brief Parses a configuration file into configuration keys and adds them to server blocks.
+ * 
  * Determines the configuration for a entry line by line.
  * Takes file_content and prints out the detected ConfigurationType.
  * It skips empty lines automatically.
  * When iterating, it trims the string from the left side.
  * Still in testing.
- * @TODO: This function should take into account that there can be multiple servers. Currently it is not doing that!
  */
 void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
 	USE_DEBUGGER;
@@ -77,8 +88,9 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 	{
 		debugger.debug("Parsing line number " + std::to_string(lineNumber));
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
-		if (firstNotWhiteSpacePosition == std::string::npos) {
-			debugger.debug("Line is empty");
+		// handle if the line is empty or starts with a bracket
+		if (firstNotWhiteSpacePosition == std::string::npos || line[firstNotWhiteSpacePosition] == '}') {
+			debugger.debug("Line is empty or is a closing bracket line");
 			lineNumber++;
 			continue;
 		}
@@ -86,6 +98,9 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
+		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1]);
+		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
+		addConfigurationKeyToCurrentServerBlock(key);
 		lineNumber++;
 	}
 }
