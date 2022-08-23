@@ -125,6 +125,8 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 		std::getline( ss, substr, ' ' );
 		if (!substr.empty())
 		{
+			if (!is_digits(raw.second))
+				throwInvalidConfigurationFileExceptionWithMessage("Invalid ports!");
 			std::istringstream portToCheck(substr);
 			portToCheck >> val;
 			if (this->validatePort(val))
@@ -153,6 +155,15 @@ bool ConfigurationKey::validatePort(unsigned int port) {
 	if (port <= 0)
 		return false;
 	return true;
+}
+
+/**
+ * @brief Checks if a string only contains digits.
+ * 
+ */
+bool ConfigurationKey::is_digits(const std::string &str)
+{
+	return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
 /**
