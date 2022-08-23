@@ -12,7 +12,7 @@
 # define	KEY_INDEX					"index"
 # define	KEY_SERVER_START_SEGMENT	"server"
 # define	KEY_ROOT					"root"
-# define	KEY_SERVER_NAMES			"server_names"
+# define	KEY_SERVER_NAMES			"server_name"
 # define	KEY_LISTEN					"listen"
 # define	KEY_INVALID					"INVALID"
 # define	KEY_METHODS					"METHODS"
@@ -104,6 +104,7 @@ class ConfigurationKey {
 		bool isListenKeyType(internal_keyvalue raw);
 		bool isServerStartSegment(internal_keyvalue raw);
 		bool isIndexKeyType(internal_keyvalue raw);
+		bool isRootKeyType(internal_keyvalue raw);
 
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);

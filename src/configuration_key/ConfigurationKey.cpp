@@ -84,8 +84,31 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected index key type.");
 		return INDEX;
 	}
+	if (this->isRootKeyType(raw))
+	{
+		debugger.info("Detected root key type.");
+		return ROOT;
+	}
 	return INVALID;
 }
+
+/**
+ * @brief Checks if the key is a root key type. Sets the root value.
+ * 
+ * @param raw 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isRootKeyType(internal_keyvalue raw)
+{
+	if (raw.first == KEY_ROOT && !raw.second.empty())
+	{
+		this->root = raw.second;
+		return true;
+	}
+	return false;
+}
+
 
 /**
  * If the internal_keyvalue is of type INDEX this will return true and set the according values
