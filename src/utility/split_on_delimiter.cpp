@@ -52,16 +52,16 @@ std::vector<std::string> split_on_delimiter(std::string &s, char delimiter)
 	return result;
 }
 
-// testing main and usage example
-int main() {
-	std::string s = "localhost localhost.localdomain test test2";
-	//std::vector<std::string> result = split_on_delimiter(s, ' ');
-	//for (auto item : result) {
-	//	std::cout << item << std::endl;
-	//}
-	std::vector<std::string> result2 = split_once_on_delimiter(s, ' ');
-	for (auto item : result2) {
-		std::cout << item << std::endl;
-	}
-	return 0;
-}
+//// testing main and usage example
+//int main() {
+//	std::string s = "localhost localhost.localdomain test test2";
+//	//std::vector<std::string> result = split_on_delimiter(s, ' ');
+//	//for (auto item : result) {
+//	//	std::cout << item << std::endl;
+//	//}
+//	std::vector<std::string> result2 = split_once_on_delimiter(s, ' ');
+//	for (auto item : result2) {
+//		std::cout << item << std::endl;
+//	}
+//	return 0;
+//}
