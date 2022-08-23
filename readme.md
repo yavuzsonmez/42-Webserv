@@ -1,5 +1,7 @@
 <h1>Webserv is an HTTP/1.1 server written in C++ 98.</h1>
 
+<h2>We decided to work with poll for the Input/Output Multiplexing</h2>
+
 <code style="background-color:#3b3939; color:#ffffff">Prototype </code></br>
 <code style="background-color:#3b3939; color:#98d6c1">How we use the fnct </code></br>
 <p style="color:#2e88f0;">@brief </p>
@@ -13,6 +15,8 @@
 <a target="_blank" href="#bind">bind</a></br>
 <a target="_blank" href="#listen">listen</a></br>
 <a target="_blank" href="#accept">accept</a></br>
+
+<a target="_blank" href="#poll">poll</a></br>
 
 
 ---
@@ -58,6 +62,13 @@
 <small style="color:#3ecf7a;">@param </small><strong>(socklen_t*)&addrlen)</strong> len of the struct.</br>
 <small style="color:#c066e3;">@return </small>On success, return a file descriptor for the accepted socket (a nonnegative integer). On error, -1 is returned, errno is set to indicate the error</br>
 
+---
 
+<code id="poll" style="background-color:#3b3939; color:#ffffff"> int poll(struct pollfd *fds, nfds_t nfds, int timeout);</code> </br>
+<small style="color:#2e88f0;">@brief </small><strong><u>Waits for one of a set of file descriptors to become ready to perform I/O.</u></strong></br>
 
-
+<small style="color:#cf3e3e;">@note </small>Use an array of struct of type pollfd {int fd; short events; short revents; };</br>
+<small style="color:#3ecf7a;">@param </small><strong>*fds</strong> Array of struct pollfd.</br>
+<small style="color:#3ecf7a;">@param </small><strong>nfds</strong> number of items in the fds array.</br>
+<small style="color:#3ecf7a;">@param </small><strong>timeout</strong> len of the struct.</br>
+<small style="color:#c066e3;">@return </small>number of milliseconds that poll() should block waiting for a file descriptor to become ready</br>
