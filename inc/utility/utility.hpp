@@ -8,6 +8,10 @@
 # include <string>
 # include <cctype>
 # include <algorithm>
+# include <iterator>
+# include <stack>
+# include <vector>
+# include <utility>
 
 void strip_from_str(std::string &file_content, const char start, const char end);
 void upper_str(std::string &str);

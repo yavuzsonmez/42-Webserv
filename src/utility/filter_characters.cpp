@@ -1,6 +1,4 @@
-#include <string>
-#include <iterator>
-#include <iostream>
+#include "../../inc/utility/utility.hpp"
 
 bool isx(char c)
 {

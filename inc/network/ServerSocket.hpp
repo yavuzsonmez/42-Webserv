@@ -3,13 +3,8 @@
 
 # include <iostream>
 # include <string>
-# include <stdio.h>
-# include <stdlib.h>
 # include <unistd.h>
-# include <cstring>
 
-# include <sys/select.h>
-# include <poll.h>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <arpa/inet.h>
@@ -26,12 +21,12 @@ class ServerSocket
 	public:
 
 		ServerSocket(unsigned short port, unsigned int address);
-		ServerSocket( const ServerSocket &src );
+		//ServerSocket( const ServerSocket &src );
 		virtual ~ServerSocket();
 
-		const int getFileDescriptor() const;
+		int getFileDescriptor() const;
 
-		void acceptConnection();
+		void processConnections();
 
 		// gets thrown if socket creation is faulty.
 		class SocketCreationError : public std::exception {

@@ -94,4 +94,4 @@ class Request
  */
 std::ostream &			operator<<( std::ostream & o, Request const & i );
 
-#endif /* ********************************************************* REQUEST_H */
+#endif

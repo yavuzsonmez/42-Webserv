@@ -1,4 +1,4 @@
-#include "../../inc/utility.hpp"
+#include "../../inc/utility/utility.hpp"
 
 //return the file name, at the end of the path
 std::string get_file_name(std::string const &path)
