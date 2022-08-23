@@ -76,7 +76,6 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
 		debugger.debug("Trimmed string to to parse" + trimmedString);
-
 		lineNumber++;
 	}
 }
