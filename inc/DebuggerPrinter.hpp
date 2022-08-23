@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Singleton.hpp"
 
+#define USE_DEBUGGER DebuggerPrinter debugger = debugger.getInstance();
+
 /**
  * @brief Loglevel of the enums
  * INFO i

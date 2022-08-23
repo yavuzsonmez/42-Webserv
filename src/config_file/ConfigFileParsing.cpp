@@ -64,7 +64,7 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
  * @TODO: This function should take into account that there can be multiple servers. Currently it is not doing that!
  */
 void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
-	DebuggerPrinter debugger = debugger.getInstance();
+	USE_DEBUGGER;
 	std::istringstream iss(file_content);
 	std::string result;
 	int lineNumber = 0;
@@ -76,5 +76,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
 		debugger.debug("Trimmed string to to parse" + trimmedString);
+
+		lineNumber++;
 	}
 }
