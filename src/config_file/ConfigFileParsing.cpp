@@ -65,15 +65,15 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
  * 
  * @param key ConfigurationKey from determineConfigurationKeys
  */
-void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKey key )
+void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKey &key )
 {
 	USE_DEBUGGER;
-	int static currentServerIndex = 0;
+	int static currentServerIndex = -1;
 
 	// creating a new server
 	if (key.configurationType == SERVERSTARTSEGMENT) {
-		debugger.debug("CREATING NEW SERVER BLOCK ");
 		serverBlocks.push_back(ServerBlock());
+		currentServerIndex++;
 	}
 	else
 	{
@@ -136,8 +136,27 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
 		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1]);
+		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
 		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
 		addConfigurationKeyToCurrentServerBlock(key);
 		lineNumber++;
+	}
+
+	printAllServerBlocks(this->serverBlocks);
+}
+
+/**
+ * @brief DEBUG FUNCTION prints out all configuration keys of all available server blocks
+ * 
+ * @param serverBlocks 
+ */
+void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> serverBlocks)
+{
+	for (int i = 0; i < serverBlocks.size(); i++) {
+		std::cout << "SERVER BLOCK " << i << std::endl;
+		// print every configuration key
+		for (int j = 0; j < serverBlocks[i].configurationKeys.size(); j++) {
+			std::cout << serverBlocks[i].configurationKeys[j].key << " " << serverBlocks[i].configurationKeys[j].value << std::endl;
+		}
 	}
 }
