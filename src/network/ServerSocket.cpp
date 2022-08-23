@@ -1,5 +1,6 @@
 #include "../../inc/network/ServerSocket.hpp"
 #include "../../inc/network/ClientSocket.hpp"
+#include "../../inc/http/Response.hpp"
 
 ServerSocket::ServerSocket(unsigned short port, unsigned int address)
 {
@@ -17,35 +18,42 @@ ServerSocket::ServerSocket(unsigned short port, unsigned int address)
 
 	if (listen(_fd, BACKLOG))
 		throw SocketCreationError();
+
+	processConnections();
 }
 
-const int ServerSocket::getFileDescriptor() const { return _fd; }
+ServerSocket::~ServerSocket(){}
 
-int main(int argc, char const *argv[])
+int ServerSocket::getFileDescriptor() const { return _fd; }
+
+void ServerSocket::processConnections()
 {
 	int forward;
 	struct sockaddr_in clientSocket;
 	socklen_t socketSize = sizeof(struct sockaddr_in);
-	ServerSocket server(4242, INADDR_ANY); // testing
 
-
-	forward = accept(server.getFileDescriptor(), (struct sockaddr *)&clientSocket, &socketSize);
-	// if accept return -1 throw error
-	ClientSocket client(clientSocket);
-
-	char *response = "Hello World!\n"; //exemple of sending something with error checking
-	size_t len, bytes_send;
-	len = strlen(response);
-	bytes_send = 0;
-	// if bytes_send < len we have to handle it and keep send until everything was sent
-	while (bytes_send < len)
+	while (1)
 	{
-		if (bytes_send == -1)
-			// if send return -1, throw error; + perror
-		bytes_send = send(forward, response + bytes_send, len - bytes_send, 0);
+		forward = accept(_fd, (struct sockaddr *)&clientSocket, &socketSize);
+		std::cout << "Request" << std::endl;
+
+		// if accept return -1 throw error
+		ClientSocket client(clientSocket);
+		Response response;
+		std::string httpResponse(response.getResponse());
+
+		int bytes_send;
+		bytes_send = 0;
+		// if bytes_send < len we have to handle it and keep send until everything was sent
+		while (bytes_send < (int)httpResponse.length())
+		{
+			//if (bytes_send == -1)
+				// if send return -1, throw error; + perror
+			bytes_send = send(forward, httpResponse.c_str(), httpResponse.length(), 0);
+			httpResponse.erase(0, bytes_send);
+		}
+
+		close(forward);
+		//if close(server) //throw error; + perror
 	}
-
-	//if close(server) //throw error; + perror
-
-	return 0;
 }
