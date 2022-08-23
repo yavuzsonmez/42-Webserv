@@ -33,6 +33,7 @@ class ConfigFileParsing {
 		bool isGeneralFaultyFile( std::string &file_content );
 		void determineConfigurationKeys( std::string &file_content );
 		void addConfigurationKeyToCurrentServerBlock( ConfigurationKey key );
+		bool shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition);
 };
 
 #endif

@@ -35,7 +35,7 @@ OBJS			=		$(SRCS:.cpp=.o)
 
 DEBUG			=		-g -fsanitize=address
 
-FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98
+FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98 -g
 
 .c.o			:
 						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)

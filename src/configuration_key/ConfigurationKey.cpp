@@ -46,10 +46,22 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
  * be treated as fatal error.
  */
 ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue raw) {
+	USE_DEBUGGER;
+	if (this->isServerStartSegment(raw))
+	{
+		debugger.info("Detected server start segment.");
+		return SERVERSTARTSEGMENT;
+	}
 	if (this->isServerNameKeyType(raw))
+	{
+		debugger.info("Detected server name key type.");
 		return SERVER_NAME;
+	}
 	if (this->isListenKeyType(raw))
+	{
+		debugger.info("Detected listen key type.");
 		return LISTEN;
+	}
 	return INVALID;
 }
 

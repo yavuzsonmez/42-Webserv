@@ -10,10 +10,11 @@
 
 # define	KEY_LOCATION				"location"
 # define	KEY_INDEX					"index"
-# define	KEY_SERVER_START_SEGMENT	"server {"
+# define	KEY_SERVER_START_SEGMENT	"server"
 # define	KEY_ROOT					"root"
 # define	KEY_SERVER_NAMES			"server_names"
 # define	KEY_LISTEN					"listen"
+# define	KEY_INVALID					"INVALID"
 
 /**
  * Defines the type of information a configuration key holds.
