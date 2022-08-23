@@ -114,7 +114,7 @@ bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int 
  * Takes file_content and prints out the detected ConfigurationType.
  * It skips empty lines automatically.
  * When iterating, it trims the string from the left side.
- * Still in testing.
+ * TODO: If location is found, it will skip all the contents of location and parse location separately.
  */
 void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
 	USE_DEBUGGER;
