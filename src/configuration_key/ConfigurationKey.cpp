@@ -79,7 +79,36 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected listen key type.");
 		return LISTEN;
 	}
+	if (this->isIndexKeyType(raw))
+	{
+		debugger.info("Detected index key type.");
+		return INDEX;
+	}
 	return INVALID;
+}
+
+/**
+ * If the internal_keyvalue is of type INDEX this will return true and set the according values
+ * in the class.
+ * 
+ * Then it adds indexes, seperated by spaces.
+ */
+bool ConfigurationKey::isIndexKeyType(internal_keyvalue raw)
+{
+	if (raw.first != KEY_INDEX)
+		return false;
+	
+	std::stringstream ss(raw.second);
+	while (ss.good())
+	{
+		std::string substr;
+		std::getline( ss, substr, ' ' );
+		if (!substr.empty())
+			this->indexes.push_back( substr );
+		else
+			return false;
+	}
+	return true;
 }
 
 /**
@@ -119,6 +148,7 @@ bool ConfigurationKey::isServerStartSegment(internal_keyvalue raw) {
 		return true;
 	return false;
 }
+
 
 /**
  * If the internal_keyvalue is of type LISTE this will return true and set the according values

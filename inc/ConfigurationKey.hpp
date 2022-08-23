@@ -103,6 +103,7 @@ class ConfigurationKey {
 		bool isServerNameKeyType(internal_keyvalue raw);
 		bool isListenKeyType(internal_keyvalue raw);
 		bool isServerStartSegment(internal_keyvalue raw);
+		bool isIndexKeyType(internal_keyvalue raw);
 
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
