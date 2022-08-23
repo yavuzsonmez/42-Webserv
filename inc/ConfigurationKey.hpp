@@ -103,6 +103,7 @@ class ConfigurationKey {
 		bool isServerStartSegment(internal_keyvalue raw);
 
 		bool validatePort(unsigned int port);
+		bool is_digits(const std::string &str);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
 };
 
