@@ -1,4 +1,8 @@
+#ifndef CONFIGFILEPARSING
+# define CONFIGFILEPARSING
+
 #include <string>
+#include "ServerBlock.hpp"
 
 /**
  * @brief Takes a config file and parses it into a config file configuration.
@@ -26,3 +30,5 @@ class ConfigFileParsing {
 		bool isGeneralFaultyFile( std::string &file_content );
 		void determineConfigurationKeys( std::string &file_content );
 };
+
+#endif
