@@ -5,7 +5,7 @@
 //Future Response class, just for testing the server right now
 Response::Response()
 {
-	std::string body = get_file_content("../../sample/404.html");
+	std::string body = get_file_content("./sample/404.html");
 
 	std::stringstream ss;
 	ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: "
@@ -14,6 +14,8 @@ Response::Response()
 	<< body;
 
 	_response = ss.str();
+
+	std::cout << _response << std::endl;
 }
 
 Response::~Response() {}

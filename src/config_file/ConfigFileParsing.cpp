@@ -1,10 +1,9 @@
-#include "../../inc/ConfigFileParsing.hpp"
-#include "../../inc/utility.hpp"
-#include "../../inc/ConfigurationKey.hpp"
+#include "../../inc/config_file/ConfigFileParsing.hpp"
+#include "../../inc/configuration_key/ConfigurationKey.hpp"
 
 ConfigFileParsing::ConfigFileParsing()
 {
-	
+
 }
 
 ConfigFileParsing::ConfigFileParsing( const ConfigFileParsing &src )
@@ -24,8 +23,8 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
 /**
  * @brief Parses the given content from the content file
  * @note Removes all the comments from a configuration file. (a comment starts with #)
- * @param file_content 
- * @return true 
+ * @param file_content
+ * @return true
  * @return false or an throw exception if the configuration file is faulty.
  */
 bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
@@ -40,8 +39,8 @@ bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
 /**
  * @brief Checks if the file is empty, does not have valid parantheses/brackets, contains invalid symbols or
  * does not have any parantheses (body) in it.
- * 
- * @param file_content 
+ *
+ * @param file_content
  * @return true if file is faulty
  */
 bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {

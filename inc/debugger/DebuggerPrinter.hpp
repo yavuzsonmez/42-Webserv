@@ -1,8 +1,7 @@
-#ifndef DEBUGGERPRINTER
-# define DEBUGGERPRINTER
+#ifndef DEBUGGER_PRINTER
+# define DEBUGGER_PRINTER
 
-#include <string>
-#include <iostream>
+#include "../utility/utility.hpp"
 #include "Singleton.hpp"
 
 /**
@@ -10,8 +9,8 @@
  * INFO i
  * WARNING W
  */
-enum LogLevel { 
-	INFO = 'I', 
+enum LogLevel {
+	INFO = 'I',
 	WARNING = 'W',
 	DEBUG = 'D',
 	ERROR = 'E'
@@ -22,8 +21,8 @@ enum LogLevel {
  * 			Will only print out debug stuff during debug mode.
  * 			SINGLETON CLASS! DO NOT INITIALIZE. Use it like this:
  * 			DebuggerPrinter debugger = debugger.getInstance();
- * 			
- * 
+ *
+ *
  * @note	LEVEL INFO - INFO message
  * 			LEVEL WARNING - warning message
  * 			LEVEL DEBUG - DEBUG message
