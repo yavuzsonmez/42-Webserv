@@ -1,4 +1,5 @@
-#include "../../inc/DebuggerPrinter.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
+#include <string>
 
 DebuggerPrinter::DebuggerPrinter()
 {
@@ -20,8 +21,8 @@ DebuggerPrinter & DebuggerPrinter::operator = (const DebuggerPrinter &src) {
 
 /**
  * @brief Prints message with color code and level prefix
- * 
- * @param message 
+ *
+ * @param message
  */
 void DebuggerPrinter::printString( const std::string &message, LogLevel level ) {
 	std::string prefix = "";
@@ -45,12 +46,12 @@ void DebuggerPrinter::printString( const std::string &message, LogLevel level ) 
 		std::cout << prefix << ":" << message << std::endl;
 	else
 		std::cerr << prefix << ":" << message << std::endl;
-}
+};
 
 /**
  * @brief Prints out a info message
- * 
- * @param message 
+ *
+ * @param message
  */
 void DebuggerPrinter::info( const std::string &message ) {
 	printString(message, INFO);
@@ -58,8 +59,8 @@ void DebuggerPrinter::info( const std::string &message ) {
 
 /**
  * @brief Prints out an warning message
- * 
- * @param message 
+ *
+ * @param message
  */
 void DebuggerPrinter::warning( const std::string &message ) {
 	printString(message, WARNING);
@@ -67,8 +68,8 @@ void DebuggerPrinter::warning( const std::string &message ) {
 
 /**
  * @brief Prints out an debug message
- * 
- * @param message 
+ *
+ * @param message
  */
 void DebuggerPrinter::debug( const std::string &message ) {
 	printString(message, DEBUG);
@@ -76,8 +77,8 @@ void DebuggerPrinter::debug( const std::string &message ) {
 
 /**
  * @brief Prints out an error message
- * 
- * @param message 
+ *
+ * @param message
  */
 void DebuggerPrinter::error( const std::string &message ) {
 	printString(message, ERROR);

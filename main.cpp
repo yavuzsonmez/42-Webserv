@@ -1,8 +1,12 @@
-#include <string>
-#include "inc/utility.hpp"
-#include "inc/ConfigFileParsing.hpp"
-#include "inc/DebuggerPrinter.hpp"
-#include "inc/Request.hpp"
+
+#include "inc/config_file/ConfigFileParsing.hpp"
+#include "inc/configuration_key/ConfigurationKey.hpp"
+#include "inc/configuration_key/ServerBlock.hpp"
+#include "inc/debugger/DebuggerPrinter.hpp"
+#include "inc/http/Response.hpp"
+#include "inc/network/ServerSocket.hpp"
+#include "inc/utility/utility.hpp"
+
 
 /**
  * @brief Checks the argument count of the program and the filename of the configuration
@@ -42,5 +46,24 @@ int main(int argc, char **argv)
 	}
 
 	delete configurationFileParsing;
+
+
+	/* START TEST REQUEST */
+/* 	std::string get = get_file_content("./sample/http_request_get");
+	std::string post = get_file_content("./sample/http_request_post");
+	std::string del = get_file_content("./sample/http_request_delete");
+	std::string wrong = get_file_content("./sample/http_request_wrong");
+	//Request httpRequestPost(post);
+	Request httpRequestGet(get);
+	//Request httpRequestDelete(del);
+	//Request httpRequestDelete(wrong);
+	std::cout << httpRequestGet << std::endl; */
+	/* END */
+
+
+	/* START TEST RESPONSE */
+	ServerSocket server(4242, INADDR_ANY);
+	/* END */
+
 	return (0);
 }

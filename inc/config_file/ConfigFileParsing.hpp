@@ -2,12 +2,12 @@
 # define CONFIGFILEPARSING
 
 #include <string>
-#include "ServerBlock.hpp"
+#include "../configuration_key/ServerBlock.hpp"
 
 /**
  * @brief Takes a config file and parses it into a config file configuration.
- * Sets the appropriate values in the config class. 
- * 
+ * Sets the appropriate values in the config class.
+ *
  * @note Before parsing with bool parseConfigFile, the ConfigFileParsing
  * will remove ALL comments (a comment starts with #) from the file.
  */

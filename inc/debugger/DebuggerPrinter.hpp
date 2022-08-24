@@ -1,9 +1,8 @@
-#ifndef DEBUGGERPRINTER
-# define DEBUGGERPRINTER
+#ifndef DEBUGGER_PRINTER
+# define DEBUGGER_PRINTER
 
-#include <string>
-#include <iostream>
 #include "Singleton.hpp"
+#include "../utility/utility.hpp"
 
 #define USE_DEBUGGER DebuggerPrinter debugger = debugger.getInstance();
 
@@ -12,8 +11,8 @@
  * INFO i
  * WARNING W
  */
-enum LogLevel { 
-	INFO = 'I', 
+enum LogLevel {
+	INFO = 'I',
 	WARNING = 'W',
 	DEBUG = 'D',
 	ERROR = 'E'

@@ -1,13 +1,9 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
-# include <iostream>
-# include <string>
-# include <vector>
-# include <sstream>
-# include <utility>
-# include "colors.hpp"
-# include "status.hpp"
+#include "../utility/utility.hpp"
+# include "../utility/colors.hpp"
+# include "../http/status.hpp"
 
 /**
  * @note Because we have to support multiple method we need enum
@@ -94,4 +90,4 @@ class Request
  */
 std::ostream &			operator<<( std::ostream & o, Request const & i );
 
-#endif /* ********************************************************* REQUEST_H */
+#endif
