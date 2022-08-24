@@ -1,18 +1,17 @@
-#include "../../inc/DebuggerPrinter.hpp"
-#include "../../inc/ServerBlock.hpp"
+#include "../../inc/configuration_key/ServerBlock.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 
 /**
  * Creates Server Block.
  */
 ServerBlock::ServerBlock()
 {
-	this->debugger = debugger.getInstance();
-	this->debugger.debug("Created ServerBlock");
+	USE_DEBUGGER;
+	debugger.debug("Created ServerBlock");
 }
 
 ServerBlock::ServerBlock( const ServerBlock &src )
 {
-	this->debugger = debugger.getInstance();
 	this->configurationKeys = src.configurationKeys;
 
 }
@@ -40,7 +39,7 @@ void ServerBlock::addConfigurationKey(ConfigurationKey &configurationKey) {
 
 /**
  * Returns all ports in the correct order
- * 
+ *
  * - Iterates over all vectors
  * - adds the member of the vector ports of the configuration key
  * 	 to the result ports of getAllServerPorts
@@ -59,7 +58,7 @@ std::vector<unsigned int> ServerBlock::getAllServerPorts() {
 
 /**
  * Returns all indexes in the correct order
- * 
+ *
  * - Iterates over all vectors
  * - adds the member of the vector indexes of the configuration key
  * 	 to the result indexes of getAllIndexes
@@ -78,7 +77,7 @@ std::vector<std::string> ServerBlock::getAllIndexes() {
 
 /**
  * Returns all server names in the correct order
- * 
+ *
  * - Iterates over all vectors
  * - adds the member of the vector server_names of the configuration key
  * 	 to the result server_names of getAllServerNames

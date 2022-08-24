@@ -1,8 +1,6 @@
-#include "../../inc/ConfigurationKey.hpp"
-#include "../../inc/DebuggerPrinter.hpp"
-#include <vector>
-#include <string>
-#include <sstream>
+#include "../../inc/configuration_key/ConfigurationKey.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
+
 
 /**
  * Default constructor
@@ -58,7 +56,7 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
 
 /**
  * @param Returns the correct configuration key based on the key and value.
- * 
+ *
  * If the key is invalid or not yet implemented, it returns INVALID. This should
  * be treated as fatal error.
  */
@@ -181,7 +179,6 @@ bool ConfigurationKey::isServerStartSegment(internal_keyvalue raw) {
  * Then it adds server ports, seperated by spaces.
  */
 bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
-	
 	if (raw.first != KEY_LISTEN)
 		return false;
 	
@@ -213,7 +210,7 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
  * Currently checking:
  * - Negative number
  * - Max Port
- * 
+ *
  * @returns bool - true or false
  * @TODO: Check if anything else has to be checked
  */
@@ -237,7 +234,7 @@ bool ConfigurationKey::is_digits(const std::string &str)
 /**
  * Throws an InvalidConfigurationFile error with a message in front
  * printed by the debugger.
- * 
+ *
  * @param message to print
  */
 void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::string message) {

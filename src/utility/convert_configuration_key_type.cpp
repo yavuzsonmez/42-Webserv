@@ -1,5 +1,5 @@
-#include "../../inc/ConfigurationKey.hpp"
-#include "../../inc/utility.hpp"
+#include "../../inc/configuration_key/ConfigurationKey.hpp"
+#include "../../inc/utility/utility.hpp"
 
 /**
  * @brief Converts the enum in a human readable string

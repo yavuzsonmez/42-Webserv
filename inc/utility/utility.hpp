@@ -1,4 +1,3 @@
-
 #ifndef UTILITY_HPP
 # define UTILITY_HPP
 
@@ -8,7 +7,16 @@
 # include <string>
 # include <cctype>
 # include <algorithm>
-# include "ConfigFileParsing.hpp"
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <fcntl.h>
+# include <iterator>
+# include <stack>
+# include <vector>
+# include <utility>
+# include <unistd.h>
+# include "../config_file/ConfigFileParsing.hpp"
 
 void strip_from_str(std::string &file_content, const char start, const char end);
 void upper_str(std::string &str);

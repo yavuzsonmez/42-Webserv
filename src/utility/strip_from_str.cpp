@@ -1,12 +1,10 @@
-#include <string>
-#include <iostream>
-#include <sstream>
+#include "../../inc/utility/utility.hpp"
 
 /**
  * Iterates through every character in the string.
  * When it finds the matching comment character (at beginning or within the string)
  * it replaces everything with the newline character.
- * 
+ *
  * Recommended usage:
  * strip_from_str(config_file, '#', '\n');
  * - Will remove all comments from a file, no matter if they are after a keyword/parameter or not.
