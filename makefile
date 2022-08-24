@@ -46,6 +46,8 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/get_file_name.cpp \
 						./src/utility/get_server_block.cpp \
 						./src/utility/validate_parantheses.cpp \
+						./src/utility/split_on_delimiter.cpp \
+						./src/utility/convert_configuration_key_type.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
@@ -53,7 +55,7 @@ OBJS			=		$(SRCS:.cpp=.o)
 
 DEBUG			=		-g -fsanitize=address
 
-FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98
+FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98 -g
 
 .c.o			:
 						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)

@@ -1,7 +1,8 @@
-#ifndef CONFIG_FILE_PARSING_HPP
-#define CONFIG_FILE_PARSING_HPP
+#ifndef CONFIGFILEPARSING
+# define CONFIGFILEPARSING
 
-#include "../utility/utility.hpp"
+#include <string>
+#include "../configuration_key/ServerBlock.hpp"
 
 /**
  * @brief Takes a config file and parses it into a config file configuration.
@@ -18,6 +19,9 @@ class ConfigFileParsing {
 		ConfigFileParsing & operator = (const ConfigFileParsing &src);
 		bool parseConfigFile( std::string &file_content );
 
+		// The server block vector which will provide the servers and their configurations
+		std::vector<ServerBlock> serverBlocks;
+
 		// gets thrown if the configuration file is faulty.
 		class InvalidConfigurationFile : public std::exception {
 			public:
@@ -28,6 +32,9 @@ class ConfigFileParsing {
 	private:
 		bool isGeneralFaultyFile( std::string &file_content );
 		void determineConfigurationKeys( std::string &file_content );
+		void addConfigurationKeyToCurrentServerBlock( ConfigurationKey &key );
+		bool shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition);
+		void printAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
 };
 
 #endif

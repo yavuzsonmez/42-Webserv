@@ -2,11 +2,6 @@
 # define SERVER_BLOCK
 
 #include "ConfigurationKey.hpp"
-#include "../debugger/DebuggerPrinter.hpp"
-#include "../utility/utility.hpp"
-
-class ConfigurationKey;
-class DebuggerPrinter;
 
 /**
  * SERVERBLOCK
@@ -29,9 +24,7 @@ class ServerBlock
         std::vector<std::string> getAllServerNames();
         std::vector<unsigned int> getAllServerPorts();
         std::vector<std::string> getAllIndexes();
-        void addConfigurationKey(ConfigurationKey configurationKey);
-    private:
-        DebuggerPrinter debugger;
+        void addConfigurationKey(ConfigurationKey &configurationKey);
  };
 
  #endif
