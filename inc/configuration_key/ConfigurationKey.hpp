@@ -1,5 +1,7 @@
-#include <string>
-#include <vector>
+#ifndef CONFIGURATION_KEY
+# define CONFIGURATION_KEY
+
+#include "../utility/utility.hpp"
 
 /**
  * All keys which can be used in the configuration file are defined here.
@@ -15,12 +17,12 @@
  * Defines the type of information a configuration key holds.
  * Lists all available configuration types.
  * Can be extended easily.
- * 
+ *
  * SERVERBLOCKSTART indicates that a new server block starts. This value will not actually be used in ConfigurationKey and
  * is just an indicator for the parser.
  */
-enum ConfigurationKeyType { 
-	INDEX, 
+enum ConfigurationKeyType {
+	INDEX,
 	SERVER_NAME,
     LISTEN,
     LOCATION,
@@ -37,26 +39,26 @@ typedef std::pair <std::string, std::string>	internal_keyvalue;
 
 /**
  * Usage: ConfigurationKey(key, value);
- * 
+ *
  * @note The configuration key represents a single entry (or a body containing values) in the configuration file.
  *       It is to be used in an array, and parses the given string-value automatically
  *       to the correct type in the constructor and sets it own configurationType.
  *       It can be nested, but only certain nestings are valid. (root in location block as example)
- * 
+ *
  * Currently, it supports following types:
  *  - server_name
  *  - port
- * 
+ *
  * To use it, split the key/value from the config_file from the first space and pass the first value as key and the rest as value.
  * Then it parses the value and by combining key and value it decides which configurationType it is.
  * You can find the available configuration types in the ConfigurationKey.hpp in the enums.
- * 
+ *
  * If there is no type which fits the value/key, it throws an exception and the program stops.
- * 
+ *
  * @note Internal handling in ConfigurationKey class is done with internal_keyvalue Pair typedef for readabiliy.
- * 
+ *
  * Later the ConfigurationKey will be stored as a ServerBlock, which itself is stored in a vector of server blocks.
- * 
+ *
  */
 class ConfigurationKey {
     public:
@@ -98,3 +100,5 @@ class ConfigurationKey {
         bool validatePort(unsigned int port);
         void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
 };
+
+#endif

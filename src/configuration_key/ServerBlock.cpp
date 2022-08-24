@@ -1,5 +1,5 @@
-#include "../../inc/DebuggerPrinter.hpp"
-#include "../../inc/ServerBlock.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
+#include "../../inc/configuration_key/ServerBlock.hpp"
 
 /**
  * Creates Server Block.
@@ -27,9 +27,9 @@ ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
 /**
  * @brief Add another configuration key to this server block.
  * Server block configuration keys are sorted and their order cannot be changed.
- * 
+ *
  * @param the configuraton key to be added
- * 
+ *
  * @returns nothing
  */
 void ServerBlock::addConfigurationKey(ConfigurationKey configurationKey) {
@@ -38,7 +38,7 @@ void ServerBlock::addConfigurationKey(ConfigurationKey configurationKey) {
 
 /**
  * Returns all ports in the correct order
- * 
+ *
  * - Iterates over all vectors
  * - adds the member of the vector ports of the configuration key
  * 	 to the result ports of getAllServerPorts
@@ -57,7 +57,7 @@ std::vector<unsigned int> ServerBlock::getAllServerPorts() {
 
 /**
  * Returns all indexes in the correct order
- * 
+ *
  * - Iterates over all vectors
  * - adds the member of the vector indexes of the configuration key
  * 	 to the result indexes of getAllIndexes
@@ -76,7 +76,7 @@ std::vector<std::string> ServerBlock::getAllIndexes() {
 
 /**
  * Returns all server names in the correct order
- * 
+ *
  * - Iterates over all vectors
  * - adds the member of the vector server_names of the configuration key
  * 	 to the result server_names of getAllServerNames

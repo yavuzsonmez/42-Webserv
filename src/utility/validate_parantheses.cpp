@@ -1,6 +1,4 @@
-#include <string>
-#include <stack>
-#include <iostream>
+#include "../../inc/utility/utility.hpp"
 
 bool	validate_parantheses(std::string parantheses)
 {

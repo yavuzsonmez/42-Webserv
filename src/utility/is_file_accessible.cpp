@@ -1,4 +1,4 @@
-#include "../../inc/utility.hpp"
+#include "../../inc/utility/utility.hpp"
 
 //check if file exists and permission
 bool is_file_accessible(std::string const &path)
