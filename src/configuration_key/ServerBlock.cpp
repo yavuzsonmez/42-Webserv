@@ -1,23 +1,24 @@
-#include "../../inc/debugger/DebuggerPrinter.hpp"
 #include "../../inc/configuration_key/ServerBlock.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 
 /**
  * Creates Server Block.
  */
 ServerBlock::ServerBlock()
 {
-	this->debugger = debugger.getInstance();
-	this->debugger.debug("Created ServerBlock");
+	USE_DEBUGGER;
+	debugger.debug("Created ServerBlock");
 }
 
 ServerBlock::ServerBlock( const ServerBlock &src )
 {
+	this->configurationKeys = src.configurationKeys;
 
 }
 
 ServerBlock::~ServerBlock()
 {
-
+	
 }
 
 ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
@@ -27,12 +28,12 @@ ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
 /**
  * @brief Add another configuration key to this server block.
  * Server block configuration keys are sorted and their order cannot be changed.
- *
- * @param the configuraton key to be added
- *
+ * 
+ * @param configurationKey configuraton key to be added
+ * 
  * @returns nothing
  */
-void ServerBlock::addConfigurationKey(ConfigurationKey configurationKey) {
+void ServerBlock::addConfigurationKey(ConfigurationKey &configurationKey) {
 	this->configurationKeys.push_back(configurationKey);
 }
 

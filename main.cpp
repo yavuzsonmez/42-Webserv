@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	DebuggerPrinter debugger = debugger.getInstance();
  	if (!check_arguments_and_filename(argc, argv)) return (1);
 
-	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
+	ConfigFileParsing static *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	file_content = get_file_content(argv[1]);
 

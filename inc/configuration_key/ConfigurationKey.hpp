@@ -1,34 +1,39 @@
-#ifndef CONFIGURATION_KEY
-# define CONFIGURATION_KEY
+#ifndef CONFIGURATIONKEY
+# define CONFIGURATIONKEY
 
-#include "../utility/utility.hpp"
+#include <string>
+#include <vector>
 
 /**
  * All keys which can be used in the configuration file are defined here.
  */
 
-# define	KEY_LOCATION	        "location"
-# define	KEY_INDEX	            "index"
-# define	KEY_ROOT	            "root"
-# define	KEY_SERVER_NAMES	    "server_names"
-# define	KEY_LISTEN	            "listen"
+# define	KEY_LOCATION				"location"
+# define	KEY_INDEX					"index"
+# define	KEY_SERVER_START_SEGMENT	"server"
+# define	KEY_ROOT					"root"
+# define	KEY_SERVER_NAMES			"server_name"
+# define	KEY_LISTEN					"listen"
+# define	KEY_INVALID					"INVALID"
+# define	KEY_METHODS					"METHODS"
 
 /**
  * Defines the type of information a configuration key holds.
  * Lists all available configuration types.
  * Can be extended easily.
- *
- * SERVERBLOCKSTART indicates that a new server block starts. This value will not actually be used in ConfigurationKey and
+ * 
+ * SERVERSTARTSEGMENT indicates that a new server block starts. This value will not actually be used in ConfigurationKey and
  * is just an indicator for the parser.
  */
 enum ConfigurationKeyType {
 	INDEX,
 	SERVER_NAME,
-    LISTEN,
-    LOCATION,
-    ROOT,
-    INVALID,
-    SERVERBLOCKSTART
+	LISTEN,
+	LOCATION,
+	ROOT,
+	INVALID,
+	SERVERSTARTSEGMENT,
+	METHODS
 };
 
 /**
@@ -61,44 +66,49 @@ typedef std::pair <std::string, std::string>	internal_keyvalue;
  *
  */
 class ConfigurationKey {
-    public:
-        // gets thrown if the configuration key is faulty.
+	public:
+		// gets thrown if the configuration key is faulty.
 		class InvalidConfigurationFile : public std::exception {
 			public:
 				virtual const char* what() const throw() {
 					return "configuration file is faulty";
 				}
 		};
-        ConfigurationKey();
+		ConfigurationKey();
 		ConfigurationKey( const ConfigurationKey &src );
 		~ConfigurationKey();
 		ConfigurationKey & operator = (const ConfigurationKey &src);
 
-        // this is the initializer taking the key and the raw value from the configuration file
-        ConfigurationKey(std::string key, std::string value);
+		// this is the initializer taking the key and the raw value from the configuration file
+		ConfigurationKey(std::string key, std::string value);
 
-        // General Attributes
+		// General Attributes
 
-        std::string key;
-        std::string value;
+		std::string key;
+		std::string value;
 
-        // Configuration type
-        ConfigurationKeyType configurationType;
+		// Configuration type
+		ConfigurationKeyType configurationType;
 
-        // Attributes of the configuration types
-        std::vector <std::string> indexes; // indexes, if type is INDEX. sorted by relevance and position within the key.
-        std::vector <std::string> server_names; // server_names, if type is SERVER_NAMES. sorted by relevance and position within the key.
-        std::string root; // returns the path of the root
-        std::string location; // returns the locationpath of the location
-        std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
-        std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
-    private:
-        ConfigurationKeyType detectConfigurationType(internal_keyvalue raw);
-        bool isServerNameKeyType(internal_keyvalue raw);
-        bool isListenKeyType(internal_keyvalue raw);
+		// Attributes of the configuration types
+		std::vector <std::string> indexes; // indexes, if type is INDEX. sorted by relevance and position within the key.
+		std::vector <std::string> server_names; // server_names, if type is SERVER_NAMES. sorted by relevance and position within the key.
+		std::string root; // returns the path of the root
+		std::string location; // returns the locationpath of the location
+		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
+		std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
+	private:
+		// Those are the internal functions which are used to parse the value to the correct type.
+		ConfigurationKeyType detectConfigurationType(internal_keyvalue raw);
+		bool isServerNameKeyType(internal_keyvalue raw);
+		bool isListenKeyType(internal_keyvalue raw);
+		bool isServerStartSegment(internal_keyvalue raw);
+		bool isIndexKeyType(internal_keyvalue raw);
+		bool isRootKeyType(internal_keyvalue raw);
 
-        bool validatePort(unsigned int port);
-        void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
+		bool validatePort(unsigned int port);
+		bool is_digits(const std::string &str);
+		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
 };
 
 #endif

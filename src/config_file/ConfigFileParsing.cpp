@@ -1,5 +1,8 @@
 #include "../../inc/config_file/ConfigFileParsing.hpp"
+#include "../../inc/utility/utility.hpp"
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
+#include "../../inc/utility/colors.hpp"
 
 ConfigFileParsing::ConfigFileParsing()
 {
@@ -55,19 +58,105 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 }
 
 /**
+ * @brief Adds a new configuration key to the current server block.
+ * If block is SERVERSTARTSEGMENT, a new server will be created in the vector.
+ * All other keys will be added. If a keys is invalid, the program
+ * will stop exection immediately.
+ * 
+ * @param key ConfigurationKey from determineConfigurationKeys
+ */
+void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKey &key )
+{
+	USE_DEBUGGER;
+	int static currentServerIndex = -1;
+
+	// creating a new server
+	if (key.configurationType == SERVERSTARTSEGMENT) {
+		currentServerIndex++;
+		serverBlocks.push_back(ServerBlock());
+	}
+	else
+	{
+		debugger.debug("Adding key to server block " + std::to_string(currentServerIndex));
+		if (serverBlocks.size() == 0) {
+			debugger.error("No server block found or key is out of scope.");
+			throw InvalidConfigurationFile();
+		}
+		serverBlocks[currentServerIndex].addConfigurationKey(key);
+	}
+}
+
+/**
+ * @brief Determines if the line in the configuration file should be skipped or not
+ * - As to be skipped qualifies any line starting with a closing curly bracket: }
+ * or a line with only empty spaces
+ * @return true 
+ * @return false 
+ */
+bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition)
+{
+	USE_DEBUGGER;
+	if (firstNotWhiteSpacePosition == std::string::npos) {
+		debugger.debug("SKIPPING: Line is empty.");
+		return true;
+	}
+	if (line[firstNotWhiteSpacePosition] == '}') {
+		debugger.debug("SKIPPING: Line is a closing curly bracket.");
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Parses a configuration file into configuration keys and adds them to server blocks.
+ * 
  * Determines the configuration for a entry line by line.
  * Takes file_content and prints out the detected ConfigurationType.
+ * It skips empty lines automatically.
  * When iterating, it trims the string from the left side.
- * Still in testing.
- * @TODO: This function should take into account that there can be multiple servers. Currently it is not doing that!
+ * TODO: If location is found, it will skip all the contents of location and parse location separately.
  */
 void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
+	USE_DEBUGGER;
 	std::istringstream iss(file_content);
 	std::string result;
+	int lineNumber = 0;
 
+	debugger.debug("Starting to parse configuration file");
 	for (std::string line; std::getline(iss, line); )
 	{
+		debugger.debug("Parsing line number " + std::to_string(lineNumber));
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
+		if (shouldSkipLineInConfigurationFile(line, firstNotWhiteSpacePosition)) {
+			lineNumber++;
+			continue;
+		}
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
+		// now splitting string up
+		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
+		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
+		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1]);
+		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
+		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
+		addConfigurationKeyToCurrentServerBlock(key);
+		lineNumber++;
+	}
+	printAllServerBlocks(this->serverBlocks);
+}
+
+/**
+ * @brief DEBUG FUNCTION prints out all configuration keys of all available server blocks
+ * 
+ * @param serverBlocks 
+ */
+void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlocks)
+{
+	for (int i = 0; i < serverBlocks.size(); i++) {
+		std::cout << "SERVER BLOCK " << i << std::endl;
+		// print every configuration key
+		std::cout << serverBlocks[i].configurationKeys.size() << " CONFIGURATION KEYS" << std::endl;
+		for (int j = 0; j < serverBlocks[i].configurationKeys.size(); j++) {
+			std::cout << convert_configuration_key_type(serverBlocks[i].configurationKeys[j].configurationType) << " " << serverBlocks[i].configurationKeys[j].key << " " << serverBlocks[i].configurationKeys[j].value << std::endl;
+		}
 	}
 }

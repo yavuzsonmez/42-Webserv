@@ -33,8 +33,6 @@ class ServerSocket
 
 		int _fd;
 		struct sockaddr_in	_socket;
-
-
 };
 
 #endif

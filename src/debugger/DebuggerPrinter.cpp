@@ -1,4 +1,5 @@
 #include "../../inc/debugger/DebuggerPrinter.hpp"
+#include <string>
 
 DebuggerPrinter::DebuggerPrinter()
 {
