@@ -1,13 +1,7 @@
 #ifndef CLIENT_SOCKET_HPP
 # define CLIENT_SOCKET_HPP
 
-# include <iostream>
-# include <string>
-
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <arpa/inet.h>
-# include <fcntl.h>
+#include "../utility/utility.hpp"
 
 class ClientSocket
 {

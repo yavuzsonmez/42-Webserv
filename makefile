@@ -7,10 +7,22 @@ Y				=		\033[33;1m					# Yellow
 
 NAME			=		webserv
 
-HDRS			=		./inc/utility.hpp \
-						./inc/Request.hpp \
+HDRS			=		./inc/config_file/ConfigFileParsing.hpp \
+						./inc/configuration_key/ConfigurationKey.hpp \
+						./inc/configuration_key/ServerBlock.hpp \
+						./inc/debugger/Singleton.hpp \
+						./inc/debugger/DebuggerPrinter.hpp \
+						./inc/http/headers.hpp \
+						./inc/http/Request.hpp \
+						./inc/http/Response.hpp \
+						./inc/http/status.hpp \
+						./inc/network/ClientSocket.hpp \
+						./inc/network/Multiplexer.hpp \
+						./inc/network/ServerSocket.hpp \
+						./inc/utility/colors.hpp \
+						./inc/utility/utility.hpp \
 
-PARSING			=		./src/parsing/Request.cpp \
+ENTRY			=		./main.cpp
 
 DEBUGGER		=		./src/debugger/DebuggerPrinter.cpp \
 
@@ -18,17 +30,24 @@ CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
 						./src/configuration_key/ConfigurationKey.cpp \
 						./src/configuration_key/ServerBlock.cpp \
 
+HTTP			=		./src/http/Request.cpp \
+						./src/http/Response.cpp \
+
+NETWORK			=		./src/network/ClientSocket.cpp \
+						./src/network/Multiplexer.cpp \
+						./src/network/ServerSocket.cpp \
+
 UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/is_file_accessible.cpp \
 						./src/utility/lower_upper_str.cpp \
 						./src/utility/check_config_file.cpp \
+						./src/utility/filter_characters.cpp \
 						./src/utility/strip_from_str.cpp \
 						./src/utility/get_file_name.cpp \
+						./src/utility/get_server_block.cpp \
 						./src/utility/validate_parantheses.cpp \
 
-ENTRY			=		./main.cpp
-
-SRCS			=		$(UTILS) $(PARSING) $(ENTRY) $(DEBUGGER) $(CONFIG_FILE)
+SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
 OBJS			=		$(SRCS:.cpp=.o)
 
@@ -54,19 +73,6 @@ debug				:	$(OBJS) $(HDRS) | silence
 						@echo "$(G)$(NAME) has been created$(Reset)"
 						$(NAME) > debug.log
 						@echo "$(B)Debug logged in 'debug.log'$(Reset)"
-
-test_util			:
-						@c++ src/utility/get_file_content.cpp -o get_file_content.out
-						@c++ src/utility/is_file_accessible.cpp -o  is_file_accessible.out
-						@c++ src/utility/lower_upper_str.cpp -o lower_upper_str.out
-						@c++ src/utility/check_config_file.cpp -o check_config_file.out
-						@c++ src/utility/strip_from_str.cpp -o strip_comment_from_file.out
-						@c++ src/utility/get_file_name.cpp -o get_file_name.out
-						@echo "$(P)Unit test for utilities functions built$(Reset)"
-
-rm_util				:
-						@rm *.out
-						@echo "$(R)Removed utilities unit test binaries$(Reset)"
 
 silence:
 						@:

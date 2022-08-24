@@ -1,7 +1,7 @@
 #ifndef MULTIPLEXER_HPP
 # define MULTIPLEXER_HPP
 
-#include <vector>
+#include "../utility/utility.hpp"
 
 class Multiplexer
 {

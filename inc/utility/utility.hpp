@@ -12,6 +12,12 @@
 # include <stack>
 # include <vector>
 # include <utility>
+# include <unistd.h>
+
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <fcntl.h>
 
 void strip_from_str(std::string &file_content, const char start, const char end);
 void upper_str(std::string &str);
