@@ -1,17 +1,21 @@
-#ifndef SERVERBLOCK
-# define SERVERBLOCK
+#ifndef SERVER_BLOCK
+# define SERVER_BLOCK
 
 #include "ConfigurationKey.hpp"
-#include "DebuggerPrinter.hpp"
+#include "../debugger/DebuggerPrinter.hpp"
+#include "../utility/utility.hpp"
+
+class ConfigurationKey;
+class DebuggerPrinter;
 
 /**
  * SERVERBLOCK
- * 
+ *
  * represents a server block in configuration file.
  * Is being built by the configuration key parser.
- * 
+ *
  * Holds multiple configuration keys
- * 
+ *
  * Also has functions to easily receive all ports and server names and indexes (ordered)
  */
 class ServerBlock

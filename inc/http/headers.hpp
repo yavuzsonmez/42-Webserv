@@ -1,6 +1,6 @@
 
-#ifndef HTTP_HEADERS_HPP
-# define HTTP_HEADERS_HPP
+#ifndef HEADERS_HPP
+# define HEADERS_HPP
 
 // HTTP headers that Webserv support
 

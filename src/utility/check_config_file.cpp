@@ -1,11 +1,11 @@
-#include "../../inc/utility.hpp"
+#include "../../inc/utility/utility.hpp"
 
 /**
  * @brief Checks the filename of the config file and if it is accessible
- * 
- * @param path 
+ *
+ * @param path
  * @return true if successful
- * @return false 
+ * @return false
  */
 bool check_config_file(std::string const &path)
 {

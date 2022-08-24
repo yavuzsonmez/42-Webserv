@@ -1,9 +1,12 @@
-#include <string>
+#ifndef CONFIG_FILE_PARSING_HPP
+#define CONFIG_FILE_PARSING_HPP
+
+#include "../utility/utility.hpp"
 
 /**
  * @brief Takes a config file and parses it into a config file configuration.
- * Sets the appropriate values in the config class. 
- * 
+ * Sets the appropriate values in the config class.
+ *
  * @note Before parsing with bool parseConfigFile, the ConfigFileParsing
  * will remove ALL comments (a comment starts with #) from the file.
  */
@@ -26,3 +29,5 @@ class ConfigFileParsing {
 		bool isGeneralFaultyFile( std::string &file_content );
 		void determineConfigurationKeys( std::string &file_content );
 };
+
+#endif
