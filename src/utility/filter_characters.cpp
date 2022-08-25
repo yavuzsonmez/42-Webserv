@@ -1,15 +1,26 @@
+<<<<<<< HEAD
 #include "../../inc/utility/utility.hpp"
 
+=======
+#include <string>
+#include <iterator>
+#include <iostream>
+//defines which character must be removed
+>>>>>>> 63a879033b2769653996a496f47988d7f299c7c4
 bool isx(char c)
 {
 	return (c != '(' && c != ')');
 }
+<<<<<<< HEAD
 
 /**
  * Filters out all characters which are in the given string.
  * @param characters to remove
  * @return cleaned string
  */
+=======
+//returns a string where all characters are removed, defined by isx
+>>>>>>> 63a879033b2769653996a496f47988d7f299c7c4
 std::string filter_characters(std::string characters)
 {
 	std::string::iterator	it = characters.begin();
