@@ -11,6 +11,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <map>
+# include <vector>
 # include "utility.hpp"
 # include <algorithm>
 
@@ -25,9 +26,12 @@ class	CGI
 	std::string	get_buf(void);
 	std::string	get_query(std::string referer);
 	char	**create_envp(void);
+	void	create_argv(void);
 
 	private:
 	std::map<std::string, std::string>	_env;
+	std::vector<std::string>	_query_parameters;
+	std::vector<std::string>	_argv;
 	std::string	_buf;
 	FILE	*_tmpout;
 	FILE	*_tmpin;

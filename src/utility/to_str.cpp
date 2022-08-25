@@ -2,7 +2,7 @@
 #include <sstream>
 
 template <typename T>
-std::string	to_str(int input)
+std::string	to_str(T input)
 {
 	std::stringstream	ss;
 	ss << input;
