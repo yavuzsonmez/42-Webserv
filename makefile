@@ -5,7 +5,16 @@ B				=		\033[0;34m					# Blue
 P				=		\033[0;35m					# Purple
 Y				=		\033[33;1m					# Yellow
 
-NAME			=		webserv
+UTIL	=	src/utility/check_config_file.cpp \
+			src/utility/filter_characters.cpp \
+			src/utility/get_file_content.cpp \
+			src/utility/get_file_name.cpp \
+			src/utility/is_file_accessible.cpp \
+			src/utility/lower_upper_str.cpp \
+			src/utility/split_string.cpp \
+			src/utility/strip_from_str.cpp \
+			src/utility/to_str.cpp \
+			src/utility/validate_parantheses.cpp \
 
 HDRS			=		./inc/config_file/ConfigFileParsing.hpp \
 						./inc/configuration_key/ConfigurationKey.hpp \
@@ -51,23 +60,20 @@ UTILS			=		./src/utility/get_file_content.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
-OBJS			=		$(SRCS:.cpp=.o)
+.c.o	:
+			c++ $(CFLAGS) -c $< -o $(<:.c=.o)
 
-DEBUG			=		-g -fsanitize=address
+$(NAME)	:	$(OBJS)
+			c++ $(FLAGS) $(OBJS) -o $(NAME)
 
 FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98 -g
 
-.c.o			:
-						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)
+fclean	:	clean
+			rm -f $(NAME)
 
-$(NAME)			:		$(OBJS) $(HDRS) | silence
-						@c++ $(FLAGS) $(OBJS) -o $(NAME)
-						@echo "$(G)$(NAME) has been created$(Reset)"
+all		:	$(NAME)
 
-dev				:		$(OBJS) $(HDRS) | silence
-						@c++ $(OBJS) -o $(NAME)
-						@echo "$(R)Compiling without flags WARNING !$(Reset)"
-						@echo "$(G)$(NAME) has been created$(Reset)"
+re		:	fclean all
 
 debug				:	$(OBJS) $(HDRS) | silence
 						@c++ $(OBJS) $(DEBUG) -o $(NAME)
