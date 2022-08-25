@@ -1,4 +1,4 @@
-#include "../../inc/CGI.hpp"
+#include "../../inc/cgi.hpp"
 
 CGI::CGI()
 {
@@ -41,7 +41,7 @@ CGI::CGI(/*Request &request*/std::string request)
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";
 	_env["SERVER_PROTOCOL"] = "http/1.1";
 	_env["SERVER_PORT"] = "8080";
-	_env["REQUEST_METHOD"] = "DELETE";
+	_env["REQUEST_METHOD"] = "GET";
 	_env["PATH_INFO"] = "CGI_bin/script";
 	_env["PATH_TRANSLATED"] = "Users/home/Projects/webserv/CGI_bin/script";
 	_env["QUERY_STRING"] = "name=Steffen";
@@ -87,6 +87,7 @@ void	CGI::execute(void)
 			i++;
 		}
 		argv[i] = NULL;
+		//std::cout << "envp: " << map_to_array(_env)[0] << std::endl;
 		execve(argv[0], argv, map_to_array(_env));						//executes the executable with its arguments
 		//execve("php-cgi", vec_to_array(_query_parameters), map_to_array(_env));
 		//std::cout << "execve: " << i << std::endl;				//check if execve failes
@@ -104,19 +105,6 @@ void	CGI::execute(void)
 		return;
 	}
 
-}
-
-char	**CGI::create_envp(void)
-{
-	char	*envp[_env.size() + 1];
-	int	i = 0;
-	for(std::map<std::string, std::string>::iterator it = _env.begin(); it != _env.end(); ++it)
-	{
-		envp[i] = strdup((it->first + "=" + it->second).c_str());
-		++i;
-	}
-	envp[i] = NULL;
-	return envp;
 }
 
 std::string	CGI::get_buf(void)

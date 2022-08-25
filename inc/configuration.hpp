@@ -2,7 +2,7 @@
 # define CONFIGURATION_HPP
 
 # include <string>
-# include "Server.hpp"
+# include "server.hpp"
 
 class	Configuration
 {

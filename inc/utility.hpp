@@ -33,7 +33,8 @@ char **map_to_array(std::map<key, value> &map)
 {
 	typename std::map<key, value>::iterator	it;
 	
-	char	*array[map.size() + 1];
+	//char	*array[map.size() + 1];
+	char **array = (char **)malloc(sizeof(char*) * (map.size() + 1));
 	int	i = 0;
 	for (it = map.begin(); it != map.end(); ++it)
 	{

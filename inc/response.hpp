@@ -4,7 +4,7 @@
 # include <string>
 # include <vector>
 # include <ctime>
-# include "CGI.hpp"
+# include "cgi.hpp"
 # include "utility.hpp"
 
 class Response

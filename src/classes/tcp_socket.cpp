@@ -1,4 +1,4 @@
-#include "../../inc/Tcp_socket.hpp"
+#include "../../inc/tcp_socket.hpp"
 
 Tcp_socket::Tcp_socket(void)
 {
