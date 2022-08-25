@@ -1,4 +1,4 @@
-#include "../../inc/Server.hpp"
+#include "../../inc/server.hpp"
 
 Server::Server(std::string serv_config) : _config(serv_config)
 {

@@ -25,8 +25,6 @@ class	CGI
 	void	execute(void);
 	std::string	get_buf(void);
 	std::string	get_query(std::string referer);
-	char	**create_envp(void);
-	void	create_argv(void);
 
 	private:
 	std::map<std::string, std::string>	_env;

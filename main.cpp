@@ -1,4 +1,4 @@
-#include "inc/Configuration.hpp"
+#include "inc/configuration.hpp"
 
 int	main(int argc, char **argv)
 {

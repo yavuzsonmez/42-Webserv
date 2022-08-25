@@ -1,4 +1,4 @@
-#include "../../inc/Location.hpp"
+#include "../../inc/location.hpp"
 
 Location::Location(std::string loc_config) : _config(loc_config)
 {

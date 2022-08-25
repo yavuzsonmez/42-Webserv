@@ -1,4 +1,4 @@
-#include "../../inc/Configuration.hpp"
+#include "../../inc/configuration.hpp"
 
 Configuration::Configuration(std::string path) : _path(path)
 {

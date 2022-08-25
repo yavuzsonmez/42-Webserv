@@ -3,8 +3,8 @@
 
 # include <string>
 # include <vector>
-# include "Tcp_socket.hpp"
-# include "Location.hpp"
+# include "tcp_socket.hpp"
+# include "location.hpp"
 
 class Server
 {
