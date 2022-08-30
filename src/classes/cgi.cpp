@@ -5,7 +5,7 @@ CGI::CGI()
 
 }
 
-CGI::CGI(/*Request &request*/std::string request)
+CGI::CGI(/*Request &request*/Request request) : _request(request)
 {
 	// env[0] = strcat("SERVER_SOFTWARE=", "webserv");						//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
 	// env[1] = strcat("SERVER_NAME=", "petroulette");						//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs. 
@@ -26,12 +26,9 @@ CGI::CGI(/*Request &request*/std::string request)
 	// env[16] = strcat("CONTENT_LENGTH=", request.content_length;)		//The length of the said content as given by the client.
 
 
-	if (request.find("/?") != request.npos)
+	if (_request.getQuery().second)
 	{
-		std::string	tmp = request.substr(request.find("/?") + 2);
-		_referer = get_query(tmp.substr(0, tmp.find(' ')));
-		_query_parameters = split_string(_referer, '&');
-
+		_query_parameters = split_string(_request.getQuery().first, '&');
 	}
 
 
