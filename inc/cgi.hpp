@@ -14,12 +14,13 @@
 # include <vector>
 # include "utility.hpp"
 # include <algorithm>
+# include "http/Request.hpp"
 
 class	CGI
 {
 	public:
 	CGI();
-	CGI(std::string request);
+	CGI(Request request);
 	~CGI();
 
 	void	execute(void);
@@ -35,8 +36,8 @@ class	CGI
 	FILE	*_tmpin;
 	int		_fd;
 	int		_tmp_size;
-	
 
+	Request	_request;
 	std::string	_referer;		//for testing, must be part of the request class
 };
 
