@@ -16,6 +16,8 @@ UTIL	=	src/utility/check_config_file.cpp \
 			src/utility/to_str.cpp \
 			src/utility/validate_parantheses.cpp \
 
+Name	=		webserv
+
 HDRS			=		./inc/config_file/ConfigFileParsing.hpp \
 						./inc/configuration_key/ConfigurationKey.hpp \
 						./inc/configuration_key/ServerBlock.hpp \
