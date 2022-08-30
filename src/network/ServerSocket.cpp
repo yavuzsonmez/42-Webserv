@@ -39,9 +39,15 @@ void ServerSocket::processConnections()
 
 		// if accept return -1 throw error
 		ClientSocket client(clientSocket);
-		Response response(request);
-		response.test_cgi();
-		std::string httpResponse(response.get_response());
+		
+		std::string	request_str;
+		read(forward, request_str.data(), 10000);
+		std::cout << "request_str: " << request_str.c_str() << std::endl;
+		// Request	request(request_str);
+		// Response response(request);
+		// response.test_cgi();
+		// std::string httpResponse(response.get_response());
+		std::string httpResponse("test responds");
 
 		int bytes_send;
 		bytes_send = 0;
