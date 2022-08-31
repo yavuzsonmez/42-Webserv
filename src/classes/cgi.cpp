@@ -62,7 +62,7 @@ void	CGI::execute(void)
 	
 	sleep(5);
 	write(1, "test1\n", 6);
-	tmpfile();											//File pointer to a temporaryfile
+	_tmpout = tmpfile();											//File pointer to a temporaryfile
 	write(1, "test2\n", 6);
 	sleep(5);
 	//_fd = fileno(_tmpout);											//extract the filedescriptor from the file stream
