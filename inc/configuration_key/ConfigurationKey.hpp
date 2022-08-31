@@ -105,10 +105,17 @@ class ConfigurationKey {
 		bool isServerStartSegment(internal_keyvalue raw);
 		bool isIndexKeyType(internal_keyvalue raw);
 		bool isRootKeyType(internal_keyvalue raw);
+		bool isLocationKeyType(internal_keyvalue raw);
 
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
+		
+		
+		/**
+		 * Indicates if we are currently parsing keys within a location block or not.
+		 */
+		bool isCurrentlyParsingLocationBlock;
 };
 
 #endif

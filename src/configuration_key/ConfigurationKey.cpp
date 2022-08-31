@@ -25,6 +25,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->root = src.root;
 	this->location	= src.location;
 	this->indexes	= src.indexes;
+	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
 	debugger.debug("Constructing new configuration key");
 }
 
@@ -43,6 +44,7 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * This calls detectConfigurationType, which sets the configuratio key type.
  */
 ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
+	this->isCurrentlyParsingLocationBlock = false;
 	DebuggerPrinter debugger = debugger.getInstance();
 	if (key.empty () || value.empty()) {
 		throwInvalidConfigurationFileExceptionWithMessage("Key or value of configuration key was empty!");
@@ -82,12 +84,26 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected index key type.");
 		return INDEX;
 	}
-	if (this->isRootKeyType(raw))
+	if (this->isLocationKeyType(raw))
 	{
-		debugger.info("Detected root key type.");
+		debugger.info("Detected listen key type. Enabled parsing location block.");
 		return ROOT;
 	}
 	return INVALID;
+}
+
+/**
+ * Returns true if the location is a location key type.
+ * Will set location_handling to true
+ */
+bool ConfigurationKey::isLocationKeyType(internal_keyvalue raw) {
+	if (raw.first == "location") {
+		this->isCurrentlyParsingLocationBlock = true;
+		if (raw.second[raw.second.length() - 1] != '{') {
+			throwInvalidConfigurationFileExceptionWithMessage("Location block does not end with {!");
+		}
+		return true;
+	}
 }
 
 /**
