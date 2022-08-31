@@ -61,8 +61,9 @@ void	CGI::execute(void)
 	pid_t	pid;
 	
 	sleep(5);
-	std::cout << "test" << std::endl;
-	_tmpout = tmpfile();											//File pointer to a temporaryfile
+	write(1, "test1\n", 6);
+	tmpfile();											//File pointer to a temporaryfile
+	write(1, "test2\n", 6);
 	sleep(5);
 	//_fd = fileno(_tmpout);											//extract the filedescriptor from the file stream
 	//_tmpin = tmpfile();
