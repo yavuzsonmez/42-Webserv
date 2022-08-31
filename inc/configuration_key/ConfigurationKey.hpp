@@ -99,13 +99,13 @@ class ConfigurationKey {
 		std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
 	private:
 		// Those are the internal functions which are used to parse the value to the correct type.
-		ConfigurationKeyType detectConfigurationType(internal_keyvalue raw);
+		ConfigurationKeyType detectConfigurationType(internal_keyvalue &raw);
 		bool isServerNameKeyType(internal_keyvalue raw);
 		bool isListenKeyType(internal_keyvalue raw);
 		bool isServerStartSegment(internal_keyvalue raw);
 		bool isIndexKeyType(internal_keyvalue raw);
 		bool isRootKeyType(internal_keyvalue raw);
-		bool isLocationKeyType(internal_keyvalue raw);
+		bool isLocationKeyType(internal_keyvalue &raw);
 
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
