@@ -61,8 +61,9 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
  *
  * If the key is invalid or not yet implemented, it returns INVALID. This should
  * be treated as fatal error.
+ * Some keys and values will be cleaned, that is way we have to pass a reference to the function
  */
-ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue raw) {
+ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue &raw) {
 	USE_DEBUGGER;
 	if (this->isServerStartSegment(raw))
 	{
@@ -87,23 +88,28 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 	if (this->isLocationKeyType(raw))
 	{
 		debugger.info("Detected listen key type. Enabled parsing location block.");
+		debugger.info("Removed: " + raw.second);
 		return ROOT;
 	}
 	return INVALID;
 }
 
 /**
- * Returns true if the location is a location key type.
- * Will set location_handling to true
+ * @brief Returns true if the location is a location key type.
+ * - isCurrentlyParsingLocationBlock
+ * - Will check if the last character in location is a opening bracket
+ * - Will remove the last character from location if it is a opening bracket to enable parsing of the location path
  */
-bool ConfigurationKey::isLocationKeyType(internal_keyvalue raw) {
+bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 	if (raw.first == "location") {
 		this->isCurrentlyParsingLocationBlock = true;
 		if (raw.second[raw.second.length() - 1] != '{') {
 			throwInvalidConfigurationFileExceptionWithMessage("Location block does not end with {!");
 		}
+		raw.second.pop_back();
 		return true;
 	}
+	return true;
 }
 
 /**
