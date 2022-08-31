@@ -5,6 +5,11 @@ Response::Response(void)
 
 }
 
+Response::Response(Request request) : _request(request)
+{
+
+}
+
 Response::~Response(void)
 {
 
@@ -85,12 +90,12 @@ void	Response::test_image(void)
 	create_response();
 }
 
-void	Response::test_cgi(std::string request)
+void	Response::test_cgi(void)
 {
 	_protocol = "HTTP/1.1";
 	_status_code = "200";
 	_status_text = "OK";
-	CGI	cgi(request);
+	CGI	cgi(_request);
 	cgi.execute();
 	_body = cgi.get_buf();
 	_server = "PetRoulette";

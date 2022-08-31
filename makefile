@@ -5,18 +5,7 @@ B				=		\033[0;34m					# Blue
 P				=		\033[0;35m					# Purple
 Y				=		\033[33;1m					# Yellow
 
-UTIL	=	src/utility/check_config_file.cpp \
-			src/utility/filter_characters.cpp \
-			src/utility/get_file_content.cpp \
-			src/utility/get_file_name.cpp \
-			src/utility/is_file_accessible.cpp \
-			src/utility/lower_upper_str.cpp \
-			src/utility/split_string.cpp \
-			src/utility/strip_from_str.cpp \
-			src/utility/to_str.cpp \
-			src/utility/validate_parantheses.cpp \
-
-Name	=		webserv
+NAME			=		webserv
 
 HDRS			=		./inc/config_file/ConfigFileParsing.hpp \
 						./inc/configuration_key/ConfigurationKey.hpp \
@@ -42,7 +31,8 @@ CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
 						./src/configuration_key/ServerBlock.cpp \
 
 HTTP			=		./src/http/Request.cpp \
-						./src/http/Response.cpp \
+						./src/classes/response.cpp \
+						./src/classes/cgi.cpp \
 
 NETWORK			=		./src/network/ClientSocket.cpp \
 						./src/network/Multiplexer.cpp \
@@ -59,23 +49,27 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/validate_parantheses.cpp \
 						./src/utility/split_on_delimiter.cpp \
 						./src/utility/convert_configuration_key_type.cpp \
+						./src/utility/split_string.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
-.c.o	:
-			c++ $(CFLAGS) -c $< -o $(<:.c=.o)
+OBJS			=		$(SRCS:.cpp=.o)
 
-$(NAME)	:	$(OBJS)
-			c++ $(FLAGS) $(OBJS) -o $(NAME)
+DEBUG			=		-g -fsanitize=address
 
 FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98 -g
 
-fclean	:	clean
-			rm -f $(NAME)
+.c.o			:
+						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)
 
-all		:	$(NAME)
+$(NAME)			:		$(OBJS) $(HDRS) | silence
+						@c++ $(FLAGS) $(OBJS) -o $(NAME)
+						@echo "$(G)$(NAME) has been created$(Reset)"
 
-re		:	fclean all
+dev				:		$(OBJS) $(HDRS) | silence
+						@c++ $(OBJS) -o $(NAME)
+						@echo "$(R)Compiling without flags WARNING !$(Reset)"
+						@echo "$(G)$(NAME) has been created$(Reset)"
 
 debug				:	$(OBJS) $(HDRS) | silence
 						@c++ $(OBJS) $(DEBUG) -o $(NAME)

@@ -29,10 +29,7 @@ void strip_from_str(std::string &file_content, const char start, const char end)
 		line.replace(start_index, line.length(), "\n");
 		result += line;
 	}
-<<<<<<< HEAD
 	file_content = result;
-=======
->>>>>>> 63a879033b2769653996a496f47988d7f299c7c4
 }
 
 

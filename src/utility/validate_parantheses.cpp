@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 #include "../../inc/utility/utility.hpp"
 
-=======
-#include <string>
-#include <stack>
-#include <iostream>
-//checks a string of parantheses for it's validity
->>>>>>> 63a879033b2769653996a496f47988d7f299c7c4
 bool	validate_parantheses(std::string parantheses)
 {
 	std::stack<char>	bracket;

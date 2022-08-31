@@ -32,7 +32,6 @@ CGI::CGI(/*Request &request*/Request request) : _request(request)
 	}
 
 
-
 	_env["SERVER_SOFTWARE"] = "webserv";
 	_env["SERVER_NAME"] = "petroulette";
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";
@@ -60,18 +59,25 @@ CGI::~CGI()
 void	CGI::execute(void)
 {
 	pid_t	pid;
+	
+	sleep(5);
+	std::cout << "test" << std::endl;
 	_tmpout = tmpfile();											//File pointer to a temporaryfile
+	sleep(5);
 	//_fd = fileno(_tmpout);											//extract the filedescriptor from the file stream
 	//_tmpin = tmpfile();
+	
 	pid = fork();												//forks a new process
-
+	
 	if (pid < 0)												//return in case it failes
 		return ;
 	else if (pid == 0)											//in the child process
 	{
+		
 		//dup2(fileno(_tmpin), STDIN_FILENO);
 		dup2(fileno(_tmpout), STDOUT_FILENO);								//stdout now points to the tmpfile
 		//char	*argv[5] = {"php-cgi", "echo.php", "firstname=Paul", "lastname=Fritz", NULL};	//creating the arguments for execve
+		
 		_query_parameters.insert(_query_parameters.begin(), "echo.php");
 		_query_parameters.insert(_query_parameters.begin(), "php-cgi");
 		
