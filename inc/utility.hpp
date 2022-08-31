@@ -18,7 +18,7 @@ bool is_file_accessible(std::string const &path);
 std::string get_file_content(std::string path);
 bool check_config_file(std::string const &path);
 std::string get_file_name(std::string const &path);
-std::vector<std::string> split_string(std::string &str, char delim);
+std::vector<std::string> split_string(std::string str, char delim);
 
 template <typename T>
 std::string	to_str(T input)
