@@ -55,6 +55,26 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool loca
 	this->key = raw.first;
 	this->value = raw.second;
 }
+/**
+ * @brief Detects the type of configuration key for the location block.
+ * - Configures the location block keys.
+ */
+ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_keyvalue &raw) {
+	USE_DEBUGGER;
+	debugger.info("Those keys are for location block");
+	if (this->isIndexKeyType(raw))
+	{
+		debugger.info("Detected index key type for location.");
+		return INDEX;
+	}
+	if (this->isRootKeyType(raw))
+	{
+		debugger.info("Detected ROOT key type.");
+		return ROOT;
+	}
+	return INVALID;
+}
+
 
 /**
  * @param Returns the correct configuration key based on the key and value.
@@ -80,6 +100,11 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected listen key type.");
 		return LISTEN;
 	}
+	if (this->isRootKeyType(raw))
+	{
+		debugger.info("Detected ROOT key type.");
+		return ROOT;
+	}
 	if (this->isIndexKeyType(raw))
 	{
 		debugger.info("Detected index key type.");
@@ -89,7 +114,7 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 	{
 		debugger.info("Detected listen key type. Enabled parsing location block.");
 		debugger.info("Removed: " + raw.second);
-		return ROOT;
+		return LOCATION;
 	}
 	return INVALID;
 }
