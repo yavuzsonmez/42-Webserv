@@ -6,7 +6,7 @@
 
 ConfigFileParsing::ConfigFileParsing()
 {
-
+	this->isCurrentlyInLocationBlock = false;
 }
 
 ConfigFileParsing::ConfigFileParsing( const ConfigFileParsing &src )
@@ -90,6 +90,7 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
  * @brief Determines if the line in the configuration file should be skipped or not
  * - As to be skipped qualifies any line starting with a closing curly bracket: }
  * or a line with only empty spaces
+ * - disables configuration key parsing if necessary
  * @return true 
  * @return false 
  */
@@ -102,6 +103,7 @@ bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int 
 	}
 	if (line[firstNotWhiteSpacePosition] == '}') {
 		debugger.debug("SKIPPING: Line is a closing curly bracket.");
+		this->isCurrentlyInLocationBlock = false;
 		return true;
 	}
 	return false;
@@ -110,10 +112,12 @@ bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int 
 /**
  * @brief Parses a configuration file into configuration keys and adds them to server blocks.
  * 
- * Determines the configuration for a entry line by line.
- * Takes file_content and prints out the detected ConfigurationType.
- * It skips empty lines automatically.
- * When iterating, it trims the string from the left side.
+ * - Determines the configuration for a entry line by line.
+ * - Takes file_content and prints out the detected ConfigurationType.
+ * - It skips empty lines automatically.
+ * - When iterating, it trims the string from the left side.
+ * - Sets the location block parsing flag to true when a location block is detected. The Location block parsing
+ *   is controlled by ConfigFileParsing.
  * TODO: If location is found, it will skip all the contents of location and parse location separately.
  */
 void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
@@ -135,7 +139,10 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
-		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1]);
+		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1], this->isCurrentlyInLocationBlock);
+		if (key.configurationType == LOCATION) {
+			this->isCurrentlyInLocationBlock = true;
+		}
 		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
 		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
 		addConfigurationKeyToCurrentServerBlock(key);
