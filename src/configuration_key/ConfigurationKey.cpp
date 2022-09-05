@@ -51,7 +51,11 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool loca
 	}
 	debugger.info("Constructed configuration key.");
 	internal_keyvalue raw(key, value);
-	this->configurationType = detectConfigurationType(raw);
+	if (this->isCurrentlyParsingLocationBlock) {
+		this->configurationType = detectLocationKeyConfiguration(raw);
+	} else {
+		this->configurationType = detectConfigurationType(raw);
+	}
 	this->key = raw.first;
 	this->value = raw.second;
 }
@@ -70,6 +74,11 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 	if (this->isRootKeyType(raw))
 	{
 		debugger.info("Detected ROOT key type.");
+		return ROOT;
+	}
+	if (this->isMethodsKeyType(raw))
+	{
+		debugger.info("Detected METHODS key type.");
 		return ROOT;
 	}
 	return INVALID;
@@ -197,6 +206,28 @@ bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
 		std::getline( ss, substr, ' ' );
 		if (!substr.empty())
 			this->server_names.push_back( substr );
+		else
+			return false;
+	}
+	return true;
+}
+
+/**
+ * @brief Check if the key is a methods key type.
+ * - also sets the methods
+ * TODO: Validate methods values
+ */
+bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
+	if (raw.first != KEY_METHODS)
+		return false;
+	
+	std::stringstream ss(raw.second);
+	while (ss.good())
+	{
+		std::string substr;
+		std::getline( ss, substr, ' ' );
+		if (!substr.empty())
+			this->methods.push_back( substr );
 		else
 			return false;
 	}

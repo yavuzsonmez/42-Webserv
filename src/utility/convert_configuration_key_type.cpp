@@ -30,5 +30,8 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType)
 	if (keyType == ROOT) {
 		return "ROOT";
 	}
+	if (keyType == METHODS) {
+		return "METHODS";
+	}
 	return "UNKNOWN";
 }
