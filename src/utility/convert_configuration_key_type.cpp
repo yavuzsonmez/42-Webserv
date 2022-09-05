@@ -37,11 +37,26 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType)
 }
 
 /**
+ * @brief Converts the vector to a joined string with delimiter delimiter
+ */
+std::string join_vector(std::vector<std::string> &vec, std::string delimiter)
+{
+	std::string joined = "";
+	for (size_t i = 0; i < vec.size(); i++) {
+		joined += vec[i];
+		if (i != vec.size() - 1) {
+			joined += delimiter;
+		}
+	}
+	return joined;
+}
+
+/**
  * Printing out nested keys in the location block
  */
-std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey key) {
-	std::cout << "LOCATION BLOCK" << std::endl;
+std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std::cout << "ROOT " << key.root << std::endl;
 	std::cout << "LOCATION " << key.location << std::endl;
+	std::cout << "METHODS " << join_vector(key.methods, ", ") << std::endl;
 	return "";
 }

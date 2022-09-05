@@ -182,6 +182,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
  */
 void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlocks)
 {
+	int locationBlockCounter = 0;
 	for (int i = 0; i < serverBlocks.size(); i++) {
 		std::cout << "SERVER BLOCK " << i << std::endl;
 		// print every configuration key
@@ -192,7 +193,9 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 				std::cout << "LOCATION BLOCK" << std::endl;
 				printOutNestedKeysFromLocationBlocks(serverBlocks[i].configurationKeys[j]);
 				std::cout << "LOCATION BLOCK END" << std::endl;
+				locationBlockCounter++;
 			}
 		}
 	}
+	std::cout << "TOTAL LOCATION BLOCKS: " << locationBlockCounter << std::endl;
 }
