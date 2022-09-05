@@ -43,8 +43,8 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * Will take raw key and value and convert it in the internal_keyvalue for better handling within the class.
  * This calls detectConfigurationType, which sets the configuratio key type.
  */
-ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
-	this->isCurrentlyParsingLocationBlock = false;
+ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block) {
+	this->isCurrentlyParsingLocationBlock = location_block;
 	DebuggerPrinter debugger = debugger.getInstance();
 	if (key.empty () || value.empty()) {
 		throwInvalidConfigurationFileExceptionWithMessage("Key or value of configuration key was empty!");
@@ -225,6 +225,14 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 			return false;
 	}
 	return true;
+}
+
+/**
+ * @brief Sets location block parsing to a determined value
+ * - to be enabled when the location block is detected
+ */
+void ConfigurationKey::setLocationBlockParsing(bool value) {
+	this->isCurrentlyParsingLocationBlock = false;
 }
 
 /**

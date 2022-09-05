@@ -80,7 +80,9 @@ class ConfigurationKey {
 		ConfigurationKey & operator = (const ConfigurationKey &src);
 
 		// this is the initializer taking the key and the raw value from the configuration file
-		ConfigurationKey(std::string key, std::string value);
+		ConfigurationKey(std::string key, std::string value, bool location_block);
+		
+		void setLocationBlockParsing(bool value);
 
 		// General Attributes
 
