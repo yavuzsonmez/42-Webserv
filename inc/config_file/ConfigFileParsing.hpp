@@ -35,6 +35,8 @@ class ConfigFileParsing {
 		void addConfigurationKeyToCurrentServerBlock( ConfigurationKey &key );
 		bool shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition);
 		void printAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
+		
+		bool isCurrentlyInLocationBlock;
 };
 
 #endif

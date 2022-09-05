@@ -80,7 +80,9 @@ class ConfigurationKey {
 		ConfigurationKey & operator = (const ConfigurationKey &src);
 
 		// this is the initializer taking the key and the raw value from the configuration file
-		ConfigurationKey(std::string key, std::string value);
+		ConfigurationKey(std::string key, std::string value, bool location_block);
+		
+		void setLocationBlockParsing(bool value);
 
 		// General Attributes
 
@@ -93,22 +95,32 @@ class ConfigurationKey {
 		// Attributes of the configuration types
 		std::vector <std::string> indexes; // indexes, if type is INDEX. sorted by relevance and position within the key.
 		std::vector <std::string> server_names; // server_names, if type is SERVER_NAMES. sorted by relevance and position within the key.
+		std::vector <std::string> methods; // methids, if type is METHODS. sorted by relevance and position within the key.
 		std::string root; // returns the path of the root
 		std::string location; // returns the locationpath of the location
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
 		std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
 	private:
 		// Those are the internal functions which are used to parse the value to the correct type.
-		ConfigurationKeyType detectConfigurationType(internal_keyvalue raw);
+		ConfigurationKeyType detectConfigurationType(internal_keyvalue &raw);
+		ConfigurationKeyType detectLocationKeyConfiguration(internal_keyvalue &raw);
 		bool isServerNameKeyType(internal_keyvalue raw);
 		bool isListenKeyType(internal_keyvalue raw);
 		bool isServerStartSegment(internal_keyvalue raw);
 		bool isIndexKeyType(internal_keyvalue raw);
 		bool isRootKeyType(internal_keyvalue raw);
+		bool isLocationKeyType(internal_keyvalue &raw);
+		bool isMethodsKeyType(internal_keyvalue raw);
 
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
+		
+		
+		/**
+		 * Indicates if we are currently parsing keys within a location block or not.
+		 */
+		bool isCurrentlyParsingLocationBlock;
 };
 
 #endif
