@@ -35,3 +35,13 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType)
 	}
 	return "UNKNOWN";
 }
+
+/**
+ * Printing out nested keys in the location block
+ */
+std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey key) {
+	std::cout << "LOCATION BLOCK" << std::endl;
+	std::cout << "ROOT " << key.root << std::endl;
+	std::cout << "LOCATION " << key.location << std::endl;
+	return "";
+}
