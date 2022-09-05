@@ -25,13 +25,12 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->root = src.root;
 	this->location	= src.location;
 	this->indexes	= src.indexes;
+	this->methods	= src.methods;
 	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
-	debugger.debug("Constructing new configuration key");
 }
 
 ConfigurationKey::~ConfigurationKey() {
 	DebuggerPrinter debugger = debugger.getInstance();
-	debugger.debug("Deconstructing configuration key");
 }
 
 ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
@@ -226,6 +225,7 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 	{
 		std::string substr;
 		std::getline( ss, substr, ' ' );
+		std::cout << "METHODS ADDING: " << substr << std::endl;
 		if (!substr.empty())
 			this->methods.push_back( substr );
 		else
