@@ -30,5 +30,8 @@ bool	validate_parantheses(std::string parantheses);
 std::vector<std::string> split_on_delimiter(std::string &s, char delimiter);
 std::vector<std::string> split_once_on_delimiter(std::string &s, char delimiter);
 std::string convert_configuration_key_type(ConfigurationKeyType keyType);
+std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key);
+std::string join_vector(std::vector<std::string> &vec, std::string delimiter);
+std::string printKeyValueColored(std::string key, std::string name);
 
 #endif

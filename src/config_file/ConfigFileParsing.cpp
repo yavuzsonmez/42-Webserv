@@ -58,10 +58,28 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 }
 
 /**
+ * @brief Add a key to a location block key (which is the last key in the vector)
+ * @param key original location key
+ * @param keyToAdd key to add to the original location key
+ */
+void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd ) {
+	if (keyToAdd.configurationType == INDEX) {
+		key.location = keyToAdd.location;
+	}
+	if (keyToAdd.configurationType == ROOT) {
+		key.root = keyToAdd.root;
+	}
+	if (keyToAdd.configurationType == METHODS) {
+		key.methods = keyToAdd.methods;
+	}
+}
+
+/**
  * @brief Adds a new configuration key to the current server block.
  * If block is SERVERSTARTSEGMENT, a new server will be created in the vector.
  * All other keys will be added. If a keys is invalid, the program
  * will stop exection immediately.
+ * - adds either to the server block or the last location key.
  * 
  * @param key ConfigurationKey from determineConfigurationKeys
  */
@@ -69,6 +87,15 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 {
 	USE_DEBUGGER;
 	int static currentServerIndex = -1;
+	
+	if (this->isCurrentlyInLocationBlock) {
+		this->addConfigurationKeyToLocation(this->serverBlocks[currentServerIndex].configurationKeys.back(), key);
+		return;
+	}
+	// set location block to true if location was detected
+	if (key.configurationType == LOCATION) {
+		this->isCurrentlyInLocationBlock = true;
+	}
 
 	// creating a new server
 	if (key.configurationType == SERVERSTARTSEGMENT) {
@@ -140,9 +167,6 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
 		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1], this->isCurrentlyInLocationBlock);
-		if (key.configurationType == LOCATION) {
-			this->isCurrentlyInLocationBlock = true;
-		}
 		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
 		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
 		addConfigurationKeyToCurrentServerBlock(key);
@@ -158,12 +182,18 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
  */
 void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlocks)
 {
+	int locationBlockCounter = 0;
 	for (int i = 0; i < serverBlocks.size(); i++) {
 		std::cout << "SERVER BLOCK " << i << std::endl;
 		// print every configuration key
 		std::cout << serverBlocks[i].configurationKeys.size() << " CONFIGURATION KEYS" << std::endl;
 		for (int j = 0; j < serverBlocks[i].configurationKeys.size(); j++) {
-			std::cout << convert_configuration_key_type(serverBlocks[i].configurationKeys[j].configurationType) << " " << serverBlocks[i].configurationKeys[j].key << " " << serverBlocks[i].configurationKeys[j].value << std::endl;
+			printKeyValueColored(serverBlocks[i].configurationKeys[j].key, serverBlocks[i].configurationKeys[j].value);
+			if (serverBlocks[i].configurationKeys[j].configurationType == LOCATION) {
+				printOutNestedKeysFromLocationBlocks(serverBlocks[i].configurationKeys[j]);
+				locationBlockCounter++;
+			}
 		}
 	}
+	std::cout << "TOTAL LOCATION BLOCKS: " << locationBlockCounter << std::endl;
 }
