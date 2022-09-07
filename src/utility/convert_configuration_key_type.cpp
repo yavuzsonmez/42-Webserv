@@ -58,7 +58,5 @@ std::string join_vector(std::vector<std::string> &vec, std::string delimiter)
 std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std::cout << B << "ROOT " << key.root << Reset << std::endl;
 	std::cout << B <<"METHODS " << join_vector(key.methods, ", ") << Reset << std::endl;
-	if (key.methods.size() > 0)
-		std::cout << "FIRST METHOD " << key.methods[0] << std::endl;
 	return "";
 }

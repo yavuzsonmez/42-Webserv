@@ -78,7 +78,8 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 	if (this->isMethodsKeyType(raw))
 	{
 		debugger.info("Detected METHODS key type.");
-		return ROOT;
+		
+		return METHODS;
 	}
 	return INVALID;
 }
