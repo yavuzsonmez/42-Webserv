@@ -15,7 +15,7 @@
 # define	KEY_SERVER_NAMES			"server_name"
 # define	KEY_LISTEN					"listen"
 # define	KEY_INVALID					"INVALID"
-# define	KEY_METHODS					"METHODS"
+# define	KEY_METHODS					"methods"
 
 /**
  * Defines the type of information a configuration key holds.
