@@ -57,6 +57,9 @@ ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool loca
 	}
 	this->key = raw.first;
 	this->value = raw.second;
+	if (this->configurationType == INVALID) {
+		throwInvalidConfigurationFileExceptionWithMessage("What do you mean with " + raw.first);
+	}
 }
 /**
  * @brief Detects the type of configuration key for the location block.
