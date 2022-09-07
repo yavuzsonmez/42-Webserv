@@ -23,9 +23,9 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->ports = src.ports;
 	this->server_names = src.server_names;
 	this->root = src.root;
-	this->location	= src.location;
-	this->indexes	= src.indexes;
-	this->methods	= src.methods;
+	this->location = src.location;
+	this->indexes = src.indexes;
+	this->methods = src.methods;
 	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
 }
 

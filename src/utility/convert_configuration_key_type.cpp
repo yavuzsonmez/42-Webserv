@@ -1,5 +1,6 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/utility/utility.hpp"
+#include "../../inc/utility/colors.hpp"
 
 /**
  * @brief Converts the enum in a human readable string
@@ -55,8 +56,9 @@ std::string join_vector(std::vector<std::string> &vec, std::string delimiter)
  * Printing out nested keys in the location block
  */
 std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
-	std::cout << "ROOT " << key.root << std::endl;
-	std::cout << "LOCATION " << key.location << std::endl;
-	std::cout << "METHODS " << join_vector(key.methods, ", ") << std::endl;
+	std::cout << B << "ROOT " << key.root << Reset << std::endl;
+	std::cout << B <<"METHODS " << join_vector(key.methods, ", ") << Reset << std::endl;
+	if (key.methods.size() > 0)
+		std::cout << "FIRST METHOD " << key.methods[0] << std::endl;
 	return "";
 }
