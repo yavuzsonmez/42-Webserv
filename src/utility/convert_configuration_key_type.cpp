@@ -3,6 +3,10 @@
 #include "../../inc/utility/colors.hpp"
 
 /**
+ * This file contains mainly debugging printing functions.
+ */
+
+/**
  * @brief Converts the enum in a human readable string
  * 
  * @param keyType 
@@ -58,5 +62,17 @@ std::string join_vector(std::vector<std::string> &vec, std::string delimiter)
 std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std::cout << B << "->" << Reset << " ROOT " << key.root << std::endl;
 	std::cout << B << "->" << Reset << " METHODS " << join_vector(key.methods, ", ")  << std::endl;
+	return "";
+}
+
+/**
+ * @brief prints out colored key and value
+ * 
+ * @param key to print
+ * @param name to print
+ * @return std::string 
+ */
+std::string printKeyValueColored(std::string key, std::string name) {
+	std::cout << B << key << Reset << " " << name << std::endl;
 	return "";
 }
