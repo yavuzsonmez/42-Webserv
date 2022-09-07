@@ -190,9 +190,9 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 		for (int j = 0; j < serverBlocks[i].configurationKeys.size(); j++) {
 			std::cout << convert_configuration_key_type(serverBlocks[i].configurationKeys[j].configurationType) << " " << serverBlocks[i].configurationKeys[j].key << " " << serverBlocks[i].configurationKeys[j].value << std::endl;
 			if (serverBlocks[i].configurationKeys[j].configurationType == LOCATION) {
-				std::cout << "LOCATION BLOCK" << std::endl;
+				std::cout << B << "LOCATION START" << Reset << std::endl;
 				printOutNestedKeysFromLocationBlocks(serverBlocks[i].configurationKeys[j]);
-				std::cout << "LOCATION BLOCK END" << std::endl;
+				std::cout << B << "LOCATION BLOCK END"  << Reset << std::endl;
 				locationBlockCounter++;
 			}
 		}
