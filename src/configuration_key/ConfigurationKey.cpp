@@ -142,7 +142,7 @@ bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 		raw.second.pop_back();
 		return true;
 	}
-	return true;
+	return false;
 }
 
 /**
