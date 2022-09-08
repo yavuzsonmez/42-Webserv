@@ -359,9 +359,8 @@ bool ConfigurationKey::is_digits(const std::string &str)
 }
 
 /**
- * Throws an InvalidConfigurationFile error with a message in front
- * printed by the debugger.
- *
+ * @brief Throws an invalid configuration message. Prints out all information known to this parsing error.
+ * Exits the program by throwing an exception.
  * @param message to print
  */
 void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::string message) {
@@ -372,6 +371,7 @@ void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::st
 	std::cout << (current_line + 1) << " " << Y << raw_input << Reset << std::endl;
 	std::cout << (current_line + 2) << " ..." <<  std::endl;
 	debugger.error(message);
+	std::cout << R << "The parser did not continue after finding this error. There may be more." << std::endl;
 	throw InvalidConfigurationFile();
 }
 
