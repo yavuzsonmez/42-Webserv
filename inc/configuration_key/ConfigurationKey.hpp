@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "../../inc/config_file/InvalidConfigurationFile.hpp"
 
 /**
  * All keys which can be used in the configuration file are defined here.
@@ -67,20 +68,11 @@ typedef std::pair <std::string, std::string>	internal_keyvalue;
  */
 class ConfigurationKey {
 	public:
-		// gets thrown if the configuration key is faulty.
-		class InvalidConfigurationFile : public std::exception {
-			public:
-				virtual const char* what() const throw() {
-					return "configuration file is faulty";
-				}
-		};
 		ConfigurationKey();
 		ConfigurationKey( const ConfigurationKey &src );
 		~ConfigurationKey();
 		ConfigurationKey & operator = (const ConfigurationKey &src);
-
-		// this is the initializer taking the key and the raw value from the configuration file
-		ConfigurationKey(std::string key, std::string value, bool location_block);
+		ConfigurationKey(std::string key, std::string value, bool location_block, int current_line, std::string raw_input);
 		
 		void setLocationBlockParsing(bool value);
 
@@ -88,6 +80,7 @@ class ConfigurationKey {
 
 		std::string key;
 		std::string value;
+		std::string raw_input;
 
 		// Configuration type
 		ConfigurationKeyType configurationType;
@@ -111,7 +104,7 @@ class ConfigurationKey {
 		bool isRootKeyType(internal_keyvalue raw);
 		bool isLocationKeyType(internal_keyvalue &raw);
 		bool isMethodsKeyType(internal_keyvalue raw);
-
+		bool isValidMethod(std::string method);
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
@@ -121,6 +114,7 @@ class ConfigurationKey {
 		 * Indicates if we are currently parsing keys within a location block or not.
 		 */
 		bool isCurrentlyParsingLocationBlock;
+		int current_line;
 };
 
 #endif

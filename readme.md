@@ -1,8 +1,10 @@
 <h1>Webserv is an HTTP/1.1 server written in C++ 98.</h1>
 
 ## To build:
-``make`` - normal build   
-``make debug`` - debug build
+``make`` - normal build or build files which changed
+``make`` - normal full build   
+``make debug`` - debug build files which changed   
+``make rebug`` - debug build ALL files (similiar to make re)   
 
 <h2>We decided to work with poll for the Input/Output Multiplexing</h2>
 

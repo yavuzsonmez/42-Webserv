@@ -38,7 +38,7 @@ void DebuggerPrinter::printString( const std::string &message, LogLevel level ) 
 			prefix = "\033[0;36m[DEBUG]\033[0m";
 			break;
 		case ERROR:
-			prefix = "\033[0;31m[ERROR!]\033[0m";
+			prefix = "\033[0;31m[ERROR]\033[0m";
 			break;
 		default:
 			prefix = "[UNKNOWN]";
