@@ -1,5 +1,6 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
+#include "../../inc/utility/colors.hpp"
 
 
 /**
@@ -27,6 +28,8 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->indexes = src.indexes;
 	this->methods = src.methods;
 	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
+	this->current_line = src.current_line;
+	this->raw_input = src.raw_input;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -42,9 +45,17 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * Actual constructor of configuration key class.
  * Will take raw key and value and convert it in the internal_keyvalue for better handling within the class.
  * This calls detectConfigurationType, which sets the configuratio key type.
+ * @param current_line The line current_line is being used for debugging purposes.
+ * @param key to key to use
+ * @param value the value to use
+ * @param location_block is the current key within a location block?
+ * @param raw_input the original input from the configuration file
+ * 
  */
-ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block) {
+ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block, int current_line, std::string raw_input) {
 	this->isCurrentlyParsingLocationBlock = location_block;
+	this->current_line = current_line;
+	this->raw_input = raw_input;
 	DebuggerPrinter debugger = debugger.getInstance();
 	if (key.empty () || value.empty()) {
 		throwInvalidConfigurationFileExceptionWithMessage("Key or value of configuration key was empty!");
@@ -217,6 +228,23 @@ bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
 }
 
 /**
+ * @brief Checks if a given method is valid or not.
+ * - GET
+ * - POST
+ * - PUT
+ * - DELETE
+ * @param method 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isValidMethod(std::string method) {
+	if (method == "GET" || method == "POST" || method == "PUT" || method == "DELETE") {
+		return true;
+	}
+	return false;
+}
+
+/**
  * @brief Check if the key is a methods key type.
  * - also sets the methods
  * TODO: Validate methods values
@@ -230,6 +258,9 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 	{
 		std::string substr;
 		std::getline( ss, substr, ' ' );
+		if (!this->isValidMethod(substr)) {
+			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + substr);
+		}
 		if (!substr.empty())
 			this->methods.push_back( substr );
 		else
@@ -276,10 +307,12 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 				throwInvalidConfigurationFileExceptionWithMessage("Invalid ports!");
 			std::istringstream portToCheck(substr);
 			portToCheck >> val;
+			if (val > 65535)
+				throwInvalidConfigurationFileExceptionWithMessage("Port too high.");
 			if (this->validatePort(val))
-				this->server_names.push_back( substr );
+				this->ports.push_back( val );
 			else
-				throw("Unsupported constructor. Use key value constructor instead!");
+				throwInvalidConfigurationFileExceptionWithMessage("Invalid port");
 		}
 		else
 			return false;
@@ -313,23 +346,32 @@ bool ConfigurationKey::validatePort(unsigned int port) {
 }
 
 /**
- * @brief Checks if a string only contains digits.
+ * @brief Checks if a string only contains digits, left-padding zeros or just zeros.
  * 
  */
 bool ConfigurationKey::is_digits(const std::string &str)
 {
+	if (str.find_first_not_of("0") == std::string::npos)
+		return false;
+	if (str.find_first_not_of("0") != 0)
+		return false;
 	return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
 /**
- * Throws an InvalidConfigurationFile error with a message in front
- * printed by the debugger.
- *
+ * @brief Throws an invalid configuration message. Prints out all information known to this parsing error.
+ * Exits the program by throwing an exception.
  * @param message to print
  */
 void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::string message) {
 	DebuggerPrinter debugger = debugger.getInstance();
+	std::cout << R << "----------------- FAILED -----------------" << Reset << std::endl;
+	std::cout << R << "Encountered a problem with configuration on line " << (current_line + 1) << Reset << ":" << std::endl;
+	std::cout << (current_line) << " ..." <<  std::endl;
+	std::cout << (current_line + 1) << " " << Y << raw_input << Reset << std::endl;
+	std::cout << (current_line + 2) << " ..." <<  std::endl;
 	debugger.error(message);
+	std::cout << R << "The parser did not continue after finding this error. There may be more." << std::endl;
 	throw InvalidConfigurationFile();
 }
 

@@ -60,8 +60,15 @@ std::string join_vector(std::vector<std::string> &vec, std::string delimiter)
  * Printing out nested keys in the location block
  */
 std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
+	std::string intendation = "   ";
+	std:: cout << intendation;
 	std::cout << B << "->" << Reset << " ROOT " << key.root << std::endl;
+	std:: cout << intendation;
+	std:: cout << intendation;
 	std::cout << B << "->" << Reset << " METHODS " << join_vector(key.methods, ", ")  << std::endl;
+	std:: cout << intendation;
+	std:: cout << intendation;
+	std::cout << B << "->" << Reset << " INDEX " << join_vector(key.indexes, ", ")  << std::endl;
 	return "";
 }
 
