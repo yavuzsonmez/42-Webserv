@@ -11,7 +11,7 @@ ConfigFileParsing::ConfigFileParsing()
 
 ConfigFileParsing::ConfigFileParsing( const ConfigFileParsing &src )
 {
-
+	(void) src;
 }
 
 ConfigFileParsing::~ConfigFileParsing()
@@ -20,6 +20,7 @@ ConfigFileParsing::~ConfigFileParsing()
 }
 
 ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src) {
+	(void) src;
 	return (*this);
 }
 
@@ -124,7 +125,7 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition)
 {
 	USE_DEBUGGER;
-	if (firstNotWhiteSpacePosition == std::string::npos) {
+	if (firstNotWhiteSpacePosition ==  (int) std::string::npos) {
 		debugger.debug("SKIPPING: Line is empty.");
 		return true;
 	}
@@ -182,12 +183,13 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
  */
 void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlocks)
 {
+	if (DEBUGMODE != 1) return;
 	int locationBlockCounter = 0;
-	for (int i = 0; i < serverBlocks.size(); i++) {
+	for (int i = 0; i < (int) serverBlocks.size(); i++) {
 		std::cout << "SERVER BLOCK " << i << std::endl;
 		// print every configuration key
 		std::cout << serverBlocks[i].configurationKeys.size() << " CONFIGURATION KEYS" << std::endl;
-		for (int j = 0; j < serverBlocks[i].configurationKeys.size(); j++) {
+		for (int j = 0; j < (int) serverBlocks[i].configurationKeys.size(); j++) {
 			printKeyValueColored(serverBlocks[i].configurationKeys[j].key, serverBlocks[i].configurationKeys[j].value);
 			if (serverBlocks[i].configurationKeys[j].configurationType == LOCATION) {
 				printOutNestedKeysFromLocationBlocks(serverBlocks[i].configurationKeys[j]);

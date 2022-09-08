@@ -55,10 +55,21 @@ OBJS			=		$(SRCS:.cpp=.o)
 
 DEBUG			=		-g -fsanitize=address
 
-FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98 -g
+FLAGS			=		-Werror -Wall -Wextra
 
-.c.o			:
-						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)
+# Here we define how every single file is being compiled.
+# With MAKECMDGOALS we detect if we are running a debug build and then inject the defines.
+ifeq ($(MAKECMDGOALS),debug)
+    FLAGS += -D DEBUGMODE=1
+else
+    FLAGS += -D DEBUGMODE=0
+endif
+
+.cpp.o			:
+						c++ -c $(FLAGS) $< -o $@
+						@if [ $@ = "debug" ]; then\
+							echo "Hello world";\
+						fi
 
 $(NAME)			:		$(OBJS) $(HDRS) | silence
 						@c++ $(FLAGS) $(OBJS) -o $(NAME)
@@ -73,8 +84,6 @@ debug				:	$(OBJS) $(HDRS) | silence
 						@c++ $(OBJS) $(DEBUG) -o $(NAME)
 						@echo "$(P)DEBUG MODE : address sanitizer$(Reset)"
 						@echo "$(G)$(NAME) has been created$(Reset)"
-						$(NAME) > debug.log
-						@echo "$(B)Debug logged in 'debug.log'$(Reset)"
 
 silence:
 						@:
