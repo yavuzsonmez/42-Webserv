@@ -21,7 +21,7 @@ server {
 Each ServerBlock can hold configuration keys.
 The configuration keys have different types:
 
-Relevant for you:
+Relevant for you:   
 INDEX   
 SERVER_NAME   
 LISTEN   
