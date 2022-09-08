@@ -313,11 +313,15 @@ bool ConfigurationKey::validatePort(unsigned int port) {
 }
 
 /**
- * @brief Checks if a string only contains digits.
+ * @brief Checks if a string only contains digits, left-padding zeros or just zeros.
  * 
  */
 bool ConfigurationKey::is_digits(const std::string &str)
 {
+	if (str.find_first_not_of("0") == std::string::npos)
+		return false;
+	if (str.find_first_not_of("0") != 0)
+		return false;
 	return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
