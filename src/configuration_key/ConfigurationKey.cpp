@@ -34,6 +34,7 @@ ConfigurationKey::~ConfigurationKey() {
 }
 
 ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
+	(void) src;
 	return (*this);
 }
 
@@ -229,7 +230,6 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 	{
 		std::string substr;
 		std::getline( ss, substr, ' ' );
-		std::cout << "METHODS ADDING: " << substr << std::endl;
 		if (!substr.empty())
 			this->methods.push_back( substr );
 		else
@@ -292,7 +292,7 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
  * - to be enabled when the location block is detected
  */
 void ConfigurationKey::setLocationBlockParsing(bool value) {
-	this->isCurrentlyParsingLocationBlock = false;
+	this->isCurrentlyParsingLocationBlock = value;
 }
 
 /**

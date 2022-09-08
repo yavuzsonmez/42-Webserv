@@ -7,7 +7,7 @@ DebuggerPrinter::DebuggerPrinter()
 }
 DebuggerPrinter::DebuggerPrinter( const DebuggerPrinter &src )
 {
-
+	(void) src;
 }
 
 DebuggerPrinter::~DebuggerPrinter()
@@ -16,6 +16,7 @@ DebuggerPrinter::~DebuggerPrinter()
 }
 
 DebuggerPrinter & DebuggerPrinter::operator = (const DebuggerPrinter &src) {
+	(void) src;
 	return (*this);
 }
 
@@ -72,6 +73,7 @@ void DebuggerPrinter::warning( const std::string &message ) {
  * @param message
  */
 void DebuggerPrinter::debug( const std::string &message ) {
+	if (DEBUGMODE != 1) return ;
 	printString(message, DEBUG);
 }
 
