@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "../../inc/config_file/InvalidConfigurationFile.hpp"
 
 /**
  * All keys which can be used in the configuration file are defined here.
@@ -67,13 +68,6 @@ typedef std::pair <std::string, std::string>	internal_keyvalue;
  */
 class ConfigurationKey {
 	public:
-		// gets thrown if the configuration key is faulty.
-		class InvalidConfigurationFile : public std::exception {
-			public:
-				virtual const char* what() const throw() {
-					return "configuration file is faulty";
-				}
-		};
 		ConfigurationKey();
 		ConfigurationKey( const ConfigurationKey &src );
 		~ConfigurationKey();
