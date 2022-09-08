@@ -73,6 +73,7 @@ void DebuggerPrinter::warning( const std::string &message ) {
  * @param message
  */
 void DebuggerPrinter::debug( const std::string &message ) {
+	if (DEBUGMODE != 1) return ;
 	printString(message, DEBUG);
 }
 
