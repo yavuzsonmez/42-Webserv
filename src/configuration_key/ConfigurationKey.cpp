@@ -230,7 +230,6 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 	{
 		std::string substr;
 		std::getline( ss, substr, ' ' );
-		std::cout << "METHODS ADDING: " << substr << std::endl;
 		if (!substr.empty())
 			this->methods.push_back( substr );
 		else
