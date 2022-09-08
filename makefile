@@ -8,6 +8,7 @@ Y				=		\033[33;1m					# Yellow
 NAME			=		webserv
 
 HDRS			=		./inc/config_file/ConfigFileParsing.hpp \
+						./inc/config_file/InvalidConfigurationFile.hpp \
 						./inc/configuration_key/ConfigurationKey.hpp \
 						./inc/configuration_key/ServerBlock.hpp \
 						./inc/debugger/Singleton.hpp \
@@ -27,6 +28,7 @@ ENTRY			=		./main.cpp
 DEBUGGER		=		./src/debugger/DebuggerPrinter.cpp \
 
 CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
+						./src/config_file/InvalidConfigurationFile.cpp \
 						./src/configuration_key/ConfigurationKey.cpp \
 						./src/configuration_key/ServerBlock.cpp \
 
