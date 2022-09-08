@@ -3,6 +3,7 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
 #include "../../inc/utility/colors.hpp"
+#include <set>
 
 ConfigFileParsing::ConfigFileParsing()
 {
@@ -26,11 +27,37 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
 }
 
 /**
+ * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
+ * - checking double ports on all server blocks
+ * - checking double server names on all server blocks
+ * - checking double location paths for each server block
+ * @return true 
+ * @return false 
+ */
+bool ConfigFileParsing::validateConfiguration() {
+	USE_DEBUGGER;
+	std::vector<unsigned int> allServerPorts = getAllServerPortsFromAllServerBlocks(this->serverBlocks);
+	std::vector<std::string> allServerNames = getAllServerNamesFromAllServerBlocks(this->serverBlocks);
+
+	if (vector_has_duplicate_element(allServerPorts)) {
+		debugger.error("Configuration file has duplicate ports.");
+		throw InvalidConfigurationFile();
+	}
+	if (vector_has_duplicate_element(allServerNames)) {
+		debugger.error("Configuration file has duplicate server names.");
+		throw InvalidConfigurationFile();
+	}
+
+	return true;
+}
+
+/**
  * @brief Parses the given content from the content file
  * @note Removes all the comments from a configuration file. (a comment starts with #)
  * @param file_content
- * @return true
- * @return false or an throw exception if the configuration file is faulty.
+ * @return true / false
+ * @note Runs two checks. First check is to see if the file is faulty. If it is, it will return false.
+ * Next check is actual logic of the file, means no double server ports etc...
  */
 bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
 	strip_from_str(file_content, '#', '\n');
@@ -38,7 +65,7 @@ bool ConfigFileParsing::parseConfigFile( std::string &file_content ) {
 		return false;
 	}
 	determineConfigurationKeys(file_content);
-	return true;
+	return validateConfiguration();
 }
 
 /**
@@ -144,7 +171,8 @@ bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int 
 
 /**
  * @brief Parses a configuration file into configuration keys and adds them to server blocks.
- * 
+ *   MAIN PARSING FUNCTION
+ *   @param file_content
  * - Determines the configuration for a entry line by line.
  * - Takes file_content and prints out the detected ConfigurationType.
  * - It skips empty lines automatically.
