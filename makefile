@@ -71,10 +71,7 @@ else
 endif
 
 .cpp.o			:
-						c++ -c $(FLAGS) $< -o $@
-						@if [ $@ = "debug" ]; then\
-							echo "Hello world";\
-						fi
+						@c++ -c $(FLAGS) $< -o $@
 
 $(NAME)			:		$(OBJS) $(HDRS) | silence
 						@c++ $(FLAGS) $(OBJS) -o $(NAME)
@@ -99,14 +96,14 @@ valgrind			:	$(NAME)
 
 clean			:
 						@rm -f $(OBJS)
-						@echo "$(R)Objects have been removed$(Reset)"
+						@echo "$(R)Objects have been removed 🗑$(Reset)"
 
 fclean			:		clean
 						@rm -f $(NAME)
-						@echo "$(R)$(NAME) has been removed$(Reset)"
+						@echo "$(R)$(NAME) has been removed 🗑$(Reset)"
 						@rm -f debug.log
 						@rm -f leaks.log
-						@echo "$(R)logs have been removed$(Reset)"
+						@echo "$(R)logs have been removed 🗑$(Reset)"
 
 all				:		$(NAME)
 
