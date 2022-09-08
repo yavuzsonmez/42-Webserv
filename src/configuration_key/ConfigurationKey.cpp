@@ -217,6 +217,23 @@ bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
 }
 
 /**
+ * @brief Checks if a given method is valid or not.
+ * - GET
+ * - POST
+ * - PUT
+ * - DELETE
+ * @param method 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isValidMethod(std::string method) {
+	if (method == "GET" || method == "POST" || method == "PUT" || method == "DELETE") {
+		return true;
+	}
+	return false;
+}
+
+/**
  * @brief Check if the key is a methods key type.
  * - also sets the methods
  * TODO: Validate methods values
@@ -230,6 +247,9 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 	{
 		std::string substr;
 		std::getline( ss, substr, ' ' );
+		if (!this->isValidMethod(substr)) {
+			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + ss.str());
+		}
 		if (!substr.empty())
 			this->methods.push_back( substr );
 		else
