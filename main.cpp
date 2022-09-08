@@ -46,7 +46,6 @@ int main(int argc, char **argv)
 
 	delete configurationFileParsing;
 
-
 	/* START TEST REQUEST */
 /* 	std::string get = get_file_content("./sample/http_request_get");
 	std::string post = get_file_content("./sample/http_request_post");
