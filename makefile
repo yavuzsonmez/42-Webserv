@@ -57,8 +57,19 @@ DEBUG			=		-g -fsanitize=address
 
 FLAGS			=		-Werror -Wall -Wextra
 
+# Here we define how every single file is being compiled.
+# With MAKECMDGOALS we detect if we are running a debug build and then inject the defines.
+ifeq ($(MAKECMDGOALS),debug)
+    FLAGS += -D DEBUGMODE=1
+else
+    FLAGS += -D DEBUGMODE=0
+endif
+
 .cpp.o			:
 						c++ -c $(FLAGS) $< -o $@
+						@if [ $@ = "debug" ]; then\
+							echo "Hello world";\
+						fi
 
 $(NAME)			:		$(OBJS) $(HDRS) | silence
 						@c++ $(FLAGS) $(OBJS) -o $(NAME)
