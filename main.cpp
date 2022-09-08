@@ -40,7 +40,6 @@ int main(int argc, char **argv)
 		configurationFileParsing->parseConfigFile(file_content);
 		debugger.info("CONFIG FILE OK");
 	} catch (const std::exception& e) {
-		debugger.warning("INVALID CONFIGURATION FILE!");
 		std::cout << "error: " << e.what() << std::endl;
 		return (1);
 	}

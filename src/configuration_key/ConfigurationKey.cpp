@@ -28,6 +28,8 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->indexes = src.indexes;
 	this->methods = src.methods;
 	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
+	this->current_line = src.current_line;
+	this->raw_input = src.raw_input;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -43,9 +45,17 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * Actual constructor of configuration key class.
  * Will take raw key and value and convert it in the internal_keyvalue for better handling within the class.
  * This calls detectConfigurationType, which sets the configuratio key type.
+ * @param current_line The line current_line is being used for debugging purposes.
+ * @param key to key to use
+ * @param value the value to use
+ * @param location_block is the current key within a location block?
+ * @param raw_input the original input from the configuration file
+ * 
  */
-ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block) {
+ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block, int current_line, std::string raw_input) {
 	this->isCurrentlyParsingLocationBlock = location_block;
+	this->current_line = current_line;
+	this->raw_input = raw_input;
 	DebuggerPrinter debugger = debugger.getInstance();
 	if (key.empty () || value.empty()) {
 		throwInvalidConfigurationFileExceptionWithMessage("Key or value of configuration key was empty!");
@@ -297,10 +307,12 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 				throwInvalidConfigurationFileExceptionWithMessage("Invalid ports!");
 			std::istringstream portToCheck(substr);
 			portToCheck >> val;
+			if (val > 65535)
+				throwInvalidConfigurationFileExceptionWithMessage("Port too high.");
 			if (this->validatePort(val))
 				this->ports.push_back( val );
 			else
-				throw("Unsupported constructor. Use key value constructor instead!");
+				throwInvalidConfigurationFileExceptionWithMessage("Invalid port");
 		}
 		else
 			return false;
@@ -355,6 +367,10 @@ bool ConfigurationKey::is_digits(const std::string &str)
 void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::string message) {
 	DebuggerPrinter debugger = debugger.getInstance();
 	std::cout << R << "----------------- FAILED -----------------" << Reset << std::endl;
+	std::cout << R << "Encountered a problem with configuration on line " << (current_line + 1) << Reset << ":" << std::endl;
+	std::cout << (current_line) << " ..." <<  std::endl;
+	std::cout << (current_line + 1) << " " << Y << raw_input << Reset << std::endl;
+	std::cout << (current_line + 2) << " ..." <<  std::endl;
 	debugger.error(message);
 	throw InvalidConfigurationFile();
 }
