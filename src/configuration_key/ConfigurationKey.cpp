@@ -297,7 +297,7 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 			std::istringstream portToCheck(substr);
 			portToCheck >> val;
 			if (this->validatePort(val))
-				this->server_names.push_back( substr );
+				this->ports.push_back( val );
 			else
 				throw("Unsupported constructor. Use key value constructor instead!");
 		}
