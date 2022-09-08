@@ -1,5 +1,6 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
+#include "../../inc/utility/colors.hpp"
 
 
 /**
@@ -248,7 +249,7 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 		std::string substr;
 		std::getline( ss, substr, ' ' );
 		if (!this->isValidMethod(substr)) {
-			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + ss.str());
+			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + substr);
 		}
 		if (!substr.empty())
 			this->methods.push_back( substr );
@@ -353,6 +354,7 @@ bool ConfigurationKey::is_digits(const std::string &str)
  */
 void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::string message) {
 	DebuggerPrinter debugger = debugger.getInstance();
+	std::cout << R << "----------------- FAILED -----------------" << Reset << std::endl;
 	debugger.error(message);
 	throw InvalidConfigurationFile();
 }
