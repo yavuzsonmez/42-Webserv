@@ -147,7 +147,6 @@ bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int 
  * - When iterating, it trims the string from the left side.
  * - Sets the location block parsing flag to true when a location block is detected. The Location block parsing
  *   is controlled by ConfigFileParsing.
- * TODO: If location is found, it will skip all the contents of location and parse location separately.
  */
 void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) {
 	USE_DEBUGGER;
