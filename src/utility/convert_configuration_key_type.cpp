@@ -66,6 +66,9 @@ std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std:: cout << intendation;
 	std:: cout << intendation;
 	std::cout << B << "->" << Reset << " METHODS " << join_vector(key.methods, ", ")  << std::endl;
+	std:: cout << intendation;
+	std:: cout << intendation;
+	std::cout << B << "->" << Reset << " INDEX " << join_vector(key.indexes, ", ")  << std::endl;
 	return "";
 }
 

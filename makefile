@@ -59,7 +59,9 @@ FLAGS			=		-Werror -Wall -Wextra
 
 # Here we define how every single file is being compiled.
 # With MAKECMDGOALS we detect if we are running a debug build and then inject the defines.
-ifeq ($(MAKECMDGOALS),debug)
+ifeq ($(MAKECMDGOALS),rebug)
+    FLAGS += -D DEBUGMODE=1
+else ifeq ($(MAKECMDGOALS),debug)
     FLAGS += -D DEBUGMODE=1
 else
     FLAGS += -D DEBUGMODE=0
@@ -106,5 +108,7 @@ fclean			:		clean
 all				:		$(NAME)
 
 re				:		fclean all
+
+rebug			:		fclean debug
 
 .PHONY			:		clean fclean all re
