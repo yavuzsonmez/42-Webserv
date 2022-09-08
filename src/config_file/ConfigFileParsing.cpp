@@ -11,7 +11,8 @@ ConfigFileParsing::ConfigFileParsing()
 
 ConfigFileParsing::ConfigFileParsing( const ConfigFileParsing &src )
 {
-	(void) src;
+	this->isCurrentlyInLocationBlock = src.isCurrentlyInLocationBlock;
+	this->serverBlocks = src.serverBlocks;
 }
 
 ConfigFileParsing::~ConfigFileParsing()
@@ -185,17 +186,18 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 {
 	if (DEBUGMODE != 1) return;
 	int locationBlockCounter = 0;
+	std::string intendation = "   ";
 	for (int i = 0; i < (int) serverBlocks.size(); i++) {
-		std::cout << "SERVER BLOCK " << i << std::endl;
+		std::cout << R << "SERVER BLOCK " << Reset << i << std::endl;
 		// print every configuration key
-		std::cout << serverBlocks[i].configurationKeys.size() << " CONFIGURATION KEYS" << std::endl;
 		for (int j = 0; j < (int) serverBlocks[i].configurationKeys.size(); j++) {
+			std:: cout << intendation;
 			printKeyValueColored(serverBlocks[i].configurationKeys[j].key, serverBlocks[i].configurationKeys[j].value);
 			if (serverBlocks[i].configurationKeys[j].configurationType == LOCATION) {
+				std:: cout << intendation;
 				printOutNestedKeysFromLocationBlocks(serverBlocks[i].configurationKeys[j]);
 				locationBlockCounter++;
 			}
 		}
 	}
-	std::cout << "TOTAL LOCATION BLOCKS: " << locationBlockCounter << std::endl;
 }
