@@ -55,10 +55,10 @@ OBJS			=		$(SRCS:.cpp=.o)
 
 DEBUG			=		-g -fsanitize=address
 
-FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98 -g
+FLAGS			=		-Werror -Wall -Wextra
 
-.c.o			:
-						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)
+.cpp.o			:
+						c++ -c $(FLAGS) $< -o $@
 
 $(NAME)			:		$(OBJS) $(HDRS) | silence
 						@c++ $(FLAGS) $(OBJS) -o $(NAME)
@@ -73,8 +73,6 @@ debug				:	$(OBJS) $(HDRS) | silence
 						@c++ $(OBJS) $(DEBUG) -o $(NAME)
 						@echo "$(P)DEBUG MODE : address sanitizer$(Reset)"
 						@echo "$(G)$(NAME) has been created$(Reset)"
-						$(NAME) > debug.log
-						@echo "$(B)Debug logged in 'debug.log'$(Reset)"
 
 silence:
 						@:

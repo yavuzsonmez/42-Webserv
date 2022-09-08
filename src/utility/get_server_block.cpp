@@ -88,7 +88,6 @@ std::vector<std::string> get_server_blocks(std::string &file_content)
 
 	std::istringstream iss(file_content);
 	std::string result;
-	int i = 0;
 	for (std::string line; std::getline(iss, line); )
 	{
 		// Check if server block closes

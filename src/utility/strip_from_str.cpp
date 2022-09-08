@@ -12,13 +12,12 @@
 void strip_from_str(std::string &file_content, const char start, const char end)
 {
 	size_t start_index;
-	size_t end_index;
 	std::istringstream iss(file_content);
 	std::string result;
 
 	for (std::string line; std::getline(iss, line); )
 	{
-		if (line.find(start) == -1)
+		if ((int) line.find(start) == -1)
 		{
 			result += line + end;
 			continue;

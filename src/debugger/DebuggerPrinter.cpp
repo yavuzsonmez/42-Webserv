@@ -7,7 +7,7 @@ DebuggerPrinter::DebuggerPrinter()
 }
 DebuggerPrinter::DebuggerPrinter( const DebuggerPrinter &src )
 {
-
+	(void) src;
 }
 
 DebuggerPrinter::~DebuggerPrinter()
@@ -16,6 +16,7 @@ DebuggerPrinter::~DebuggerPrinter()
 }
 
 DebuggerPrinter & DebuggerPrinter::operator = (const DebuggerPrinter &src) {
+	(void) src;
 	return (*this);
 }
 
