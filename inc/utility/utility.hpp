@@ -15,6 +15,7 @@
 # include <stack>
 # include <vector>
 # include <utility>
+# include <set>
 # include <unistd.h>
 # include "../config_file/ConfigFileParsing.hpp"
 
@@ -33,5 +34,16 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType);
 std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key);
 std::string join_vector(std::vector<std::string> &vec, std::string delimiter);
 std::string printKeyValueColored(std::string key, std::string name);
+std::vector<unsigned int> getAllServerPortsFromAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
+std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
 
+
+
+template<typename X>
+bool vector_has_duplicate_element(std::vector<X> v)
+{
+	std::set<X> s(v.begin(), v.end());
+	return s.size() != v.size();
+
+}
 #endif

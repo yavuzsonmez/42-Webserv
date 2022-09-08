@@ -28,6 +28,7 @@ ENTRY			=		./main.cpp
 DEBUGGER		=		./src/debugger/DebuggerPrinter.cpp \
 
 CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
+						./src/config_file/ConfigValidationHelper.cpp \
 						./src/config_file/InvalidConfigurationFile.cpp \
 						./src/configuration_key/ConfigurationKey.cpp \
 						./src/configuration_key/ServerBlock.cpp \
