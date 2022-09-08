@@ -183,6 +183,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
  */
 void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlocks)
 {
+	if (DEBUGMODE != 1) return;
 	int locationBlockCounter = 0;
 	for (int i = 0; i < (int) serverBlocks.size(); i++) {
 		std::cout << "SERVER BLOCK " << i << std::endl;
