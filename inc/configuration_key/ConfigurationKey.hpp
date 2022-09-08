@@ -72,9 +72,7 @@ class ConfigurationKey {
 		ConfigurationKey( const ConfigurationKey &src );
 		~ConfigurationKey();
 		ConfigurationKey & operator = (const ConfigurationKey &src);
-
-		// this is the initializer taking the key and the raw value from the configuration file
-		ConfigurationKey(std::string key, std::string value, bool location_block);
+		ConfigurationKey(std::string key, std::string value, bool location_block, int current_line, std::string raw_input);
 		
 		void setLocationBlockParsing(bool value);
 
@@ -82,6 +80,7 @@ class ConfigurationKey {
 
 		std::string key;
 		std::string value;
+		std::string raw_input;
 
 		// Configuration type
 		ConfigurationKeyType configurationType;
@@ -115,6 +114,7 @@ class ConfigurationKey {
 		 * Indicates if we are currently parsing keys within a location block or not.
 		 */
 		bool isCurrentlyParsingLocationBlock;
+		int current_line;
 };
 
 #endif

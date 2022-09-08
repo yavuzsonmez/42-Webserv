@@ -171,7 +171,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
-		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1], this->isCurrentlyInLocationBlock);
+		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1], this->isCurrentlyInLocationBlock, lineNumber, trimmedString);
 		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
 		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
 		addConfigurationKeyToCurrentServerBlock(key);
