@@ -63,9 +63,13 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
  * @brief Add a key to a location block key (which is the last key in the vector)
  * @param key original location key
  * @param keyToAdd key to add to the original location key
+ * ALL KEYS WHICH ARE HELD BY LOCATION BLOCKS HAVE TO BE ADDED IN THIS FUNCTION
  */
 void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd ) {
 	if (keyToAdd.configurationType == INDEX) {
+		key.indexes = keyToAdd.indexes;
+	}
+	if (keyToAdd.configurationType == LOCATION) {
 		key.location = keyToAdd.location;
 	}
 	if (keyToAdd.configurationType == ROOT) {
