@@ -1,4 +1,4 @@
-#include "../../inc/cgi.hpp"
+#include "../../inc/http/Cgi.hpp"
 
 CGI::CGI()
 {
@@ -28,7 +28,8 @@ CGI::CGI(/*Request &request*/Request request) : _request(request)
 
 	if (_request.getQuery().second)
 	{
-		_query_parameters = split_string(_request.getQuery().first, '&');
+		std::string	query = _request.getQuery().first;
+		_query_parameters = split_on_delimiter(query, '&');
 	}
 
 
@@ -60,11 +61,7 @@ void	CGI::execute(void)
 {
 	pid_t	pid;
 	
-	sleep(5);
-	write(1, "test1\n", 6);
 	_tmpout = tmpfile();											//File pointer to a temporaryfile
-	write(1, "test2\n", 6);
-	sleep(5);
 	//_fd = fileno(_tmpout);											//extract the filedescriptor from the file stream
 	//_tmpin = tmpfile();
 	
@@ -80,19 +77,19 @@ void	CGI::execute(void)
 		//char	*argv[5] = {"php-cgi", "echo.php", "firstname=Paul", "lastname=Fritz", NULL};	//creating the arguments for execve
 		
 		_query_parameters.insert(_query_parameters.begin(), "echo.php");
-		_query_parameters.insert(_query_parameters.begin(), "php-cgi");
+		_query_parameters.insert(_query_parameters.begin(), "cgi_tester");
 		
-		char	*argv[_query_parameters.size() + 1];
-		size_t i = 0;
-		std::vector<std::string>::iterator it;
-		for (it = _query_parameters.begin(); it != _query_parameters.end(); ++it)
-		{
-			argv[i] = strdup(to_str(*it).c_str());
-			i++;
-		}
-		argv[i] = NULL;
-		//std::cout << "envp: " << map_to_array(_env)[0] << std::endl;
-		execve(argv[0], argv, map_to_array(_env));						//executes the executable with its arguments
+		//char	*argv[_query_parameters.size() + 1];
+		// size_t i = 0;
+		// std::vector<std::string>::iterator it;
+		// for (it = _query_parameters.begin(); it != _query_parameters.end(); ++it)
+		// {
+		// 	argv[i] = strdup(to_str(*it).c_str());
+		// 	i++;
+		// }
+		// argv[i] = NULL;
+		std::cout << "envp: " << map_to_array(_env)[11] << std::endl;
+		execve("php-cgi", vec_to_array(_query_parameters), map_to_array(_env));						//executes the executable with its arguments
 		//execve("php-cgi", vec_to_array(_query_parameters), map_to_array(_env));
 		//std::cout << "execve: " << i << std::endl;				//check if execve failes
 		exit(1);												//exit the childprocess

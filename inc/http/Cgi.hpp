@@ -12,9 +12,13 @@
 # include <fcntl.h>
 # include <map>
 # include <vector>
-# include "utility.hpp"
+# include "../utility/utility.hpp"
 # include <algorithm>
-# include "http/Request.hpp"
+# include "Request.hpp"
+
+/**
+ * @brief class that gets instantiated whenever a cgiscript is called
+ */
 
 class	CGI
 {
@@ -38,7 +42,6 @@ class	CGI
 	int		_tmp_size;
 
 	Request	_request;
-	std::string	_referer;		//for testing, must be part of the request class
 };
 
 # endif

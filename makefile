@@ -31,8 +31,8 @@ CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
 						./src/configuration_key/ServerBlock.cpp \
 
 HTTP			=		./src/http/Request.cpp \
-						./src/classes/response.cpp \
-						./src/classes/cgi.cpp \
+						./src/http/Response.cpp \
+						./src/http/Cgi.cpp \
 
 NETWORK			=		./src/network/ClientSocket.cpp \
 						./src/network/Multiplexer.cpp \
