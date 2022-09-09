@@ -1,6 +1,6 @@
 #include "../../inc/network/ServerSocket.hpp"
 #include "../../inc/network/ClientSocket.hpp"
-#include "../../inc/response.hpp"
+#include "../../inc/http/Response.hpp"
 
 ServerSocket::ServerSocket(unsigned short port, unsigned int address)
 {
@@ -40,11 +40,12 @@ void ServerSocket::processConnections()
 		// if accept return -1 throw error
 		ClientSocket client(clientSocket);
 		
-		std::string	request_str;
-		read(forward, (char*)request_str.data(), 1000);
-		std::cout << "request_str: " << request_str.c_str() << std::endl;
+		char	buf[1000];
+		read(forward, buf, 1000);
+		std::string	request_str(buf);
 		Request	request(request_str);
 		Response response(request);
+		// test url -> http://localhost:4242/?firstname=Yavuz&lastname=Sonmez&age=26&home=Heilbronn
 		response.test_cgi();
 		std::string httpResponse(response.get_response());
 
