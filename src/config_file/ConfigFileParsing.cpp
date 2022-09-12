@@ -91,6 +91,7 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
  * @param key original location key
  * @param keyToAdd key to add to the original location key
  * ALL KEYS WHICH ARE HELD BY LOCATION BLOCKS HAVE TO BE ADDED IN THIS FUNCTION
+ * Super important function, without adding behavior for key it it will not appear in the location block!
  */
 void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd ) {
 	if (keyToAdd.configurationType == INDEX) {
@@ -104,6 +105,9 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	}
 	if (keyToAdd.configurationType == METHODS) {
 		key.methods = keyToAdd.methods;
+	}
+	if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
+		key.cgi_path = keyToAdd.cgi_path;
 	}
 }
 
@@ -121,22 +125,30 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 	USE_DEBUGGER;
 	int static currentServerIndex = -1;
 	
-	if (this->isCurrentlyInLocationBlock) {
+	if (this->isCurrentlyInLocationBlock && this->isCurrentlyInServerBlock) {
 		this->addConfigurationKeyToLocation(this->serverBlocks[currentServerIndex].configurationKeys.back(), key);
 		return;
 	}
 	// set location block to true if location was detected
-	if (key.configurationType == LOCATION) {
+	if (key.configurationType == LOCATION && this->isCurrentlyInServerBlock) {
 		this->isCurrentlyInLocationBlock = true;
+		this->server_bracket_counter++;
 	}
 
 	// creating a new server
+	// set SERVER BLOCK to true
 	if (key.configurationType == SERVERSTARTSEGMENT) {
 		currentServerIndex++;
+		this->server_bracket_counter++;
 		serverBlocks.push_back(ServerBlock());
+		this->isCurrentlyInServerBlock = true;
 	}
 	else
 	{
+		if (this->server_bracket_counter == 0) {
+			debugger.error("Configuration file has no server block.");
+			throw InvalidConfigurationFile();
+		}
 		debugger.debug("Adding key to server block " + std::to_string(currentServerIndex));
 		if (serverBlocks.size() == 0) {
 			debugger.error("No server block found or key is out of scope.");
@@ -160,6 +172,13 @@ bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int 
 	if (firstNotWhiteSpacePosition ==  (int) std::string::npos) {
 		debugger.debug("SKIPPING: Line is empty.");
 		return true;
+	}
+	if (line[firstNotWhiteSpacePosition] == '}' || line[firstNotWhiteSpacePosition] == '{') {
+		if (line[firstNotWhiteSpacePosition] == '}') {
+			this->server_bracket_counter--;
+		} else {
+			this->server_bracket_counter++;
+		}
 	}
 	if (line[firstNotWhiteSpacePosition] == '}') {
 		debugger.debug("SKIPPING: Line is a closing curly bracket.");
@@ -210,6 +229,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 
 /**
  * @brief DEBUG FUNCTION prints out all configuration keys of all available server blocks
+ * MAIN DEBUG PRINTING FUNCTION
  * 
  * @param serverBlocks 
  */
