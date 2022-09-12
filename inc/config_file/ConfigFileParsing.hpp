@@ -31,6 +31,7 @@ class ConfigFileParsing {
 		void addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd );
 		bool validateConfiguration();
 		bool isCurrentlyInLocationBlock;
+		bool isCurrentlyInServerBlock;
 };
 
 #endif
