@@ -7,6 +7,7 @@
 
 /**
  * All keys which can be used in the configuration file are defined here.
+ * To add a new key, add it to the KEY_DEFINES and to the enum.
  */
 
 # define	KEY_LOCATION				"location"
@@ -17,6 +18,7 @@
 # define	KEY_LISTEN					"listen"
 # define	KEY_INVALID					"INVALID"
 # define	KEY_METHODS					"methods"
+# define	KEY_EXECUTABLE_PATH			"cgi_path"
 
 /**
  * Defines the type of information a configuration key holds.
@@ -34,7 +36,8 @@ enum ConfigurationKeyType {
 	ROOT,
 	INVALID,
 	SERVERSTARTSEGMENT,
-	METHODS
+	METHODS,
+	CGI_EXECUTABLE_PATH
 };
 
 /**

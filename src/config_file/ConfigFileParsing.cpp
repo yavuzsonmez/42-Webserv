@@ -121,19 +121,21 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 	USE_DEBUGGER;
 	int static currentServerIndex = -1;
 	
-	if (this->isCurrentlyInLocationBlock) {
+	if (this->isCurrentlyInLocationBlock && this->isCurrentlyInServerBlock) {
 		this->addConfigurationKeyToLocation(this->serverBlocks[currentServerIndex].configurationKeys.back(), key);
 		return;
 	}
 	// set location block to true if location was detected
-	if (key.configurationType == LOCATION) {
+	if (key.configurationType == LOCATION && this->isCurrentlyInServerBlock) {
 		this->isCurrentlyInLocationBlock = true;
 	}
 
 	// creating a new server
+	// set SERVER BLOCK to true
 	if (key.configurationType == SERVERSTARTSEGMENT) {
 		currentServerIndex++;
 		serverBlocks.push_back(ServerBlock());
+		this->isCurrentlyInServerBlock = true;
 	}
 	else
 	{
