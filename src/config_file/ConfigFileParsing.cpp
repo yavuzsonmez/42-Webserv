@@ -91,6 +91,7 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
  * @param key original location key
  * @param keyToAdd key to add to the original location key
  * ALL KEYS WHICH ARE HELD BY LOCATION BLOCKS HAVE TO BE ADDED IN THIS FUNCTION
+ * Super important function, without adding behavior for key it it will not appear in the location block!
  */
 void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd ) {
 	if (keyToAdd.configurationType == INDEX) {
@@ -104,6 +105,9 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	}
 	if (keyToAdd.configurationType == METHODS) {
 		key.methods = keyToAdd.methods;
+	}
+	if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
+		key.cgi_path = keyToAdd.cgi_path;
 	}
 }
 
@@ -212,6 +216,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 
 /**
  * @brief DEBUG FUNCTION prints out all configuration keys of all available server blocks
+ * MAIN DEBUG PRINTING FUNCTION
  * 
  * @param serverBlocks 
  */

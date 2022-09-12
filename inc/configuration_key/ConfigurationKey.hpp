@@ -8,6 +8,8 @@
 /**
  * All keys which can be used in the configuration file are defined here.
  * To add a new key, add it to the KEY_DEFINES and to the enum.
+ * Add parsing behavior to determineConfigurationKeys in ConfigFileParsing.cpp
+ * Then add adding behavior to addConfigurationKeyToLocation
  */
 
 # define	KEY_LOCATION				"location"
@@ -94,6 +96,7 @@ class ConfigurationKey {
 		std::vector <std::string> methods; // methids, if type is METHODS. sorted by relevance and position within the key.
 		std::string root; // returns the path of the root
 		std::string location; // returns the locationpath of the location
+		std::string cgi_path; // returns the locationpath of the location
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
 		std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
 	private:
@@ -107,6 +110,7 @@ class ConfigurationKey {
 		bool isRootKeyType(internal_keyvalue raw);
 		bool isLocationKeyType(internal_keyvalue &raw);
 		bool isMethodsKeyType(internal_keyvalue raw);
+		bool isCgiExecutableKeyType(internal_keyvalue raw);
 		bool isValidMethod(std::string method);
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
