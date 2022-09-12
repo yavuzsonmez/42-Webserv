@@ -1,6 +1,13 @@
 <h1>Webserv is an HTTP/1.1 server written in C++ 98.</h1>
 
+## To build:
+``make`` - normal build or build files which changed
+``make`` - normal full build   
+``make debug`` - debug build files which changed   
+``make rebug`` - debug build ALL files (similiar to make re)   
+
 <h2>We decided to work with poll for the Input/Output Multiplexing</h2>
+
 
 <code style="background-color:#3b3939; color:#ffffff">Prototype </code></br>
 <code style="background-color:#3b3939; color:#98d6c1">How we use the fnct </code></br>

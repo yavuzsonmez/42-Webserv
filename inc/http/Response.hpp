@@ -36,7 +36,6 @@ class Response
 	std::string	_status_text;
 
 	std::string	_server;
-	tm	*_date;
 	std::string	_content_type;
 	std::string	_charset;
 	std::string	_content_length;

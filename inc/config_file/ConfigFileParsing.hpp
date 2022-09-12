@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../configuration_key/ServerBlock.hpp"
+#include "../../inc/config_file/InvalidConfigurationFile.hpp"
 
 /**
  * @brief Takes a config file and parses it into a config file configuration.
@@ -21,20 +22,15 @@ class ConfigFileParsing {
 
 		// The server block vector which will provide the servers and their configurations
 		std::vector<ServerBlock> serverBlocks;
-
-		// gets thrown if the configuration file is faulty.
-		class InvalidConfigurationFile : public std::exception {
-			public:
-				virtual const char* what() const throw() {
-					return "configuration file is faulty";
-				}
-		};
 	private:
 		bool isGeneralFaultyFile( std::string &file_content );
 		void determineConfigurationKeys( std::string &file_content );
 		void addConfigurationKeyToCurrentServerBlock( ConfigurationKey &key );
 		bool shouldSkipLineInConfigurationFile(std::string line, int firstNotWhiteSpacePosition);
 		void printAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
+		void addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd );
+		bool validateConfiguration();
+		bool isCurrentlyInLocationBlock;
 };
 
 #endif

@@ -8,6 +8,7 @@ Y				=		\033[33;1m					# Yellow
 NAME			=		webserv
 
 HDRS			=		./inc/config_file/ConfigFileParsing.hpp \
+						./inc/config_file/InvalidConfigurationFile.hpp \
 						./inc/configuration_key/ConfigurationKey.hpp \
 						./inc/configuration_key/ServerBlock.hpp \
 						./inc/debugger/Singleton.hpp \
@@ -27,6 +28,8 @@ ENTRY			=		./main.cpp
 DEBUGGER		=		./src/debugger/DebuggerPrinter.cpp \
 
 CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
+						./src/config_file/ConfigValidationHelper.cpp \
+						./src/config_file/InvalidConfigurationFile.cpp \
 						./src/configuration_key/ConfigurationKey.cpp \
 						./src/configuration_key/ServerBlock.cpp \
 
@@ -49,7 +52,6 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/validate_parantheses.cpp \
 						./src/utility/split_on_delimiter.cpp \
 						./src/utility/convert_configuration_key_type.cpp \
-						./src/utility/split_string.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
@@ -57,10 +59,20 @@ OBJS			=		$(SRCS:.cpp=.o)
 
 DEBUG			=		-g -fsanitize=address
 
-FLAGS			=		-Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98 -g
+FLAGS			=		-Werror -Wall -Wextra
 
-.c.o			:
-						@c++ $(CFLAGS) -c $< -o $(<:.c=.o)
+# Here we define how every single file is being compiled.
+# With MAKECMDGOALS we detect if we are running a debug build and then inject the defines.
+ifeq ($(MAKECMDGOALS),rebug)
+    FLAGS += -D DEBUGMODE=1
+else ifeq ($(MAKECMDGOALS),debug)
+    FLAGS += -D DEBUGMODE=1
+else
+    FLAGS += -D DEBUGMODE=0
+endif
+
+.cpp.o			:
+						@c++ -c $(FLAGS) $< -o $@
 
 $(NAME)			:		$(OBJS) $(HDRS) | silence
 						@c++ $(FLAGS) $(OBJS) -o $(NAME)
@@ -75,8 +87,6 @@ debug				:	$(OBJS) $(HDRS) | silence
 						@c++ $(OBJS) $(DEBUG) -o $(NAME)
 						@echo "$(P)DEBUG MODE : address sanitizer$(Reset)"
 						@echo "$(G)$(NAME) has been created$(Reset)"
-						$(NAME) > debug.log
-						@echo "$(B)Debug logged in 'debug.log'$(Reset)"
 
 silence:
 						@:
@@ -87,17 +97,19 @@ valgrind			:	$(NAME)
 
 clean			:
 						@rm -f $(OBJS)
-						@echo "$(R)Objects have been removed$(Reset)"
+						@echo "$(R)Objects have been removed 🗑$(Reset)"
 
 fclean			:		clean
 						@rm -f $(NAME)
-						@echo "$(R)$(NAME) has been removed$(Reset)"
+						@echo "$(R)$(NAME) has been removed 🗑$(Reset)"
 						@rm -f debug.log
 						@rm -f leaks.log
-						@echo "$(R)logs have been removed$(Reset)"
+						@echo "$(R)logs have been removed 🗑$(Reset)"
 
 all				:		$(NAME)
 
 re				:		fclean all
+
+rebug			:		fclean debug
 
 .PHONY			:		clean fclean all re

@@ -22,6 +22,7 @@ ServerBlock::~ServerBlock()
 }
 
 ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
+	(void) src;
 	return (*this);
 }
 
