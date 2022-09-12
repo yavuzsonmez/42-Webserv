@@ -43,6 +43,12 @@ int main(int argc, char **argv)
 		return (1);
 	}
 
+	for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
+	{
+		
+	}
+
+
 	delete configurationFileParsing;
 
 	/* START TEST REQUEST */
