@@ -100,7 +100,6 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 	if (this->isCgiExecutableKeyType(raw))
 	{
 		debugger.info("Detected CGI PATH key type.");
-		
 		return CGI_EXECUTABLE_PATH;
 	}
 	return INVALID;
