@@ -132,17 +132,23 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 	// set location block to true if location was detected
 	if (key.configurationType == LOCATION && this->isCurrentlyInServerBlock) {
 		this->isCurrentlyInLocationBlock = true;
+		this->server_bracket_counter++;
 	}
 
 	// creating a new server
 	// set SERVER BLOCK to true
 	if (key.configurationType == SERVERSTARTSEGMENT) {
 		currentServerIndex++;
+		this->server_bracket_counter++;
 		serverBlocks.push_back(ServerBlock());
 		this->isCurrentlyInServerBlock = true;
 	}
 	else
 	{
+		if (this->server_bracket_counter == 0) {
+			debugger.error("Configuration file has no server block.");
+			throw InvalidConfigurationFile();
+		}
 		debugger.debug("Adding key to server block " + std::to_string(currentServerIndex));
 		if (serverBlocks.size() == 0) {
 			debugger.error("No server block found or key is out of scope.");
@@ -166,6 +172,13 @@ bool ConfigFileParsing::shouldSkipLineInConfigurationFile(std::string line, int 
 	if (firstNotWhiteSpacePosition ==  (int) std::string::npos) {
 		debugger.debug("SKIPPING: Line is empty.");
 		return true;
+	}
+	if (line[firstNotWhiteSpacePosition] == '}' || line[firstNotWhiteSpacePosition] == '{') {
+		if (line[firstNotWhiteSpacePosition] == '}') {
+			this->server_bracket_counter--;
+		} else {
+			this->server_bracket_counter++;
+		}
 	}
 	if (line[firstNotWhiteSpacePosition] == '}') {
 		debugger.debug("SKIPPING: Line is a closing curly bracket.");
