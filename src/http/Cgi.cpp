@@ -88,7 +88,7 @@ void	CGI::execute(void)
 		// 	i++;
 		// }
 		// argv[i] = NULL;
-		std::cout << "envp: " << map_to_array(_env)[11] << std::endl;
+		//std::cout << "envp: " << map_to_array(_env)[11] << std::endl;
 		execve("php-cgi", vec_to_array(_query_parameters), map_to_array(_env));						//executes the executable with its arguments
 		//execve("php-cgi", vec_to_array(_query_parameters), map_to_array(_env));
 		//std::cout << "execve: " << i << std::endl;				//check if execve failes

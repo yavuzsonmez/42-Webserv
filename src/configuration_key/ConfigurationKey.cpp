@@ -1,5 +1,6 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
+#include "../../inc/utility/colors.hpp"
 
 
 /**
@@ -23,17 +24,20 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->ports = src.ports;
 	this->server_names = src.server_names;
 	this->root = src.root;
-	this->location	= src.location;
-	this->indexes	= src.indexes;
-	debugger.debug("Constructing new configuration key");
+	this->location = src.location;
+	this->indexes = src.indexes;
+	this->methods = src.methods;
+	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
+	this->current_line = src.current_line;
+	this->raw_input = src.raw_input;
 }
 
 ConfigurationKey::~ConfigurationKey() {
 	DebuggerPrinter debugger = debugger.getInstance();
-	debugger.debug("Deconstructing configuration key");
 }
 
 ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
+	(void) src;
 	return (*this);
 }
 
@@ -41,26 +45,69 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
  * Actual constructor of configuration key class.
  * Will take raw key and value and convert it in the internal_keyvalue for better handling within the class.
  * This calls detectConfigurationType, which sets the configuratio key type.
+ * @param current_line The line current_line is being used for debugging purposes.
+ * @param key to key to use
+ * @param value the value to use
+ * @param location_block is the current key within a location block?
+ * @param raw_input the original input from the configuration file
+ * 
  */
-ConfigurationKey::ConfigurationKey(std::string key, std::string value) {
+ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block, int current_line, std::string raw_input) {
+	this->isCurrentlyParsingLocationBlock = location_block;
+	this->current_line = current_line;
+	this->raw_input = raw_input;
 	DebuggerPrinter debugger = debugger.getInstance();
 	if (key.empty () || value.empty()) {
 		throwInvalidConfigurationFileExceptionWithMessage("Key or value of configuration key was empty!");
 	}
 	debugger.info("Constructed configuration key.");
 	internal_keyvalue raw(key, value);
-	this->configurationType = detectConfigurationType(raw);
+	if (this->isCurrentlyParsingLocationBlock) {
+		this->configurationType = detectLocationKeyConfiguration(raw);
+	} else {
+		this->configurationType = detectConfigurationType(raw);
+	}
 	this->key = raw.first;
 	this->value = raw.second;
+	if (this->configurationType == INVALID) {
+		throwInvalidConfigurationFileExceptionWithMessage("What do you mean with " + raw.first);
+	}
 }
+/**
+ * @brief Detects the type of configuration key for the location block.
+ * - Configures the location block keys.
+ */
+ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_keyvalue &raw) {
+	USE_DEBUGGER;
+	debugger.info("Those keys are for location block");
+	if (this->isIndexKeyType(raw))
+	{
+		debugger.info("Detected index key type for location.");
+		return INDEX;
+	}
+	if (this->isRootKeyType(raw))
+	{
+		debugger.info("Detected ROOT key type.");
+		return ROOT;
+	}
+	if (this->isMethodsKeyType(raw))
+	{
+		debugger.info("Detected METHODS key type.");
+		
+		return METHODS;
+	}
+	return INVALID;
+}
+
 
 /**
  * @param Returns the correct configuration key based on the key and value.
  *
  * If the key is invalid or not yet implemented, it returns INVALID. This should
  * be treated as fatal error.
+ * Some keys and values will be cleaned, that is way we have to pass a reference to the function
  */
-ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue raw) {
+ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue &raw) {
 	USE_DEBUGGER;
 	if (this->isServerStartSegment(raw))
 	{
@@ -77,17 +124,41 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected listen key type.");
 		return LISTEN;
 	}
+	if (this->isRootKeyType(raw))
+	{
+		debugger.info("Detected ROOT key type.");
+		return ROOT;
+	}
 	if (this->isIndexKeyType(raw))
 	{
 		debugger.info("Detected index key type.");
 		return INDEX;
 	}
-	if (this->isRootKeyType(raw))
+	if (this->isLocationKeyType(raw))
 	{
-		debugger.info("Detected root key type.");
-		return ROOT;
+		debugger.info("Detected listen key type. Enabled parsing location block.");
+		debugger.info("Removed: " + raw.second);
+		return LOCATION;
 	}
 	return INVALID;
+}
+
+/**
+ * @brief Returns true if the location is a location key type.
+ * - isCurrentlyParsingLocationBlock
+ * - Will check if the last character in location is a opening bracket
+ * - Will remove the last character from location if it is a opening bracket to enable parsing of the location path
+ */
+bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
+	if (raw.first == "location") {
+		this->isCurrentlyParsingLocationBlock = true;
+		if (raw.second[raw.second.length() - 1] != '{') {
+			throwInvalidConfigurationFileExceptionWithMessage("Location block does not end with {!");
+		}
+		raw.second.pop_back();
+		return true;
+	}
+	return false;
 }
 
 /**
@@ -157,6 +228,48 @@ bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
 }
 
 /**
+ * @brief Checks if a given method is valid or not.
+ * - GET
+ * - POST
+ * - PUT
+ * - DELETE
+ * @param method 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isValidMethod(std::string method) {
+	if (method == "GET" || method == "POST" || method == "PUT" || method == "DELETE") {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Check if the key is a methods key type.
+ * - also sets the methods
+ * TODO: Validate methods values
+ */
+bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
+	if (raw.first != KEY_METHODS)
+		return false;
+	
+	std::stringstream ss(raw.second);
+	while (ss.good())
+	{
+		std::string substr;
+		std::getline( ss, substr, ' ' );
+		if (!this->isValidMethod(substr)) {
+			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + substr);
+		}
+		if (!substr.empty())
+			this->methods.push_back( substr );
+		else
+			return false;
+	}
+	return true;
+}
+
+/**
  * @brief Is serverblock start segment
  * Returns true if the next segment is a server block start segment.
  * It looks like this: server {
@@ -194,15 +307,25 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 				throwInvalidConfigurationFileExceptionWithMessage("Invalid ports!");
 			std::istringstream portToCheck(substr);
 			portToCheck >> val;
+			if (val > 65535)
+				throwInvalidConfigurationFileExceptionWithMessage("Port too high.");
 			if (this->validatePort(val))
-				this->server_names.push_back( substr );
+				this->ports.push_back( val );
 			else
-				throw("Unsupported constructor. Use key value constructor instead!");
+				throwInvalidConfigurationFileExceptionWithMessage("Invalid port");
 		}
 		else
 			return false;
 	}
 	return true;
+}
+
+/**
+ * @brief Sets location block parsing to a determined value
+ * - to be enabled when the location block is detected
+ */
+void ConfigurationKey::setLocationBlockParsing(bool value) {
+	this->isCurrentlyParsingLocationBlock = value;
 }
 
 /**
@@ -223,23 +346,32 @@ bool ConfigurationKey::validatePort(unsigned int port) {
 }
 
 /**
- * @brief Checks if a string only contains digits.
+ * @brief Checks if a string only contains digits, left-padding zeros or just zeros.
  * 
  */
 bool ConfigurationKey::is_digits(const std::string &str)
 {
+	if (str.find_first_not_of("0") == std::string::npos)
+		return false;
+	if (str.find_first_not_of("0") != 0)
+		return false;
 	return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
 /**
- * Throws an InvalidConfigurationFile error with a message in front
- * printed by the debugger.
- *
+ * @brief Throws an invalid configuration message. Prints out all information known to this parsing error.
+ * Exits the program by throwing an exception.
  * @param message to print
  */
 void ConfigurationKey::throwInvalidConfigurationFileExceptionWithMessage(std::string message) {
 	DebuggerPrinter debugger = debugger.getInstance();
+	std::cout << R << "----------------- FAILED -----------------" << Reset << std::endl;
+	std::cout << R << "Encountered a problem with configuration on line " << (current_line + 1) << Reset << ":" << std::endl;
+	std::cout << (current_line) << " ..." <<  std::endl;
+	std::cout << (current_line + 1) << " " << Y << raw_input << Reset << std::endl;
+	std::cout << (current_line + 2) << " ..." <<  std::endl;
 	debugger.error(message);
+	std::cout << R << "The parser did not continue after finding this error. There may be more." << std::endl;
 	throw InvalidConfigurationFile();
 }
 

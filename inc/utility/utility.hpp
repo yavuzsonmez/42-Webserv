@@ -16,6 +16,7 @@
 # include <vector>
 # include <map>
 # include <utility>
+# include <set>
 # include <unistd.h>
 # include "../config_file/ConfigFileParsing.hpp"
 
@@ -31,6 +32,11 @@ bool	validate_parantheses(std::string parantheses);
 std::vector<std::string> split_on_delimiter(std::string &s, char delimiter);
 std::vector<std::string> split_once_on_delimiter(std::string &s, char delimiter);
 std::string convert_configuration_key_type(ConfigurationKeyType keyType);
+std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key);
+std::string join_vector(std::vector<std::string> &vec, std::string delimiter);
+std::string printKeyValueColored(std::string key, std::string name);
+std::vector<unsigned int> getAllServerPortsFromAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
+std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
 
 /**
  * @brief converts any type into a string
@@ -60,8 +66,8 @@ char **map_to_array(std::map<key, value> &map)
 {
 	typename std::map<key, value>::iterator	it;
 	
-	//char **array = new char*[sizeof(char*) * (map.size() + 1)];
-	char	*array[map.size() + 1];
+	char **array = new char*[sizeof(char*) * (map.size() + 1)];
+	//char	*array[map.size() + 1];
 	int	i = 0;
 	for (it = map.begin(); it != map.end(); ++it)
 	{
@@ -96,4 +102,12 @@ char **vec_to_array(std::vector<T> &vector)
 	return array;
 }
 
+
+template<typename X>
+bool vector_has_duplicate_element(std::vector<X> v)
+{
+	std::set<X> s(v.begin(), v.end());
+	return s.size() != v.size();
+
+}
 #endif

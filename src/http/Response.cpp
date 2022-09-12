@@ -40,11 +40,11 @@ void	Response::create_response(void)
 
 std::string	Response::get_image_format(void)
 {
-	if (_body.find("PNG") != -1)
+	if (_body.find("PNG") != (unsigned long) -1)
 		return ("image/png");
-	if (_body.find("JFIF") != -1)
+	if (_body.find("JFIF") != (unsigned long) -1)
 		return ("image/jpeg");
-	if (_body.find("GIF") != -1)
+	if (_body.find("GIF") !=  (unsigned long)-1)
 		return ("image/gif");
 	return("no valid format");
 }
