@@ -90,12 +90,12 @@ void	Response::test_image(void)
 	create_response();
 }
 
-void	Response::test_cgi(void)
+void	Response::test_cgi(ServerBlock &config)
 {
 	_protocol = "HTTP/1.1";
 	_status_code = "200";
 	_status_text = "OK";
-	CGI	cgi(_request);
+	CGI	cgi(_request, config);
 	cgi.execute();
 	_body = cgi.get_buf();
 	_server = "PetRoulette";
