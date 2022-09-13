@@ -6,6 +6,7 @@
 # include <ctime>
 # include "Cgi.hpp"
 # include "../utility/utility.hpp"
+# include "../configuration_key/ServerBlock.hpp"
 # include "Request.hpp"
 
 /**
@@ -25,7 +26,7 @@ class Response
 	void	test_text(void);
 	void	test_html(void);
 	void	test_image(void);
-	void	test_cgi(void);
+	void	test_cgi(ServerBlock &config);
 
 	std::string	get_image_format(void);
 

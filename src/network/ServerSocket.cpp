@@ -2,14 +2,14 @@
 #include "../../inc/network/ClientSocket.hpp"
 #include "../../inc/http/Response.hpp"
 
-ServerSocket::ServerSocket(unsigned short port, unsigned int address)
+ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
 {
 	_fd = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
 	if (_fd < 0)
 		throw SocketCreationError();
 
 	_socket.sin_family = AF_INET;
-	_socket.sin_port = htons(port); //host byte order to network byte order
+	_socket.sin_port = htons(_config.getAllServerPorts().front()); //host byte order to network byte order
 	_socket.sin_addr.s_addr = address;
 	bzero(&(_socket.sin_zero), 8);
 
@@ -46,7 +46,7 @@ void ServerSocket::processConnections()
 		Request	request(request_str);
 		Response response(request);
 		// test url -> http://localhost:4242/?firstname=Yavuz&lastname=Sonmez&age=26&home=Heilbronn
-		response.test_cgi();
+		response.test_cgi(_config);
 		std::string httpResponse(response.get_response());
 
 		int bytes_send;

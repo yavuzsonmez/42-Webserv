@@ -43,11 +43,12 @@ int main(int argc, char **argv)
 		return (1);
 	}
 
-	for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
-	{
-		
-	}
+	// for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
+	// {
+	// 	ServerSocket server(configurationFileParsing->serverBlocks[i], INADDR_ANY);
+	// }
 
+	ServerSocket server(configurationFileParsing->serverBlocks[0], INADDR_ANY);
 
 	delete configurationFileParsing;
 
@@ -65,7 +66,7 @@ int main(int argc, char **argv)
 
 
 	/* START TEST RESPONSE */
-	ServerSocket server(4242, INADDR_ANY);
+	//ServerSocket server(4242, INADDR_ANY);
 	/* END */
 
 	return (0);

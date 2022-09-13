@@ -13,6 +13,7 @@
 # include <map>
 # include <vector>
 # include "../utility/utility.hpp"
+# include "../configuration_key/ServerBlock.hpp"
 # include <algorithm>
 # include "Request.hpp"
 
@@ -24,7 +25,7 @@ class	CGI
 {
 	public:
 	CGI();
-	CGI(Request request);
+	CGI(Request request, ServerBlock &config);
 	~CGI();
 
 	void	execute(void);
@@ -37,11 +38,12 @@ class	CGI
 	std::vector<std::string>	_argv;
 	std::string	_buf;
 	FILE	*_tmpout;
-	//FILE	*_tmpin;
+	FILE	*_tmpin;
 	//int		_fd;
 	int		_tmp_size;
 
 	Request	_request;
+	ServerBlock	_config;
 };
 
 # endif
