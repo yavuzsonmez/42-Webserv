@@ -5,13 +5,31 @@ Response::Response(void)
 
 }
 
-Response::Response(Request request) : _request(request)
+Response::Response(Request request, ServerBlock config) : _request(request), _config(config)
 {
 
 }
 
 Response::~Response(void)
 {
+
+}
+
+void	Response::process_request(void)
+{
+	std::cout << "request: " << _request.getPath().first << std::endl;
+	
+	for (int i = 0; i < (int) _config.configurationKeys.size(); i++)
+	{
+		if (_config.configurationKeys[i].configurationType == LOCATION)
+		{
+			;
+		}
+	}
+	if (_request.getPath().first == "/")
+	{
+		_location = Location()
+	}
 
 }
 

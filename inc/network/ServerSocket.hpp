@@ -32,7 +32,6 @@ class ServerSocket
 		};
 
 	private:
-
 		int _fd;
 		struct sockaddr_in	_socket;
 		ServerBlock	_config;
