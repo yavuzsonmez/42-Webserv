@@ -7,6 +7,7 @@
 # include "Cgi.hpp"
 # include "../utility/utility.hpp"
 # include "../configuration_key/ServerBlock.hpp"
+# include "../configuration_key/ConfigurationKey.hpp"
 # include "Request.hpp"
 # include "Location.hpp"
 
@@ -37,6 +38,7 @@ class Response
 	Request		_request;
 	ServerBlock	_config;
 	Location	_location;
+	std::vector<ConfigurationKey>	_vec_loc;
 	std::string	_protocol;
 	std::string	_status_code;
 	std::string	_status_text;

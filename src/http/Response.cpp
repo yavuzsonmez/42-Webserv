@@ -17,23 +17,31 @@ Response::~Response(void)
 
 void	Response::process_request(void)
 {
-	std::cout << "request: " << _request.getPath().first << std::endl;
-	
-	for (int i = 0; i < (int) _config.configurationKeys.size(); i++)
+	std::cout << "request: " << _request.getScript().first << std::endl;
+	_vec_loc = _config.getConfigurationKeysWithType(LOCATION);
+	if (_request.getScript().first.empty())
 	{
-		if (_config.configurationKeys[i].configurationType == LOCATION)
+		_location = Location(_config);
+	}
+	else
+	{
+		int flag = 0;
+		for (std::vector<ConfigurationKey>::iterator it = _vec_loc.begin(); it != _vec_loc.end(), it++)
 		{
-			if (_request.getPath().first == _config.configurationKeys[i].location);
+			if (_request.getScript().first == (*it).location);
 			{
-				_location = Location(_config.configurationKeys[i]);
+				_location = Location(*it);
+				flag = 1;
+				break;
 			}
 		}
+		if (!flag)
+		{
+			_location = Location();
+		}
 	}
-	if (_request.getPath().first == "/")
-	{
-		_location = Location()
-	}
-
+	
+	if(_location._index.substr(fn.find_last_of(".") + 1) == "conf")
 }
 
 std::string	Response::get_response(void)

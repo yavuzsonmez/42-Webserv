@@ -36,6 +36,7 @@ CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
 HTTP			=		./src/http/Request.cpp \
 						./src/http/Response.cpp \
 						./src/http/Cgi.cpp \
+						./src/http/Location.cpp \
 
 NETWORK			=		./src/network/ClientSocket.cpp \
 						./src/network/Multiplexer.cpp \
