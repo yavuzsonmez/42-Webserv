@@ -23,7 +23,10 @@ void	Response::process_request(void)
 	{
 		if (_config.configurationKeys[i].configurationType == LOCATION)
 		{
-			;
+			if (_request.getPath().first == _config.configurationKeys[i].location);
+			{
+				_location = Location(_config.configurationKeys[i]);
+			}
 		}
 	}
 	if (_request.getPath().first == "/")
