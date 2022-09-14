@@ -8,6 +8,7 @@
 # include "../utility/utility.hpp"
 # include "../configuration_key/ServerBlock.hpp"
 # include "Request.hpp"
+# include "Location.hpp"
 
 /**
  * @brief class that is used to generate the response
@@ -17,11 +18,13 @@ class Response
 {
 	public:
 	Response();
-	Response(Request request);
+	Response(Request request, ServerBlock config);
 	~Response(void);
 
-	std::string	get_response(void);
+	void	process_request(void);
 	void	create_response(void);
+	std::string	get_response(void);
+	
 
 	void	test_text(void);
 	void	test_html(void);
@@ -32,6 +35,8 @@ class Response
 
 	private:
 	Request		_request;
+	ServerBlock	_config;
+	Location	_location;
 	std::string	_protocol;
 	std::string	_status_code;
 	std::string	_status_text;
