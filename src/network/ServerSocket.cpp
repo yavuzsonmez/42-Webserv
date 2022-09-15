@@ -1,6 +1,7 @@
 #include "../../inc/network/ServerSocket.hpp"
 #include "../../inc/network/ClientSocket.hpp"
 #include "../../inc/http/Response.hpp"
+#include "../../inc/http/Process.hpp"
 
 ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
 {
@@ -44,11 +45,13 @@ void ServerSocket::processConnections()
 		read(forward, buf, 1000);
 		std::string	request_str(buf);
 		Request	request(request_str);
-		Response response(request, _config);
+		Response response;
+		Process	process(response, request, _config);
 		// test url -> http://localhost:4242/?firstname=Yavuz&lastname=Sonmez&age=26&home=Heilbronn
 		//response.test_cgi(_config);
-		response.process_request();
+		process.process_request();
 		std::string httpResponse(response.get_response());
+		
 
 		int bytes_send;
 		bytes_send = 0;
