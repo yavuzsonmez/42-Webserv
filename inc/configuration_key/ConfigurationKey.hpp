@@ -17,6 +17,8 @@
 # define	KEY_LISTEN					"listen"
 # define	KEY_INVALID					"INVALID"
 # define	KEY_METHODS					"methods"
+# define	KEY_NOT_FOUND_PAGE			"not_found_error_page"
+# define	KEY_GENERAL_ERROR_PAGE		"general_error_page"
 
 /**
  * Defines the type of information a configuration key holds.
@@ -34,7 +36,9 @@ enum ConfigurationKeyType {
 	ROOT,
 	INVALID,
 	SERVERSTARTSEGMENT,
-	METHODS
+	METHODS,
+	NOT_FOUND_ERROR_PAGE,
+	GENERAL_ERROR_PAGE
 };
 
 /**
@@ -91,6 +95,8 @@ class ConfigurationKey {
 		std::vector <std::string> methods; // methids, if type is METHODS. sorted by relevance and position within the key.
 		std::string root; // returns the path of the root
 		std::string location; // returns the locationpath of the location
+		std::string not_found_error_page_path; // returns the location of the error path to the error file
+		std::string general_error_page_path; // returns the location of the error path to the error file
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
 		std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
 	private:
@@ -104,6 +110,8 @@ class ConfigurationKey {
 		bool isRootKeyType(internal_keyvalue raw);
 		bool isLocationKeyType(internal_keyvalue &raw);
 		bool isMethodsKeyType(internal_keyvalue raw);
+		bool isNotFoundErrorPagePathType(internal_keyvalue raw);
+		bool isGeneralErrorPagePathType(internal_keyvalue raw);
 		bool isValidMethod(std::string method);
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);

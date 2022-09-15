@@ -31,6 +31,7 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
  * - checking double ports on all server blocks
  * - checking double server names on all server blocks
  * - checking double location paths for each server block
+ * - checking double error path for each server block
  * @return true 
  * @return false 
  */
@@ -39,6 +40,10 @@ bool ConfigFileParsing::validateConfiguration() {
 	std::vector<unsigned int> allServerPorts = getAllServerPortsFromAllServerBlocks(this->serverBlocks);
 	std::vector<std::string> allServerNames = getAllServerNamesFromAllServerBlocks(this->serverBlocks);
 
+	if (checksIfAnyServerBlockHasDoubleErrorPages(this->serverBlocks)) {
+		debugger.error("Error: Double error pages found in configuration file.");
+		throw InvalidConfigurationFile();
+	}
 	if (vector_has_duplicate_element(allServerPorts)) {
 		debugger.error("Configuration file has duplicate ports.");
 		throw InvalidConfigurationFile();

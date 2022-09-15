@@ -38,6 +38,12 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType)
 	if (keyType == METHODS) {
 		return "METHODS";
 	}
+	if (keyType == NOT_FOUND_ERROR_PAGE) {
+		return "NOT_FOUND_ERROR_PAGE";
+	}
+	if (keyType == GENERAL_ERROR_PAGE) {
+		return "GENERAL_ERROR_PAGE";
+	}
 	return "UNKNOWN";
 }
 
