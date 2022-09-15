@@ -39,6 +39,20 @@ void ServerBlock::addConfigurationKey(ConfigurationKey &configurationKey) {
 }
 
 /**
+ * @brief Get all configuration keys with the requested type
+ * @param type type of configuration keys to be returned
+ */
+std::vector<ConfigurationKey> ServerBlock::getConfigurationKeysWithType(ConfigurationKeyType type) {
+	std::vector<ConfigurationKey> keys;
+	for (int i = 0; i < (int) this->configurationKeys.size(); i++) {
+		if (this->configurationKeys[i].configurationType == type) {
+			keys.push_back(this->configurationKeys[i]);
+		}
+	}
+	return keys;
+}
+
+/**
  * Returns all ports in the correct order
  *
  * - Iterates over all vectors

@@ -25,6 +25,7 @@ class ServerBlock
         std::vector<unsigned int> getAllServerPorts();
         std::vector<std::string> getAllIndexes();
         void addConfigurationKey(ConfigurationKey &configurationKey);
+		std::vector<ConfigurationKey> getConfigurationKeysWithType(ConfigurationKeyType type);
  };
 
  #endif
