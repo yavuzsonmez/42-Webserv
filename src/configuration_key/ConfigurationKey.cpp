@@ -99,7 +99,6 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 	return INVALID;
 }
 
-
 /**
  * @param Returns the correct configuration key based on the key and value.
  *
@@ -139,6 +138,16 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected listen key type. Enabled parsing location block.");
 		debugger.info("Removed: " + raw.second);
 		return LOCATION;
+	}
+	if (this->isGeneralErrorPagePathType(raw))
+	{
+		debugger.info("Detected general error page path type.");
+		return GENERAL_ERROR_PAGE;
+	}
+	if (this->isNotFoundErrorPagePathType(raw))
+	{
+		debugger.info("Detected not found error page path type.");
+		return NOT_FOUND_ERROR_PAGE;
 	}
 	return INVALID;
 }
@@ -278,7 +287,7 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
  * @return true or false
  */
 bool ConfigurationKey::isServerStartSegment(internal_keyvalue raw) {
-	if (raw.first == "server" && raw.second == "{")
+	if (raw.first == KEY_SERVER_START_SEGMENT && raw.second == "{")
 		return true;
 	return false;
 }
@@ -318,6 +327,44 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 			return false;
 	}
 	return true;
+}
+
+/**
+ * @brief Checks if the given key is a path to the not found error page or not
+ * 
+ * @param raw 
+ * @return true is error page path
+ * @return false is not error path path
+ */
+bool ConfigurationKey::isNotFoundErrorPagePathType(internal_keyvalue raw) {
+	if (raw.first == KEY_NOT_FOUND_PAGE && !raw.second.empty())
+	{
+		if (this->not_found_error_page_path.empty())
+			this->not_found_error_page_path = raw.second;
+		else
+			throwInvalidConfigurationFileExceptionWithMessage("Multiple not found error page paths!");
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Checks if the given key is a path to the general error page or not
+ * 
+ * @param raw 
+ * @return true is error page path
+ * @return false is not error path path
+ */
+bool ConfigurationKey::isGeneralErrorPagePathType(internal_keyvalue raw) {
+	if (raw.first == KEY_GENERAL_ERROR_PAGE && !raw.second.empty())
+	{
+		if (this->general_error_page_path.empty())
+			this->general_error_page_path = raw.second;
+		else
+			throwInvalidConfigurationFileExceptionWithMessage("Multiple not general error page paths!");
+		return true;
+	}
+	return false;
 }
 
 /**

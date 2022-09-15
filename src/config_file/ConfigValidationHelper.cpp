@@ -49,3 +49,24 @@ std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<Server
 	}
 	return server_names;
 }
+
+/**
+ * @brief Iterate over all server blocks and checks if there are duplicate error page paths
+ * - general_error_page (one for each)
+ * - not_found_error_page (one for each)
+ * @param serverBlocks block reference
+ * @return bool false or true when there are double pages
+ */
+bool checksIfAnyServerBlockHasDoubleErrorPages(std::vector<ServerBlock> &serverBlocks) {
+	std::vector<ServerBlock>::iterator i = serverBlocks.begin();
+
+	for (serverBlocks.begin(), serverBlocks.end(); i != serverBlocks.end(); ++i) {
+		std::vector<ConfigurationKey> generalErrorPage = (*i).getConfigurationKeysWithType(GENERAL_ERROR_PAGE);
+		std::vector<ConfigurationKey> notfoundErrorPage = (*i).getConfigurationKeysWithType(NOT_FOUND_ERROR_PAGE);
+		
+		if (generalErrorPage.size() > 1 || notfoundErrorPage.size() > 1) {
+			return true;
+		}
+	}
+	return false;
+}
