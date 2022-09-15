@@ -38,6 +38,9 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType)
 	if (keyType == METHODS) {
 		return "METHODS";
 	}
+	if (keyType == CGI_EXECUTABLE_PATH) {
+		return "CGI PATH";
+	}
 	if (keyType == NOT_FOUND_ERROR_PAGE) {
 		return "NOT_FOUND_ERROR_PAGE";
 	}
@@ -75,6 +78,9 @@ std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std:: cout << intendation;
 	std:: cout << intendation;
 	std::cout << B << "->" << Reset << " INDEX " << join_vector(key.indexes, ", ")  << std::endl;
+	std:: cout << intendation;
+	std:: cout << intendation;
+	std::cout << B << "->" << Reset << " CGI_PATH " << key.cgi_path  << std::endl;
 	return "";
 }
 
