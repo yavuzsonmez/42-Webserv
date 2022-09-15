@@ -28,6 +28,8 @@ LISTEN
 LOCATION   
 ROOT   
 METHODS   
+GENERAL_ERROR_PAGE
+NOT_FOUND_ERROR_PAGE
 
 You can ignore following:   
 INVALID   
