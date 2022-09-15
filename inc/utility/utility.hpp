@@ -37,6 +37,7 @@ std::string join_vector(std::vector<std::string> &vec, std::string delimiter);
 std::string printKeyValueColored(std::string key, std::string name);
 std::vector<unsigned int> getAllServerPortsFromAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
 std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<ServerBlock> &serverBlocks);
+std::string trim_whitespaces(std::string str);
 
 /**
  * @brief converts any type into a string
