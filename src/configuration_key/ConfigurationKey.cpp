@@ -45,7 +45,7 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
 /**
  * Actual constructor of configuration key class.
  * Will take raw key and value and convert it in the internal_keyvalue for better handling within the class.
- * This calls detectConfigurationType, which sets the configuratio key type.
+ * This calls detectConfigurationType, which sets the configuratio key type..
  * @param current_line The line current_line is being used for debugging purposes.
  * @param key to key to use
  * @param value the value to use
@@ -174,12 +174,13 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
  * - Will remove the last character from location if it is a opening bracket to enable parsing of the location path
  */
 bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
-	if (raw.first == "location") {
+	if (raw.first == "location" && !raw.second.empty()) {
 		this->isCurrentlyParsingLocationBlock = true;
 		if (raw.second[raw.second.length() - 1] != '{') {
 			throwInvalidConfigurationFileExceptionWithMessage("Location block does not end with {!");
 		}
 		raw.second.pop_back();
+		raw.second = trim_whitespaces(raw.second);
 		return true;
 	}
 	return false;
@@ -196,7 +197,7 @@ bool ConfigurationKey::isRootKeyType(internal_keyvalue raw)
 {
 	if (raw.first == KEY_ROOT && !raw.second.empty())
 	{
-		this->root = raw.second;
+		this->root = trim_whitespaces(raw.second);
 		return true;
 	}
 	return false;
@@ -243,6 +244,7 @@ bool ConfigurationKey::isServerNameKeyType(internal_keyvalue raw) {
 	{
 		std::string substr;
 		std::getline( ss, substr, ' ' );
+		substr = trim_whitespaces(substr);
 		if (!substr.empty())
 			this->server_names.push_back( substr );
 		else
@@ -282,6 +284,7 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 	{
 		std::string substr;
 		std::getline( ss, substr, ' ' );
+		substr = trim_whitespaces(substr);
 		if (!this->isValidMethod(substr)) {
 			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + substr);
 		}
@@ -325,6 +328,7 @@ bool ConfigurationKey::isListenKeyType(internal_keyvalue raw) {
 		unsigned int val;
 		std::string substr;
 		std::getline( ss, substr, ' ' );
+		substr = trim_whitespaces(substr);
 		if (!substr.empty())
 		{
 			if (!is_digits(raw.second))

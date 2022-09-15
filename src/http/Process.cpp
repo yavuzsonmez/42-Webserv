@@ -52,10 +52,12 @@ bool	Process::check_location(void)
 		std::string	request_path = _request.getPath().first.insert(0, "/");
 		std::cout << "location: " << (*it).value.length() << std::endl;
 		std::cout << "path: " << request_path.length() << std::endl;
+		std::cout << "string request: |" << request_path << "|" << std::endl;
+		std::cout << "string config: |" << (*it).value << "|" << std::endl;
 		std::cout << "check: " << ((*it).location == request_path) << std::endl;
-		if ((*it).location == request_path)
+		if ((*it).location.compare(request_path))
 		{
-			std::cout << "test1" << std::endl;
+			std::cout << "IS SAME!" << std::endl;
 			return true;
 		}
 	}
