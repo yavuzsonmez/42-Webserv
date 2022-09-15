@@ -15,34 +15,52 @@ Response::~Response(void)
 
 }
 
-void	Response::process_request(void)
-{
-	std::cout << "request: " << _request.getScript().first << std::endl;
-	_vec_loc = _config.getConfigurationKeysWithType(LOCATION);
-	if (_request.getScript().first.empty())
-	{
-		_location = Location(_config);
-	}
-	else
-	{
-		int flag = 0;
-		for (std::vector<ConfigurationKey>::iterator it = _vec_loc.begin(); it != _vec_loc.end(), it++)
-		{
-			if (_request.getScript().first == (*it).location);
-			{
-				_location = Location(*it);
-				flag = 1;
-				break;
-			}
-		}
-		if (!flag)
-		{
-			_location = Location();
-		}
-	}
+// void	Response::process_request(void)
+// {
+// 	std::cout << "request: " << _request.getScript().first << std::endl;
+// 	_vec_loc = _config.getConfigurationKeysWithType(LOCATION);
+// 	if (_request.getScript().first.empty())
+// 	{
+// 		_location = Location(_config);
+// 	}
+// 	else
+// 	{
+// 		int flag = 0;
+// 		for (std::vector<ConfigurationKey>::iterator it = _vec_loc.begin(); it != _vec_loc.end(), it++)
+// 		{
+// 			if (_request.getScript().first == (*it).location);
+// 			{
+// 				_location = Location(*it);
+// 				flag = 1;
+// 				break;
+// 			}
+// 		}
+// 		if (!flag)
+// 		{
+// 			_location = Location();
+// 		}
+// 	}
 	
-	if(_location._index.substr(fn.find_last_of(".") + 1) == "conf")
-}
+// 	if(_location._index.substr(fn.find_last_of(".") + 1) == "conf")
+// }
+
+void	Response::set_protocol(std::string protocol){_protocol = protocol;}
+void	Response::set_status_code(std::string status_code){_status_code = status_code;}
+void	Response::set_status_text(std::string status_text){_status_text = status_text;}
+void	Response::set_server(std::string server){_server = server;}
+void	Response::set_content_type(std::string content_type){_content_type = content_type;}
+void	Response::set_charset(std::string charset){_charset = charset;}
+void	Response::set_content_length(std::string content_length){_content_length = content_length;}
+void	Response::set_body(std::string body){_body = body;}
+
+std::string	Response::get_protocol(void){return _protocol;}
+std::string	Response::get_status_code(void){return _status_code;}
+std::string	Response::get_status_text(void){return _status_text;}
+std::string	Response::get_server(void){return _server;}
+std::string	Response::get_content_type(void){return _content_type;}
+std::string	Response::get_charset(void){return _charset;}
+std::string	Response::get_content_length(void){return _content_length;}
+std::string	Response::get_body(void){return _body;}
 
 std::string	Response::get_response(void)
 {

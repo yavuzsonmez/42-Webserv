@@ -32,6 +32,24 @@ class Response
 	void	test_image(void);
 	void	test_cgi(ServerBlock &config);
 
+	void	set_protocol(std::string protocol);
+	void	set_status_code(std::string status_code);
+	void	set_status_text(std::string status_text);
+	void	set_server(std::string server);
+	void	set_content_type(std::string content_type);
+	void	set_charset(std::string charset);
+	void	set_content_length(std::string content_length);
+	void	set_body(std::string body);
+
+	std::string	get_protocol(void);
+	std::string	get_status_code(void);
+	std::string	get_status_text(void);
+	std::string	get_server(void);
+	std::string	get_content_type(void);
+	std::string	get_charset(void);
+	std::string	get_content_length(void);
+	std::string	get_body(void);
+
 	std::string	get_image_format(void);
 
 	private:
