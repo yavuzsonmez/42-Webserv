@@ -7,6 +7,9 @@
 
 /**
  * All keys which can be used in the configuration file are defined here.
+ * To add a new key, add it to the KEY_DEFINES and to the enum.
+ * Add parsing behavior to determineConfigurationKeys in ConfigFileParsing.cpp
+ * Then add adding behavior to addConfigurationKeyToLocation
  */
 
 # define	KEY_LOCATION				"location"
@@ -17,6 +20,7 @@
 # define	KEY_LISTEN					"listen"
 # define	KEY_INVALID					"INVALID"
 # define	KEY_METHODS					"methods"
+# define	KEY_EXECUTABLE_PATH			"cgi_path"
 # define	KEY_NOT_FOUND_PAGE			"not_found_error_page"
 # define	KEY_GENERAL_ERROR_PAGE		"general_error_page"
 
@@ -37,6 +41,7 @@ enum ConfigurationKeyType {
 	INVALID,
 	SERVERSTARTSEGMENT,
 	METHODS,
+	CGI_EXECUTABLE_PATH,
 	NOT_FOUND_ERROR_PAGE,
 	GENERAL_ERROR_PAGE
 };
@@ -95,6 +100,7 @@ class ConfigurationKey {
 		std::vector <std::string> methods; // methids, if type is METHODS. sorted by relevance and position within the key.
 		std::string root; // returns the path of the root
 		std::string location; // returns the locationpath of the location
+		std::string cgi_path; // returns the locationpath of the location
 		std::string not_found_error_page_path; // returns the location of the error path to the error file
 		std::string general_error_page_path; // returns the location of the error path to the error file
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
@@ -110,6 +116,7 @@ class ConfigurationKey {
 		bool isRootKeyType(internal_keyvalue raw);
 		bool isLocationKeyType(internal_keyvalue &raw);
 		bool isMethodsKeyType(internal_keyvalue raw);
+		bool isCgiExecutableKeyType(internal_keyvalue raw);
 		bool isNotFoundErrorPagePathType(internal_keyvalue raw);
 		bool isGeneralErrorPagePathType(internal_keyvalue raw);
 		bool isValidMethod(std::string method);

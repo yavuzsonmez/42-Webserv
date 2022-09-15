@@ -30,6 +30,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
 	this->current_line = src.current_line;
 	this->raw_input = src.raw_input;
+	this->cgi_path = src.cgi_path;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -96,7 +97,30 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 		
 		return METHODS;
 	}
+	if (this->isCgiExecutableKeyType(raw))
+	{
+		debugger.info("Detected CGI PATH key type.");
+		return CGI_EXECUTABLE_PATH;
+	}
 	return INVALID;
+}
+
+/**
+ * @brief Checks if the key is a CGI Executable Path key type. Sets the cgi path value.
+ * 
+ * @param raw 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isCgiExecutableKeyType(internal_keyvalue raw)
+{
+	USE_DEBUGGER;
+	if (raw.first == KEY_EXECUTABLE_PATH && !raw.second.empty())
+	{
+		this->cgi_path = raw.second;
+		return true;
+	}
+	return false;
 }
 
 /**
