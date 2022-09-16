@@ -85,15 +85,17 @@ void	Response::create_response(void)
 		_response += "\r\n" + _body;
 }
 
-std::string	Response::get_image_format(void)
+std::string	Response::get_file_format(void)
 {
+	if (_body.find("html") != (unsigned long) -1)
+		return ("text/html");
 	if (_body.find("PNG") != (unsigned long) -1)
 		return ("image/png");
 	if (_body.find("JFIF") != (unsigned long) -1)
 		return ("image/jpeg");
 	if (_body.find("GIF") !=  (unsigned long)-1)
 		return ("image/gif");
-	return("no valid format");
+	return("unknown");
 }
 
 void	Response::test_text(void)
@@ -131,7 +133,7 @@ void	Response::test_image(void)
 	_server = "PetRoulette";
 	//_content_type = "image/png";
 	_body = get_file_content("images/Rotating_earth_(large).gif");
-	_content_type = get_image_format();
+	_content_type = get_file_format();
 	_content_length = to_str(_body.length());
 
 	create_response();
