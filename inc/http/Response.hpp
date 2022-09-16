@@ -50,7 +50,7 @@ class Response
 	std::string	get_content_length(void);
 	std::string	get_body(void);
 
-	std::string	get_image_format(void);
+	std::string	get_file_format(void);
 
 	private:
 	Request		_request;
