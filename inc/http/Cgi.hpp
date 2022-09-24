@@ -25,7 +25,7 @@ class	CGI
 {
 	public:
 	CGI();
-	CGI(Request request, ServerBlock &config);
+	CGI(Request request, ServerBlock &config, std::string path, std::string cgi_path);
 	~CGI();
 
 	void	execute(void);
@@ -44,6 +44,8 @@ class	CGI
 
 	Request	_request;
 	ServerBlock	_config;
+	std::string	_path;
+	std::string	_cgi_path;
 };
 
 # endif

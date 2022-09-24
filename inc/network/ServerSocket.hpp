@@ -1,6 +1,7 @@
 #ifndef SERVER_SOCKET_HPP
 # define SERVER_SOCKET_HPP
 
+#include "unistd.h"
 #include "../utility/utility.hpp"
 #include "../configuration_key/ServerBlock.hpp"
 

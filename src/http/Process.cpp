@@ -12,10 +12,19 @@ Process::~Process(void)
 
 void	Process::process_request(void)
 {
+	if (_request.getMethod().first == GET)
+		get_request();
+	else if (_request.getMethod().first == POST)
+		post_request();
+	else if (_request.getMethod().first == DELETE)
+		delete_request();
+}
+
+void	Process::get_request(void)
+{
 	if (_request.getPath().first == "/")
 	{
 		std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-		std::cout << "index-path: " << path << std::endl;
 		build_response(path);
 		return ;
 	}
@@ -23,17 +32,13 @@ void	Process::process_request(void)
 	{
 		if (_request.getScript().first.empty())
 		{
-			std::cout << "request: " << _request.getPath().first << std::endl;
 			//std::string path = get_location(_request.getPath().first.insert(0, "/")).root + "/" + get_location(_request.getPath().first.insert(0, "/")).indexes.front();
 			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
-			std::cout << "without-script-path: " << path << std::endl;
 			build_response(path);
 		}
 		else
 		{
-			
 			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
-			std::cout << "with-scriptpath : " << path << std::endl;
 			if (is_file_accessible(path))
 			{
 				build_response(path);
@@ -42,14 +47,47 @@ void	Process::process_request(void)
 	}
 	else
 	{
-		std::cout << "Error 404" << std::endl;
+		std::cout << "Error 404: " <<  _request.getPath().first << std::endl;
 	}
+}
 
+void	Process::post_request(void)
+{
+	std::cout << "POST" << std::endl;
+	std::cout << _request.getBody().first.empty() << std::endl;
+}
 
-	
-	
-	//if (check_location())
-
+void	Process::delete_request(void)
+{
+	std::cout << "DELETE" << std::endl;
+	if (_request.getPath().first == "/")
+	{
+		std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
+		if (is_file_accessible(path))
+		{
+			std::remove(path.c_str());
+		}
+		return ;
+	}
+	else if (check_location())
+	{
+		if (_request.getScript().first.empty())
+		{
+			std::cout << "Error: No file specified" << std::endl;
+		}
+		else
+		{
+			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
+			if (is_file_accessible(path))
+			{
+				std::remove(path.c_str());
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Error 404: " <<  _request.getPath().first << std::endl;
+	}
 }
 
 void	Process::build_response(std::string path)
@@ -59,7 +97,14 @@ void	Process::build_response(std::string path)
 		_response.set_status_text("OK");
 
 		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-		_response.set_body(get_file_content(path));
+		if (!path.substr(path.find_last_of(".") + 1).compare("php"))
+		{
+			CGI	cgi(_request, _config, path, _cgi);
+			cgi.execute();
+			_response.set_body(cgi.get_buf());
+		}
+		else
+			_response.set_body(get_file_content(path));
 		_response.set_content_length(to_str(_response.get_body().length()));
 		_response.set_content_type(_response.get_file_format());
 		_response.create_response();
@@ -82,14 +127,11 @@ void	Process::create_index(void)
 bool	Process::check_location(void)
 {
 	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
-	std::cout << "location-vector: " << locations[0].location << std::endl;
 	std::vector<ConfigurationKey>::iterator	it;
 	for (it = locations.begin(); it != locations.end(); it++)
 	{
 		std::string	request_path = _request.getPath().first.insert(0, "/");
-		std::cout << "config-location: " << (*it).location << std::endl;
-		std::cout << "request-location: " << request_path << std::endl;
-		if (!(*it).location.compare(request_path))
+		if (!(*it).value.compare(request_path))
 		{
 			return true;
 		}
@@ -114,13 +156,15 @@ bool	Process::check_location(void)
 std::string	Process::get_location(std::string location, ConfigurationKeyType type)
 {
 	
-	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
+	std::vector<ConfigurationKey>	vec = _config.getConfigurationKeysWithType(LOCATION);
 	std::vector<ConfigurationKey>::iterator	it;
 	std::string	path;
-	for (it = locations.begin(); it != locations.end(); it++)
+	for (it = vec.begin(); it != vec.end(); it++)
 	{
-		if (!(*it).location.compare(location))
+		if (!(*it).value.compare(location))
 		{
+			_cgi = (*it).cgi_path;
+			//std::cout << "cgi: " << _cgi << std::endl;
 			if (type == ROOT)
 				return (*it).root;
 			else if (type == INDEX)
