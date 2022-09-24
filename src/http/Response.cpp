@@ -139,16 +139,16 @@ void	Response::test_image(void)
 	create_response();
 }
 
-void	Response::test_cgi(ServerBlock &config)
-{
-	_protocol = "HTTP/1.1";
-	_status_code = "200";
-	_status_text = "OK";
-	CGI	cgi(_request, config);
-	cgi.execute();
-	_body = cgi.get_buf();
-	_server = "PetRoulette";
-	_content_type = "text/html";
-	_content_length = to_str(_body.length());
-	create_response();
-}
+// void	Response::test_cgi(ServerBlock &config)
+// {
+// 	_protocol = "HTTP/1.1";
+// 	_status_code = "200";
+// 	_status_text = "OK";
+// 	CGI	cgi(_request, config);
+// 	cgi.execute();
+// 	_body = cgi.get_buf();
+// 	_server = "PetRoulette";
+// 	_content_type = "text/html";
+// 	_content_length = to_str(_body.length());
+// 	create_response();
+// }

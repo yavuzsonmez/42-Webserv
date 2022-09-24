@@ -2,6 +2,7 @@
 #include "../../inc/network/ClientSocket.hpp"
 #include "../../inc/http/Response.hpp"
 #include "../../inc/http/Process.hpp"
+#include <sys/ioctl.h>
 
 ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
 {
@@ -41,9 +42,38 @@ void ServerSocket::processConnections()
 		// if accept return -1 throw error
 		ClientSocket client(clientSocket);
 		
-		char	buf[1000];
-		read(forward, buf, 1000);
+		
+		//std::string	request_str;
+		char	buf[1000000];
+		bzero(buf, 1000000);
+		// size_t	bytes = read(forward, buf, 1024);
+		// while (bytes > 0)
+		// {
+		// 	request_str.resize(bytes);
+		// 	size_t	i;
+		// 	for (i = 0 ; i < bytes; i++)
+		// 	{
+		// 		char	*tmp = (char*)request_str.data();
+		// 		tmp[i] = buf[i];
+		// 	}
+		// 	bzero(buf, 1024);
+		// 	//bytes = read(forward, buf, 1024);
+		// 	bytes = 0;
+		// }
+
+		// int len = 0;
+		// while (!len && ioctl(forward, FIONREAD, &len) >= 0)
+		// std::cout << "length: " << len << std::endl;
+
+		// request_str.resize(len);
+		// read(forward, (char*)request_str.data(), len);
+
+		// std::cout << request_str << std::endl;
+
+		read(forward, buf, 1000000);
+		write(STDOUT_FILENO, buf, 1000000);
 		std::string	request_str(buf);
+
 		Request	request(request_str);
 		Response response;
 		Process	process(response, request, _config);

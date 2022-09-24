@@ -30,7 +30,7 @@ class Response
 	void	test_text(void);
 	void	test_html(void);
 	void	test_image(void);
-	void	test_cgi(ServerBlock &config);
+	//void	test_cgi(ServerBlock &config);
 
 	void	set_protocol(std::string protocol);
 	void	set_status_code(std::string status_code);
