@@ -54,7 +54,13 @@ void	Process::get_request(void)
 void	Process::post_request(void)
 {
 	std::cout << "POST" << std::endl;
-	std::cout << _request.getBody().first.empty() << std::endl;
+	//std::cout << _request.getBody().first << std::endl;
+	// _response.set_protocol("HTTP/1.1");
+	// _response.set_status_code("200");
+	// _response.set_status_text("OK");
+	// _response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+	// _response.create_response();
+
 }
 
 void	Process::delete_request(void)
@@ -62,7 +68,11 @@ void	Process::delete_request(void)
 	std::cout << "DELETE" << std::endl;
 	if (_request.getPath().first == "/")
 	{
-		std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
+		std::string path;
+		if (_request.getScript().first.empty())
+			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+		else
+			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
 		if (is_file_accessible(path))
 		{
 			std::remove(path.c_str());
@@ -107,6 +117,8 @@ void	Process::build_response(std::string path)
 			_response.set_body(get_file_content(path));
 		_response.set_content_length(to_str(_response.get_body().length()));
 		_response.set_content_type(_response.get_file_format());
+		// if (_response.get_body().length() > 1)
+		// 	_response.set_transfer_encoding("chunked");
 		_response.create_response();
 }
 
