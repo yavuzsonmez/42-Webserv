@@ -43,9 +43,9 @@ void ServerSocket::processConnections()
 		ClientSocket client(clientSocket);
 		
 		
-		//std::string	request_str;
-		char	buf[1000000];
-		bzero(buf, 1000000);
+		std::string	request_str;
+		//char	buf[1000000];
+		//bzero(buf, 1000000);
 		// size_t	bytes = read(forward, buf, 1024);
 		// while (bytes > 0)
 		// {
@@ -61,18 +61,27 @@ void ServerSocket::processConnections()
 		// 	bytes = 0;
 		// }
 
-		// int len = 0;
-		// while (!len && ioctl(forward, FIONREAD, &len) >= 0)
-		// std::cout << "length: " << len << std::endl;
+		// struct	pollfd	fds;
+		// memset(&fds, 0, sizeof(fds));
+		// fds.fd = forward;
+		// fds.events = POLLIN;
 
+		// int len;
+		// while (poll(&fds, 1, 100) == 0){}
+		// len = ioctl(forward, FIONREAD, &len);
 		// request_str.resize(len);
 		// read(forward, (char*)request_str.data(), len);
+		int len = 0;
+		while (!len && ioctl(forward, FIONREAD, &len) >= 0)
 
-		// std::cout << request_str << std::endl;
+		request_str.resize(len);
+		read(forward, (char*)request_str.data(), len);
 
-		read(forward, buf, 1000000);
-		write(STDOUT_FILENO, buf, 1000000);
-		std::string	request_str(buf);
+		std::cout << request_str << std::endl;
+
+		// read(forward, buf, 1000000);
+		// write(STDOUT_FILENO, buf, 1000000);
+		// std::string	request_str(buf);
 
 		Request	request(request_str);
 		Response response;
@@ -94,6 +103,61 @@ void ServerSocket::processConnections()
 			httpResponse.erase(0, bytes_send);
 		}
 
+		// std::string	body = response.get_body();
+		// bytes_send = 0;
+		// // if bytes_send < len we have to handle it and keep send until everything was sent
+		// while (bytes_send <= (int)body.length())
+		// {
+		// 	//if (bytes_send == -1)
+		// 		// if send return -1, throw error; + perror
+		// 	send(forward, "2FA\r\n", 5, 0);
+		// 	//std::cout << "bytes: " << bytes_send << std::endl;
+		// 	//write(STDIN_FILENO, (char*)body.data() + bytes_send, 762);
+		// 	bytes_send += send(forward, (char*)body.data() + bytes_send, 762, 0);
+		// }
+		// send(forward, "0\r\n\r\n", 5, 0);
+
+		// int	content_length = 418698;		//from the request header
+		// char	*buff = (char*)calloc(sizeof(char), content_length);
+		// std::cout <<  "test" << std::endl;
+		// std::ofstream ofs("upload/test.png", std::ofstream::out);
+
+		// len = 0;
+		// int	bytes = 0;
+		// time_t	beginning = time(NULL);
+		// while (len < content_length && difftime(time(NULL), beginning) <= 5)
+		// {
+		// 	bytes = read(forward, buff + len, 1024);
+		// 	len += bytes;
+		// 	if (bytes)
+		// 		beginning = time(NULL);
+		// 	std::cout << "len: " << len << std::endl;
+		// }
+
+		// std::cout << "write in file" << std::endl;
+		// ofs.write(buff, content_length);
+		// ofs.close();
+
+		// free(buff);
+		// std::cout << "finished" << std::endl;
+
+		// response.set_protocol("HTTP/1.1");
+		// response.set_status_code("200");
+		// response.set_status_text("OK");
+		// response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+		// response.create_response();
+
+		// bytes_send = 0;
+		// // if bytes_send < len we have to handle it and keep send until everything was sent
+		// std::cout << "test" << std::endl;
+		// while (bytes_send < (int)response.get_response().length())
+		// {
+		// 	//if (bytes_send == -1)
+		// 		// if send return -1, throw error; + perror
+		// 	bytes_send = send(forward, response.get_response().c_str(), response.get_response().length(), 0);
+		// 	response.get_response().erase(0, bytes_send);
+		// }
+		
 		close(forward);
 		//if close(server) //throw error; + perror
 	}

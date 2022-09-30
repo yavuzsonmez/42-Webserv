@@ -39,6 +39,7 @@ class Response
 	void	set_content_type(std::string content_type);
 	void	set_charset(std::string charset);
 	void	set_content_length(std::string content_length);
+	void	set_transfer_encoding(std::string transfer_encoding);
 	void	set_body(std::string body);
 
 	std::string	get_protocol(void);
@@ -48,6 +49,7 @@ class Response
 	std::string	get_content_type(void);
 	std::string	get_charset(void);
 	std::string	get_content_length(void);
+	std::string	get_transfer_encoding(void);
 	std::string	get_body(void);
 
 	std::string	get_file_format(void);
@@ -65,6 +67,7 @@ class Response
 	std::string	_content_type;
 	std::string	_charset;
 	std::string	_content_length;
+	std::string	_transfer_encoding;
 	std::string	_body;
 	// std::string _html;
 	// std::string _plain;

@@ -51,6 +51,7 @@ void	Response::set_server(std::string server){_server = server;}
 void	Response::set_content_type(std::string content_type){_content_type = content_type;}
 void	Response::set_charset(std::string charset){_charset = charset;}
 void	Response::set_content_length(std::string content_length){_content_length = content_length;}
+void	Response::set_transfer_encoding(std::string transfer_encoding){_transfer_encoding = transfer_encoding;}
 void	Response::set_body(std::string body){_body = body;}
 
 std::string	Response::get_protocol(void){return _protocol;}
@@ -60,6 +61,7 @@ std::string	Response::get_server(void){return _server;}
 std::string	Response::get_content_type(void){return _content_type;}
 std::string	Response::get_charset(void){return _charset;}
 std::string	Response::get_content_length(void){return _content_length;}
+std::string	Response::get_transfer_encoding(void){return _transfer_encoding;}
 std::string	Response::get_body(void){return _body;}
 
 std::string	Response::get_response(void)
@@ -81,6 +83,11 @@ void	Response::create_response(void)
 	// 	_response += "\r\n" + _plain;
 	// if (!_image.empty())
 	// 	_response += "\r\n" + _image;
+	// if (!_transfer_encoding.empty())
+	// {
+	// 	_response += "transfer-encoding: " + _transfer_encoding + "\r\n\r\n";
+	// 	return ;
+	// }
 	if (!_body.empty())
 		_response += "\r\n" + _body;
 }
@@ -93,8 +100,10 @@ std::string	Response::get_file_format(void)
 		return ("image/png");
 	if (_body.find("JFIF") != (unsigned long) -1)
 		return ("image/jpeg");
-	if (_body.find("GIF") !=  (unsigned long)-1)
+	if (_body.find("GIF") != (unsigned long)-1)
 		return ("image/gif");
+	if (_body.find("MPEG-4") != (unsigned long)-1)
+		return ("video/mp4");
 	return("unknown");
 }
 
