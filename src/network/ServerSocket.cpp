@@ -126,10 +126,10 @@ void ServerSocket::processConnections()
 
 		// if (request.getMethod().first == POST)
 		// {
-		// 	int	content_length = 418886;		//from the request header content-length
+		// 	int	content_length = 211623;		//from the request header content-length
 		// 	char	*buff = (char*)calloc(sizeof(char), content_length);
 		// 	std::cout <<  "test" << std::endl;
-		// 	std::ofstream ofs("uploads/test.png", std::ofstream::out);
+		// 	std::ofstream ofs("uploads/test.jpg", std::ofstream::out);
 			
 		// 	len = 0;
 		// 	int	bytes = 0;
