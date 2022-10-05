@@ -19,4 +19,5 @@
 	<h1>Age: <?php echo $_GET['Age'];?></h1>
 	<h1>Home: <?php echo $_GET['Home'];?></h1>
 </body>
+<?php phpinfo(); ?>
 </html>
