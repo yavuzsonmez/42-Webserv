@@ -124,46 +124,46 @@ void ServerSocket::processConnections()
 		// }
 		// send(forward, "0\r\n\r\n", 5, 0);
 
-		// if (request.getMethod().first == POST)
-		// {
-		// 	int	content_length = 211623;		//from the request header content-length
-		// 	char	*buff = (char*)calloc(sizeof(char), content_length);
-		// 	std::cout <<  "test" << std::endl;
-		// 	std::ofstream ofs("uploads/test.jpg", std::ofstream::out);
+		if (request.getMethod().first == POST)
+		{
+			int	content_length = 211623;		//from the request header content-length
+			char	*buff = (char*)calloc(sizeof(char), content_length);
+			std::cout <<  "test" << std::endl;
+			std::ofstream ofs("uploads/test.jpg", std::ofstream::out);
 			
-		// 	len = 0;
-		// 	int	bytes = 0;
-		// 	time_t	beginning = time(NULL);
-		// 	while (len < content_length && difftime(time(NULL), beginning) <= 1)
-		// 	{
-		// 		bytes = read(forward, buff + len, 1024);
-		// 		len += bytes;
-		// 		if (bytes)
-		// 			beginning = time(NULL);
-		// 		std::cout << "len: " << len << std::endl;
-		// 	}
+			len = 0;
+			int	bytes = 0;
+			time_t	beginning = time(NULL);
+			while (len < content_length && difftime(time(NULL), beginning) <= 1)
+			{
+				bytes = read(forward, buff + len, 1024);
+				len += bytes;
+				if (bytes)
+					beginning = time(NULL);
+				std::cout << "len: " << len << std::endl;
+			}
 
-		// 	std::cout << "write in file" << std::endl;
-		// 	ofs.write(buff, content_length);
-		// 	ofs.close();
-		// 	free(buff);
-		// 	std::cout << "finished" << std::endl;
-		// 	response.set_protocol("HTTP/1.1");
-		// 	response.set_status_code("200");
-		// 	response.set_status_text("OK");
-		// 	response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-		// 	response.create_response();
-		// 	bytes_send = 0;
-		// 	// if bytes_send < len we have to handle it and keep send until everything was sent
-		// 	std::cout << "test" << std::endl;
-		// 	while (bytes_send < (int)response.get_response().length())
-		// 	{
-		// 		//if (bytes_send == -1)
-		// 			// if send return -1, throw error; + perror
-		// 		bytes_send = send(forward, response.get_response().c_str(), response.get_response().length(), 0);
-		// 		response.get_response().erase(0, bytes_send);
-		// 	}
-		// }
+			std::cout << "write in file" << std::endl;
+			ofs.write(buff, content_length);
+			ofs.close();
+			free(buff);
+			std::cout << "finished" << std::endl;
+			response.set_protocol("HTTP/1.1");
+			response.set_status_code("200");
+			response.set_status_text("OK");
+			response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+			response.create_response();
+			bytes_send = 0;
+			// if bytes_send < len we have to handle it and keep send until everything was sent
+			std::cout << "test" << std::endl;
+			while (bytes_send < (int)response.get_response().length())
+			{
+				//if (bytes_send == -1)
+					// if send return -1, throw error; + perror
+				bytes_send = send(forward, response.get_response().c_str(), response.get_response().length(), 0);
+				response.get_response().erase(0, bytes_send);
+			}
+		}
 		
 		close(forward);
 		//if close(server) //throw error; + perror
