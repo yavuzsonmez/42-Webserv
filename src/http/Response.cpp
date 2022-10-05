@@ -51,6 +51,7 @@ void	Response::set_server(std::string server){_server = server;}
 void	Response::set_content_type(std::string content_type){_content_type = content_type;}
 void	Response::set_charset(std::string charset){_charset = charset;}
 void	Response::set_content_length(std::string content_length){_content_length = content_length;}
+void	Response::set_transfer_encoding(std::string transfer_encoding){_transfer_encoding = transfer_encoding;}
 void	Response::set_body(std::string body){_body = body;}
 
 std::string	Response::get_protocol(void){return _protocol;}
@@ -60,6 +61,7 @@ std::string	Response::get_server(void){return _server;}
 std::string	Response::get_content_type(void){return _content_type;}
 std::string	Response::get_charset(void){return _charset;}
 std::string	Response::get_content_length(void){return _content_length;}
+std::string	Response::get_transfer_encoding(void){return _transfer_encoding;}
 std::string	Response::get_body(void){return _body;}
 
 std::string	Response::get_response(void)
@@ -81,19 +83,28 @@ void	Response::create_response(void)
 	// 	_response += "\r\n" + _plain;
 	// if (!_image.empty())
 	// 	_response += "\r\n" + _image;
+	// if (!_transfer_encoding.empty())
+	// {
+	// 	_response += "transfer-encoding: " + _transfer_encoding + "\r\n\r\n";
+	// 	return ;
+	// }
 	if (!_body.empty())
 		_response += "\r\n" + _body;
 }
 
-std::string	Response::get_image_format(void)
+std::string	Response::get_file_format(void)
 {
+	if (_body.find("html") != (unsigned long) -1)
+		return ("text/html");
 	if (_body.find("PNG") != (unsigned long) -1)
 		return ("image/png");
 	if (_body.find("JFIF") != (unsigned long) -1)
 		return ("image/jpeg");
-	if (_body.find("GIF") !=  (unsigned long)-1)
+	if (_body.find("GIF") != (unsigned long)-1)
 		return ("image/gif");
-	return("no valid format");
+	if (_body.find("MPEG-4") != (unsigned long)-1)
+		return ("video/mp4");
+	return("unknown");
 }
 
 void	Response::test_text(void)
@@ -131,22 +142,22 @@ void	Response::test_image(void)
 	_server = "PetRoulette";
 	//_content_type = "image/png";
 	_body = get_file_content("images/Rotating_earth_(large).gif");
-	_content_type = get_image_format();
+	_content_type = get_file_format();
 	_content_length = to_str(_body.length());
 
 	create_response();
 }
 
-void	Response::test_cgi(ServerBlock &config)
-{
-	_protocol = "HTTP/1.1";
-	_status_code = "200";
-	_status_text = "OK";
-	CGI	cgi(_request, config);
-	cgi.execute();
-	_body = cgi.get_buf();
-	_server = "PetRoulette";
-	_content_type = "text/html";
-	_content_length = to_str(_body.length());
-	create_response();
-}
+// void	Response::test_cgi(ServerBlock &config)
+// {
+// 	_protocol = "HTTP/1.1";
+// 	_status_code = "200";
+// 	_status_text = "OK";
+// 	CGI	cgi(_request, config);
+// 	cgi.execute();
+// 	_body = cgi.get_buf();
+// 	_server = "PetRoulette";
+// 	_content_type = "text/html";
+// 	_content_length = to_str(_body.length());
+// 	create_response();
+// }

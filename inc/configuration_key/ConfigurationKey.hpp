@@ -21,6 +21,7 @@
 # define	KEY_INVALID					"INVALID"
 # define	KEY_METHODS					"methods"
 # define	KEY_EXECUTABLE_PATH			"cgi_path"
+# define	KEY_FILEENDING				"cgi_fileending"
 # define	KEY_NOT_FOUND_PAGE			"not_found_error_page"
 # define	KEY_GENERAL_ERROR_PAGE		"general_error_page"
 
@@ -42,6 +43,7 @@ enum ConfigurationKeyType {
 	SERVERSTARTSEGMENT,
 	METHODS,
 	CGI_EXECUTABLE_PATH,
+	CGI_FILEENDING,
 	NOT_FOUND_ERROR_PAGE,
 	GENERAL_ERROR_PAGE
 };
@@ -101,6 +103,7 @@ class ConfigurationKey {
 		std::string root; // returns the path of the root
 		std::string location; // returns the locationpath of the location
 		std::string cgi_path; // returns the locationpath of the location
+		std::string cgi_fileending; // those file endings should be executed with a cgi
 		std::string not_found_error_page_path; // returns the location of the error path to the error file
 		std::string general_error_page_path; // returns the location of the error path to the error file
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
@@ -117,12 +120,14 @@ class ConfigurationKey {
 		bool isLocationKeyType(internal_keyvalue &raw);
 		bool isMethodsKeyType(internal_keyvalue raw);
 		bool isCgiExecutableKeyType(internal_keyvalue raw);
+		bool isCgiFileEndingKeyType(internal_keyvalue raw);
 		bool isNotFoundErrorPagePathType(internal_keyvalue raw);
 		bool isGeneralErrorPagePathType(internal_keyvalue raw);
 		bool isValidMethod(std::string method);
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
+		bool validateCgiFileEnding(std::string to_validate);
 		
 		
 		/**

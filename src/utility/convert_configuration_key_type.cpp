@@ -81,6 +81,9 @@ std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std:: cout << intendation;
 	std:: cout << intendation;
 	std::cout << B << "->" << Reset << " CGI_PATH " << key.cgi_path  << std::endl;
+	std:: cout << intendation;
+	std:: cout << intendation;
+	std::cout << B << "->" << Reset << " CGI ENDING " << key.cgi_fileending  << std::endl;
 	return "";
 }
 
