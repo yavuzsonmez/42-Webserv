@@ -67,58 +67,8 @@ void	Process::get_request(void)
 		}
 		else
 			std::cout << "Error 404: " <<  _request.getPath().first << std::endl;
-			std::cout << "Error 404 TEST PAGE: " <<  _request.getPath().first << std::endl;
 			std::string path =  "./default_pages/404_default.html";
 			build_response(path);
-	}
-}
-
-void	Process::post_request(void)
-{
-	std::cout << "POST" << std::endl;
-	//std::cout << _request.getBody().first << std::endl;
-	// _response.set_protocol("HTTP/1.1");
-	// _response.set_status_code("200");
-	// _response.set_status_text("OK");
-	// _response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-	// _response.create_response();
-
-}
-
-void	Process::delete_request(void)
-{
-	std::cout << "DELETE" << std::endl;
-	if (_request.getPath().first == "/")
-	{
-		std::string path;
-		if (_request.getScript().first.empty())
-			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-		else
-			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
-		if (is_file_accessible(path))
-		{
-			std::remove(path.c_str());
-		}
-		return ;
-	}
-	else if (check_location())
-	{
-		if (_request.getScript().first.empty())
-		{
-			std::cout << "Error: No file specified" << std::endl;
-		}
-		else
-		{
-			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
-			if (is_file_accessible(path))
-			{
-				std::remove(path.c_str());
-			}
-		}
-	}
-	else
-	{
-		std::cout << "Error 404: " <<  _request.getPath().first << std::endl;
 	}
 }
 
