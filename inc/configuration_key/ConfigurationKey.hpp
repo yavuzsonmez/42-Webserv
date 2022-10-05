@@ -127,6 +127,7 @@ class ConfigurationKey {
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
+		bool validateCgiFileEnding(std::string to_validate);
 		
 		
 		/**

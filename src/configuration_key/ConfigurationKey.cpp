@@ -130,6 +130,35 @@ bool ConfigurationKey::isCgiExecutableKeyType(internal_keyvalue raw)
 }
 
 /**
+ * @brief Checks if the value is a file ending, means a dot in beginning and only alpha characters.
+ * No spaces in between
+ * 
+ * @param to_validate 
+ * @return true if ending is correct
+ * @return false 
+ */
+bool ConfigurationKey::validateCgiFileEnding(std::string to_validate)
+{
+	USE_DEBUGGER;
+	if (to_validate.empty())
+	{
+		debugger.info("File ending is empty.");
+		return false;
+	}
+	if (!isalphastring(to_validate.substr(2, to_validate.length())) || to_validate[0] != '.')
+	{
+		debugger.error("Invalid cgi file ending. Only alpha characters allowed and dot in beginning.");
+		return false;
+	}
+	if (!no_whitespace_between(to_validate))
+	{
+		debugger.error("Invalid cgi file ending. No whitespace allowed.");
+		return false;
+	}
+	return true;
+}
+
+/**
  * @brief Checks if the key is a CGI File endinng key type. Sets the cgi file ending value.
  * 
  * @param raw 
@@ -141,8 +170,8 @@ bool ConfigurationKey::isCgiFileEndingKeyType(internal_keyvalue raw)
 	USE_DEBUGGER;
 	if (raw.first == KEY_FILEENDING && !raw.second.empty())
 	{
-		if (raw.second[0] != '.') {
-			throwInvalidConfigurationFileExceptionWithMessage("CGI ending need to start with a dot.");
+		if (!this->validateCgiFileEnding(raw.second)) {
+			throwInvalidConfigurationFileExceptionWithMessage("CGI ending need to start with a dot and cannot contain any spaces.");
 		}
 		this->cgi_fileending = raw.second;
 		return true;

@@ -225,6 +225,11 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
+		if (key_value_raw.size() != 2) {
+			debugger.error("Invalid configuration key detected. Line: " + std::to_string(lineNumber));
+			debugger.error("There is no second pair for the key value pair.");
+			throw InvalidConfigurationFile();
+		}
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
 		ConfigurationKey key = ConfigurationKey(key_value_raw[0], trim_whitespaces(key_value_raw[1]), this->isCurrentlyInLocationBlock, lineNumber, trimmedString);
 		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
