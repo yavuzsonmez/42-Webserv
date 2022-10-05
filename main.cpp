@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 		configurationFileParsing->parseConfigFile(file_content);
 		debugger.info("CONFIG FILE OK");
 	} catch (const std::exception& e) {
-		std::cout << "error: " << e.what() << std::endl;
+		std::cout << R << "Something went wrong: " << Reset << e.what() << std::endl;
 		return (1);
 	}
 
