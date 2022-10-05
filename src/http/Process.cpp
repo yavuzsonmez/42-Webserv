@@ -32,7 +32,6 @@ void	Process::get_request(void)
 	{
 		if (_request.getScript().first.empty())
 		{
-			//std::string path = get_location(_request.getPath().first.insert(0, "/")).root + "/" + get_location(_request.getPath().first.insert(0, "/")).indexes.front();
 			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
 			build_response(path);
 		}
@@ -159,20 +158,6 @@ bool	Process::check_location(void)
 	return false;
 }
 
-// ConfigurationKey	Process::get_location(std::string location)
-// {
-	
-// 	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
-// 	std::vector<ConfigurationKey>::iterator	it;
-// 	ConfigurationKey key(*locations.begin());
-// 	for (it = locations.begin(); it != locations.end(); it++)
-// 	{
-// 		if ((*it).location.compare(location))
-// 			key = *it;
-// 	}
-// 	return key;
-// }
-
 std::string	Process::get_location(std::string location, ConfigurationKeyType type)
 {
 	
@@ -185,7 +170,6 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 		{
 			_cgi = (*it).cgi_path;
 			_cgi_fileending = (*it).cgi_fileending;
-			//std::cout << "cgi: " << _cgi << std::endl;
 			if (type == ROOT)
 				return (*it).root;
 			else if (type == INDEX)
@@ -194,18 +178,3 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 	}
 	return path;
 }
-
-
-// int	Process::get_location(std::string location)
-// {
-// 	int	i = 0;
-// 	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
-// 	std::vector<ConfigurationKey>::iterator	it;
-// 	for (it = locations.begin(); it != locations.end(); it++, i++)
-// 	{
-// 		if ((*it).location.compare(location))
-// 			return i;
-// 	}
-// 	return -1;
-// }
-
