@@ -10,6 +10,12 @@ Process::~Process(void)
 
 }
 
+/**
+ * @brief  Process request and handle method type
+ * 
+ * TODO: Check if given request method is allowed, otherwise sent back a method forbidden page.
+ * 
+ */
 void	Process::process_request(void)
 {
 	// if (_request.getMethod().first == GET)
@@ -20,6 +26,11 @@ void	Process::process_request(void)
 	// 	delete_request();
 }
 
+/**
+ * @brief Handles request
+ * TODO: Add method enum to handle all request in one place
+ * 
+ */
 void	Process::get_request(void)
 {
 	if (_request.getPath().first == "/")
