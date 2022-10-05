@@ -95,6 +95,6 @@ std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
  * @return std::string 
  */
 std::string printKeyValueColored(std::string key, std::string name) {
-	std::cout << B << key << Reset << " " << name << std::endl;
+	std::cout << B << key << Reset << " " << "|" << name << "|" << std::endl;
 	return "";
 }
