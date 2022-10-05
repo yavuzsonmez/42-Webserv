@@ -173,7 +173,7 @@ bool ConfigurationKey::isCgiFileEndingKeyType(internal_keyvalue raw)
 		if (!this->validateCgiFileEnding(raw.second)) {
 			throwInvalidConfigurationFileExceptionWithMessage("CGI ending need to start with a dot and cannot contain any spaces.");
 		}
-		this->cgi_fileending = raw.second;
+		this->cgi_fileending = trim_whitespaces(raw.second.substr(1, raw.second.length()));
 		return true;
 	}
 	return false;
