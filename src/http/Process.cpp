@@ -135,8 +135,6 @@ void	Process::build_response(std::string path)
 			_response.set_body(get_file_content(path));
 		_response.set_content_length(to_str(_response.get_body().length()));
 		_response.set_content_type(_response.get_file_format());
-		// if (_response.get_body().length() > 1)
-		// 	_response.set_transfer_encoding("chunked");
 		_response.create_response();
 }
 
