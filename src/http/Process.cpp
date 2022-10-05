@@ -67,6 +67,9 @@ void	Process::get_request(void)
 		}
 		else
 			std::cout << "Error 404: " <<  _request.getPath().first << std::endl;
+			std::cout << "Error 404 TEST PAGE: " <<  _request.getPath().first << std::endl;
+			std::string path =  "./default_pages/404_default.html";
+			build_response(path);
 	}
 }
 
