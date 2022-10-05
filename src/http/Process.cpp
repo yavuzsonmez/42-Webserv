@@ -12,12 +12,12 @@ Process::~Process(void)
 
 void	Process::process_request(void)
 {
-	if (_request.getMethod().first == GET)
+	// if (_request.getMethod().first == GET)
 		get_request();
-	else if (_request.getMethod().first == POST)
-		post_request();
-	else if (_request.getMethod().first == DELETE)
-		delete_request();
+	// else if (_request.getMethod().first == POST)
+	// 	post_request();
+	// else if (_request.getMethod().first == DELETE)
+	// 	delete_request();
 }
 
 void	Process::get_request(void)
@@ -116,7 +116,7 @@ void	Process::build_response(std::string path)
 		_response.set_status_text("OK");
 
 		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-		if (!path.substr(path.find_last_of(".") + 1).compare("php"))
+		if (!path.substr(path.find_last_of(".") + 1).compare("py"))
 		{
 			CGI	cgi(_request, _config, path, _cgi);
 			cgi.execute();
