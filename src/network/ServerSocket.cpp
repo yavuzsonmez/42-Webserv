@@ -28,6 +28,9 @@ ServerSocket::~ServerSocket(){}
 
 int ServerSocket::getFileDescriptor() const { return _fd; }
 
+/**
+ * @brief Handles connections 
+ */
 void ServerSocket::processConnections()
 {
 	int forward;
