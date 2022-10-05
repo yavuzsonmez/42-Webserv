@@ -116,7 +116,7 @@ void	Process::build_response(std::string path)
 		_response.set_status_text("OK");
 
 		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-		if (!path.substr(path.find_last_of(".") + 1).compare("py"))
+		if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
 		{
 			CGI	cgi(_request, _config, path, _cgi);
 			cgi.execute();
@@ -185,6 +185,7 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 		if (!(*it).value.compare(location))
 		{
 			_cgi = (*it).cgi_path;
+			_cgi_fileending = (*it).cgi_fileending;
 			//std::cout << "cgi: " << _cgi << std::endl;
 			if (type == ROOT)
 				return (*it).root;
