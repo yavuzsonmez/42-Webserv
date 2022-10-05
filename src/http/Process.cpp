@@ -114,7 +114,6 @@ void	Process::build_response(std::string path)
 		_response.set_protocol("HTTP/1.1");
 		_response.set_status_code("200");
 		_response.set_status_text("OK");
-
 		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 		if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
 		{

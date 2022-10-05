@@ -31,6 +31,7 @@ class Process
 	Request		_request;
 	ServerBlock	&_config;
 	std::string	_cgi;
+	std::string	_cgi_fileending;
 
 
 };
