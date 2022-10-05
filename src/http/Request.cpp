@@ -37,7 +37,7 @@ Request::Request(std::string &req) :
 	_headers(),
 	_body("", false),
 	_status("")
-	{ parser(req); }
+	{ parser(req);}
 
 /**
  * @brief Copy constructor

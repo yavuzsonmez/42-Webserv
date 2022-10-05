@@ -5,11 +5,12 @@ CGI::CGI()
 
 }
 
-CGI::CGI(/*Request &request*/Request request, ServerBlock &config) : _request(request), _config(config)
+CGI::CGI(/*Request &request*/Request request, ServerBlock &config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
 	if (_request.getQuery().second)
 	{
 		std::string	query = _request.getQuery().first;
+		//std::cout << "getQuery: " << _request.getQuery().first << std::endl;
 		_query_parameters = split_on_delimiter(query, '&');
 	}
 
@@ -40,17 +41,17 @@ CGI::~CGI()
 /*executes cgi*/
 void	CGI::execute(void)
 {
-	std::string cgi_path;
-	std::string cgi_index;
+	//std::string cgi_path = "php-cgi";
+	// std::string cgi_index;
 	
-	for (int j = 0; j < (int) _config.configurationKeys.size(); j++)
-	{
-		if (_config.configurationKeys[j].configurationType == LOCATION)
-		{
-			cgi_path = _config.configurationKeys[j].cgi_path;
-			cgi_index = _config.configurationKeys[j].indexes.front();
-		}
-	}
+	// for (int j = 0; j < (int) _config.configurationKeys.size(); j++)
+	// {
+	// 	if (_config.configurationKeys[j].configurationType == LOCATION)
+	// 	{
+	// 		cgi_path = _config.configurationKeys[j].cgi_path;
+	// 		cgi_index = _config.configurationKeys[j].indexes.front();
+	// 	}
+	// }
 
 	pid_t	pid;
 	
@@ -67,10 +68,10 @@ void	CGI::execute(void)
 		dup2(fileno(_tmpin), STDIN_FILENO);
 		dup2(fileno(_tmpout), STDOUT_FILENO);								//stdout now points to the tmpfile
 		
-		_query_parameters.insert(_query_parameters.begin(), cgi_index.c_str());
-		_query_parameters.insert(_query_parameters.begin(), cgi_path.c_str());
+		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
+		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 
-		execve(cgi_path.c_str(), vec_to_array(_query_parameters), map_to_array(_env));						//executes the executable with its arguments
+		execve(_cgi_path.c_str(), vec_to_array(_query_parameters), map_to_array(_env));						//executes the executable with its arguments
 		//std::cout << "execve: " << i << std::endl;				//check if execve failes
 		exit(1);												//exit the childprocess
 	}
