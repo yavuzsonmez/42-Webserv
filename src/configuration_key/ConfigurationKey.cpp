@@ -141,6 +141,9 @@ bool ConfigurationKey::isCgiFileEndingKeyType(internal_keyvalue raw)
 	USE_DEBUGGER;
 	if (raw.first == KEY_FILEENDING && !raw.second.empty())
 	{
+		if (raw.second[0] != '.') {
+			throwInvalidConfigurationFileExceptionWithMessage("CGI ending need to start with a dot.");
+		}
 		this->cgi_fileending = raw.second;
 		return true;
 	}
