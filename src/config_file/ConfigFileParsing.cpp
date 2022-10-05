@@ -114,6 +114,9 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
 		key.cgi_path = trim_whitespaces(keyToAdd.cgi_path);
 	}
+	if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
+		key.cgi_fileending = trim_whitespaces(keyToAdd.cgi_fileending);
+	}
 }
 
 /**

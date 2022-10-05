@@ -31,6 +31,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->current_line = src.current_line;
 	this->raw_input = src.raw_input;
 	this->cgi_path = src.cgi_path;
+	this->cgi_fileending = src.cgi_fileending;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -102,6 +103,11 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 		debugger.info("Detected CGI PATH key type.");
 		return CGI_EXECUTABLE_PATH;
 	}
+	if (this->isCgiFileEndingKeyType(raw))
+	{
+		debugger.info("Detected CGI FILE ENDING key type.");
+		return CGI_FILEENDING;
+	}
 	return INVALID;
 }
 
@@ -118,6 +124,24 @@ bool ConfigurationKey::isCgiExecutableKeyType(internal_keyvalue raw)
 	if (raw.first == KEY_EXECUTABLE_PATH && !raw.second.empty())
 	{
 		this->cgi_path = raw.second;
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Checks if the key is a CGI File endinng key type. Sets the cgi file ending value.
+ * 
+ * @param raw 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isCgiFileEndingKeyType(internal_keyvalue raw)
+{
+	USE_DEBUGGER;
+	if (raw.first == KEY_FILEENDING && !raw.second.empty())
+	{
+		this->cgi_fileending = raw.second;
 		return true;
 	}
 	return false;
