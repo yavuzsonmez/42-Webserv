@@ -54,6 +54,7 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/validate_parantheses.cpp \
 						./src/utility/split_on_delimiter.cpp \
 						./src/utility/convert_configuration_key_type.cpp \
+						./src/utility/inttohex.cpp \
 						./src/utility/trim_whitespaces.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
