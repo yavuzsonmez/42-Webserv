@@ -13,7 +13,6 @@ ServerBlock::ServerBlock()
 ServerBlock::ServerBlock( const ServerBlock &src )
 {
 	this->configurationKeys = src.configurationKeys;
-
 }
 
 ServerBlock::~ServerBlock()
@@ -50,6 +49,34 @@ std::vector<ConfigurationKey> ServerBlock::getConfigurationKeysWithType(Configur
 		}
 	}
 	return keys;
+}
+
+/**
+ * @brief returns the general cgi path of the server block
+ * 
+ * @return std::string 
+ */
+std::string ServerBlock::getCgiPath() {
+	std::vector<ConfigurationKey> configKeys = this->getConfigurationKeysWithType(CGI_EXECUTABLE_PATH);
+	if (configKeys.size() == 0) {
+		return "";
+	}
+	std::string cgi_path = configKeys[0].value;
+	return cgi_path;
+}
+
+/**
+ * @brief returns the general cgi file ending of the server block
+ * 
+ * @return std::string 
+ */
+std::string ServerBlock::getCgiFileEnding() {
+	std::vector<ConfigurationKey> configKeys = this->getConfigurationKeysWithType(CGI_FILEENDING);
+	if (configKeys.size() == 0) {
+		return "";
+	}
+	std::string cgi_fileending = configKeys[0].value;
+	return cgi_fileending;
 }
 
 /**
