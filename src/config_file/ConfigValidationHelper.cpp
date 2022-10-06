@@ -75,6 +75,28 @@ bool checkIfKeyIsUniqueInEachServerBlock(std::vector<ServerBlock> &serverBlocks,
 }
 
 /**
+ * @brief Iterate over all server blocks and makes sure each of them has the given keyType at least one.
+ * 
+ * @param serverBlocks
+ * @param keyType
+ * @return true if at least one is there, false if not
+ */ 
+bool keyExistsInEachServerBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType)
+{
+	USE_DEBUGGER;
+	std::vector<ServerBlock>::iterator i = serverBlocks.begin();
+	std::vector<std::string> server_names;
+
+	for (serverBlocks.begin(), serverBlocks.end(); i != serverBlocks.end(); ++i) {
+		std::vector<ConfigurationKey> configurationKeysPerBlock = (*i).getConfigurationKeysWithType(keyType);
+		if (configurationKeysPerBlock.size() == 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
  * @brief Iterate over all server blocks and checks if there are duplicate error page paths
  * - general_error_page (one for each)
  * - not_found_error_page (one for each)
