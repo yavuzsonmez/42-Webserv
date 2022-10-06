@@ -57,18 +57,10 @@ void	Process::get_request(void)
 	}
 	else
 	{
-		if ( !_request.getPath().first.compare("upload.php"))
-		{
-			std::string path = get_location(_request.getScript().first.insert(0, "/"), ROOT) + "/" + _request.getPath().first;
-			if (is_file_accessible(path))
-			{
-				build_response(path);
-			}
-		}
-		else
-			std::cout << "Error 404: " <<  _request.getPath().first << std::endl;
-			std::string path =  "./default_pages/404_default.html";
-			build_response(path);
+		std::cout << "Error 404: " <<  _request.getPath().first << std::endl;
+		std::string path =  "./default_pages/404_default.html";
+		build_response(path);
+		throw("404");
 	}
 }
 

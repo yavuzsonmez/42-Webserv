@@ -56,7 +56,15 @@ void ServerSocket::processConnections()
 		Request	request(request_str);
 		Response response;
 		Process	process(response, request, _config);
-		process.process_request();
+		try
+		{
+			process.process_request();
+		}
+		catch (int code)
+		{
+			
+		}
+		
 		std::string httpResponse(response.get_response());
 
 		int bytes_send;
