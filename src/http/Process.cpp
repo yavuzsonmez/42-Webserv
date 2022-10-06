@@ -2,7 +2,8 @@
 
 Process::Process(Response &response, Request request, ServerBlock &config) : _response(response), _request(request), _config(config)
 {
-
+	_cgi = _config.getCgiPath();
+	_cgi_fileending = _config.getCgiFileEnding();
 }
 
 Process::~Process(void)
@@ -125,8 +126,10 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 	{
 		if (!(*it).value.compare(location))
 		{
-			_cgi = (*it).cgi_path;
-			_cgi_fileending = (*it).cgi_fileending;
+			if (!(*it).cgi_path.empty())
+				_cgi = (*it).cgi_path;
+			if (!(*it).cgi_fileending.empty())
+				_cgi_fileending = (*it).cgi_fileending;
 			if (type == ROOT)
 				return (*it).root;
 			else if (type == INDEX)
@@ -142,13 +145,19 @@ void	Process::exception(int e)
 	{
 		case 404:
 			try {
-				build_response("default_pages/404_default.html", "404", "Not Found");}
+				build_response("default_pages/400_default.html", "404", "Not Found");}
 			catch (int e) {
 				throw (e);}
 			break;
 		case 500:
 			try {
 				build_response("default_pages/500_default.html", "500", "Internal Server Error");}
+			catch (int e) {
+				throw (e);}
+			break;
+		case 501:
+			try {
+				build_response("default_pages/501_default.html", "501", " Not Implemented");}
 			catch (int e) {
 				throw (e);}
 			break;
