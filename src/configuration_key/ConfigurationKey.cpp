@@ -34,6 +34,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->cgi_fileending = src.cgi_fileending;
 	this->redirection = src.redirection;
 	this->post_max_size = src.post_max_size;
+	this->nestedConfigurationKeyTypesinLocationBlock = src.nestedConfigurationKeyTypesinLocationBlock;
 }
 
 ConfigurationKey::~ConfigurationKey() {
