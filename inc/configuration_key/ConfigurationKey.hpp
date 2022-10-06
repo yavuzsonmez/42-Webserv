@@ -113,7 +113,7 @@ class ConfigurationKey {
 		int post_max_size; // post max size in megabyte
 		std::string general_error_page_path; // returns the location of the error path to the error file
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
-		std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
+		std::vector<ConfigurationKeyType> nestedConfigurationKeyTypesinLocationBlock; // describes the properties within the location block
 	private:
 		// Those are the internal functions which are used to parse the value to the correct type.
 		ConfigurationKeyType detectConfigurationType(internal_keyvalue &raw);
