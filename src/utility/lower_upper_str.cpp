@@ -1,5 +1,21 @@
 #include "../../inc/utility/utility.hpp"
 
+/**
+ * @brief Is number string
+ * 
+ * @param str 
+ * @return true 
+ * @return false 
+ */
+bool isnumberstring(std::string str)
+{
+	for (size_t i = 0; i < str.length(); i++)
+	{
+		if (!isdigit(str[i]))
+			return false;
+	}
+	return true;
+}
 
 /**
  * @brief Tests if a string only contains alpha characters

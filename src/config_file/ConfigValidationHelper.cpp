@@ -1,5 +1,6 @@
 #include "../../inc/config_file/ConfigFileParsing.hpp"
 #include "../../inc/utility/utility.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 
 /**
  * All those functions prototypes can be found in utility.
@@ -48,6 +49,29 @@ std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<Server
 		append_vector(server_names, (*i).getAllServerNames());
 	}
 	return server_names;
+}
+
+
+/**
+ * @brief Iterate over all server blocks and makes sure each of them has the given keyType jsut once.
+ * 
+ * @param serverBlocks
+ * @param keyType
+ * @return true if unique, false if not
+ */ 
+bool checkIfKeyIsUniqueInEachServerBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType)
+{
+	USE_DEBUGGER;
+	std::vector<ServerBlock>::iterator i = serverBlocks.begin();
+	std::vector<std::string> server_names;
+
+	for (serverBlocks.begin(), serverBlocks.end(); i != serverBlocks.end(); ++i) {
+		std::vector<ConfigurationKey> configurationKeysPerBlock = (*i).getConfigurationKeysWithType(keyType);
+		if (configurationKeysPerBlock.size() > 1) {
+			return false;
+		}
+	}
+	return true;
 }
 
 /**

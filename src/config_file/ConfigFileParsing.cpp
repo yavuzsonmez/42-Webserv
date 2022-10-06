@@ -32,6 +32,7 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
  * - checking double server names on all server blocks
  * - checking double location paths for each server block
  * - checking double error path for each server block
+ * - checking double post max body size for each server block
  * @return true 
  * @return false 
  */
@@ -50,6 +51,10 @@ bool ConfigFileParsing::validateConfiguration() {
 	}
 	if (vector_has_duplicate_element(allServerNames)) {
 		debugger.error("Configuration file has duplicate server names.");
+		throw InvalidConfigurationFile();
+	}
+	if (!checkIfKeyIsUniqueInEachServerBlock(serverBlocks, POST_MAX_SIZE)) {
+		debugger.error("Configuration file has duplicate post_max_body_size.");
 		throw InvalidConfigurationFile();
 	}
 
