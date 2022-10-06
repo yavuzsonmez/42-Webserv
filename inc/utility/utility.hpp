@@ -48,6 +48,8 @@ bool keyExistsInEachServerBlock(std::vector<ServerBlock> &serverBlocks, Configur
 bool	isnumberstring(std::string str);
 bool	checksIfAnyServerBlockHasDoubleErrorPages(std::vector<ServerBlock> &serverBlocks);
 bool	validate_url(std::string url);
+bool keyExistsInEachLocationBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType);
+bool checkIfCgiExecutableAndFileEndingAreSet(std::vector<ServerBlock> &serverBlocks);
 
 /**
  * @brief converts any type into a string
