@@ -63,7 +63,7 @@ void ServerSocket::processConnections()
 		{
 			process.process_request();
 		}
-		catch (int code)
+		catch (std::string code)
 		{
 			
 		}
