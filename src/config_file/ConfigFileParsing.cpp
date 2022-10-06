@@ -127,6 +127,9 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	if (keyToAdd.configurationType == CGI_FILEENDING) {
 		key.cgi_fileending = trim_whitespaces(keyToAdd.cgi_fileending);
 	}
+	if (keyToAdd.configurationType == REDIRECTION) {
+		key.redirection = trim_whitespaces(keyToAdd.redirection);
+	}
 }
 
 /**
