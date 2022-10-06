@@ -15,7 +15,7 @@ bool check_config_file(std::string const &path)
 		return (false);
 	file_name = get_file_name(path);
 	lower_str(file_name);
-	if (file_name.compare("webserv.conf"))
+	if (file_name.size() < 5 || file_name.substr(file_name.size() - 5) != ".conf")
 		return (false);
 	return (true);
 }

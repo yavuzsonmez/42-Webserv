@@ -24,8 +24,10 @@ class ServerBlock
         std::vector<std::string> getAllServerNames();
         std::vector<unsigned int> getAllServerPorts();
         std::vector<std::string> getAllIndexes();
+        std::string getCgiPath();
+        std::string getCgiFileEnding();
         void addConfigurationKey(ConfigurationKey &configurationKey);
 		std::vector<ConfigurationKey> getConfigurationKeysWithType(ConfigurationKeyType type);
- };
+};
 
  #endif
