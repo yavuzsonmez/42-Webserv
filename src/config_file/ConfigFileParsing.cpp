@@ -69,6 +69,10 @@ bool ConfigFileParsing::validateConfiguration() {
 		debugger.error("Configuration file has no cgi_fileending defined in one or more location blocks.");
 		throw InvalidConfigurationFile();
 	}
+	if (!keyExistsInEachLocationBlock(serverBlocks, ROOT)) {
+		debugger.error("At least one location block does not contain a ROOT option. This is required.");
+		throw InvalidConfigurationFile();
+	}
 
 	return true;
 }
