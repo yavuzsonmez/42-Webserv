@@ -27,24 +27,19 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
 }
 
 /**
- * GENERAL VALIDATION FUNCITON
- * 
- * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
- * - checking double ports on all server blocks
+ * @brief Checks for duplicates in the config file which are a logic mistake
+ * * - checking double ports on all server blocks
  * - checking double server names on all server blocks
  * - checking double location paths for each server block
- * - checking double error path for each server block
+ * - checking double ports on all server blocks
  * - checking double post max body size for each server block
- * - checks that there is a root available in each server block
- * - checks that for every location cgi there is a file ending available
  * @return true 
  * @return false 
  */
-bool ConfigFileParsing::validateConfiguration() {
+bool ConfigFileParsing::validationDuplicationCheck() {
 	USE_DEBUGGER;
 	std::vector<unsigned int> allServerPorts = getAllServerPortsFromAllServerBlocks(this->serverBlocks);
 	std::vector<std::string> allServerNames = getAllServerNamesFromAllServerBlocks(this->serverBlocks); 
-
 	if (checksIfAnyServerBlockHasDoubleErrorPages(this->serverBlocks)) {
 		debugger.error("Error: Double error pages found in configuration file.");
 		throw InvalidConfigurationFile();
@@ -60,6 +55,25 @@ bool ConfigFileParsing::validateConfiguration() {
 	if (!checkIfKeyIsUniqueInEachServerBlock(serverBlocks, POST_MAX_SIZE)) {
 		debugger.error("Configuration file has duplicate post_max_body_size.");
 		throw InvalidConfigurationFile();
+	}
+	return true;
+}
+
+/**
+ * GENERAL VALIDATION FUNCITON
+ * 
+ * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
+ * - runs validationDuplicationCheck(), checking for logic duplicates
+ * - checks that there is a root available in each server block
+ * - checks that for every location cgi there is a file ending available
+ * @return true 
+ * @return false 
+ */
+bool ConfigFileParsing::validateConfiguration() {
+	USE_DEBUGGER;
+
+	if (validationDuplicationCheck()) {
+		debugger.debug("Configuration file has no detected duplicates in ports, server names, error pages or post_max_body_size.");
 	}
 	if (!keyExistsInEachServerBlock(serverBlocks, ROOT)) {
 		debugger.error("Configuration file has no root defined in one or more server blocks.");
