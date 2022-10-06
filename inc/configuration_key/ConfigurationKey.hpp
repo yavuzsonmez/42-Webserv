@@ -24,6 +24,7 @@
 # define	KEY_FILEENDING				"cgi_fileending"
 # define	KEY_NOT_FOUND_PAGE			"not_found_error_page"
 # define	KEY_GENERAL_ERROR_PAGE		"general_error_page"
+# define	KEY_POST_MAX_SIZE			"post_max_size"
 
 /**
  * Defines the type of information a configuration key holds.
@@ -44,6 +45,7 @@ enum ConfigurationKeyType {
 	METHODS,
 	CGI_EXECUTABLE_PATH,
 	CGI_FILEENDING,
+	POST_MAX_SIZE,
 	NOT_FOUND_ERROR_PAGE,
 	GENERAL_ERROR_PAGE
 };
@@ -105,6 +107,7 @@ class ConfigurationKey {
 		std::string cgi_path; // returns the locationpath of the location
 		std::string cgi_fileending; // those file endings should be executed with a cgi
 		std::string not_found_error_page_path; // returns the location of the error path to the error file
+		int post_max_size; // post max size in megabyte
 		std::string general_error_page_path; // returns the location of the error path to the error file
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
 		std::vector<ConfigurationKey> nestedConfigurationKey; // describes the properties within the location block
@@ -122,12 +125,14 @@ class ConfigurationKey {
 		bool isCgiExecutableKeyType(internal_keyvalue raw);
 		bool isCgiFileEndingKeyType(internal_keyvalue raw);
 		bool isNotFoundErrorPagePathType(internal_keyvalue raw);
+		bool isPostMaxSizeType(internal_keyvalue raw);
 		bool isGeneralErrorPagePathType(internal_keyvalue raw);
 		bool isValidMethod(std::string method);
 		bool validatePort(unsigned int port);
 		bool is_digits(const std::string &str);
 		void throwInvalidConfigurationFileExceptionWithMessage(std::string message);
 		bool validateCgiFileEnding(std::string to_validate);
+		bool validatePostMaxSize(std::string to_validate);
 		
 		
 		/**

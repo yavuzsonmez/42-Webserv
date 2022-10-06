@@ -47,6 +47,9 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType)
 	if (keyType == GENERAL_ERROR_PAGE) {
 		return "GENERAL_ERROR_PAGE";
 	}
+	if (keyType == POST_MAX_SIZE) {
+		return "POST MAX SIZE";
+	}
 	return "UNKNOWN";
 }
 
