@@ -228,7 +228,8 @@ bool ConfigurationKey::isCgiFileEndingKeyType(internal_keyvalue raw)
 		if (!this->validateCgiFileEnding(raw.second)) {
 			throwInvalidConfigurationFileExceptionWithMessage("CGI ending need to start with a dot and cannot contain any spaces.");
 		}
-		this->cgi_fileending = trim_whitespaces(raw.second.substr(1, raw.second.length()));
+		this->cgi_fileending = raw.second.substr(1, raw.second.length());
+		debugger.debug("TESTING CGI file ending is " + this->cgi_fileending);
 		return true;
 	}
 	return false;
@@ -250,22 +251,22 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 	}
 	if (this->isServerNameKeyType(raw))
 	{
-		debugger.info("Detected server name key type.");
+		debugger.info("Detected server name key type in server block.");
 		return SERVER_NAME;
 	}
 	if (this->isListenKeyType(raw))
 	{
-		debugger.info("Detected listen key type.");
+		debugger.info("Detected listen key type in server block.");
 		return LISTEN;
 	}
 	if (this->isRootKeyType(raw))
 	{
-		debugger.info("Detected ROOT key type.");
+		debugger.info("Detected ROOT key type in server block.");
 		return ROOT;
 	}
 	if (this->isIndexKeyType(raw))
 	{
-		debugger.info("Detected index key type.");
+		debugger.info("Detected index key type in server block.");
 		return INDEX;
 	}
 	if (this->isLocationKeyType(raw))
@@ -276,18 +277,28 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 	}
 	if (this->isGeneralErrorPagePathType(raw))
 	{
-		debugger.info("Detected general error page path type.");
+		debugger.info("Detected general error page path type in server block.");
 		return GENERAL_ERROR_PAGE;
 	}
 	if (this->isNotFoundErrorPagePathType(raw))
 	{
-		debugger.info("Detected not found error page path type.");
+		debugger.info("Detected not found error page path type in server block.");
 		return NOT_FOUND_ERROR_PAGE;
 	}
 	if (this->isPostMaxSizeType(raw))
 	{
-		debugger.info("Detected post max size type.");
+		debugger.info("Detected post max size type in server block.");
 		return POST_MAX_SIZE;
+	}
+	if (this->isCgiExecutableKeyType(raw))
+	{
+		debugger.info("Detected CGI PATH key type in server block.");
+		return CGI_EXECUTABLE_PATH;
+	}
+	if (this->isCgiFileEndingKeyType(raw))
+	{
+		debugger.info("Detected CGI FILE ENDING key type in server block.");
+		return CGI_FILEENDING;
 	}
 	return INVALID;
 }
