@@ -17,12 +17,10 @@ class Process
 	void	get_request(void);
 	void	post_request(void);
 	void	delete_request(void);
-	void	create_index(void);
-	void	build_response(std::string path);
+	void	build_response(std::string path, std::string code, std::string status);
 	bool	check_location(void);
-	//ConfigurationKey	get_location(std::string path);
 	std::string	get_location(std::string path, ConfigurationKeyType type);
-	//int	get_location(std::string path);
+	void	exception(int code);
 
 	
 
