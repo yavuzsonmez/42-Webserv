@@ -1,4 +1,3 @@
-
 #include "inc/config_file/ConfigFileParsing.hpp"
 #include "inc/configuration_key/ConfigurationKey.hpp"
 #include "inc/configuration_key/ServerBlock.hpp"
@@ -28,7 +27,7 @@ bool check_arguments_and_filename(int argc, char**argv)
  */
 int main(int argc, char **argv)
 {
-	DebuggerPrinter debugger = debugger.getInstance();
+	USE_DEBUGGER;
  	if (!check_arguments_and_filename(argc, argv)) return (1);
 
 	ConfigFileParsing static *configurationFileParsing = new ConfigFileParsing();
@@ -40,9 +39,16 @@ int main(int argc, char **argv)
 		configurationFileParsing->parseConfigFile(file_content);
 		debugger.info("CONFIG FILE OK");
 	} catch (const std::exception& e) {
-		std::cout << "error: " << e.what() << std::endl;
+		std::cout << R << "Something went wrong: " << Reset << e.what() << std::endl;
 		return (1);
 	}
+
+	// for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
+	// {
+	// 	ServerSocket server(configurationFileParsing->serverBlocks[i], INADDR_ANY);
+	// }
+
+	ServerSocket server(configurationFileParsing->serverBlocks[0], INADDR_ANY);
 
 	delete configurationFileParsing;
 
@@ -60,7 +66,7 @@ int main(int argc, char **argv)
 
 
 	/* START TEST RESPONSE */
-	ServerSocket server(4242, INADDR_ANY);
+	//ServerSocket server(4242, INADDR_ANY);
 	/* END */
 
 	return (0);

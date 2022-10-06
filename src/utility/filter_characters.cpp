@@ -10,6 +10,7 @@ bool isx(char c)
  * @param characters to remove
  * @return cleaned string
  */
+
 std::string filter_characters(std::string characters)
 {
 	std::string::iterator	it = characters.begin();

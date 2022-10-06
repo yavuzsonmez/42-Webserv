@@ -27,19 +27,19 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
 }
 
 /**
- * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
- * - checking double ports on all server blocks
+ * @brief Checks for duplicates in the config file which are a logic mistake
+ * * - checking double ports on all server blocks
  * - checking double server names on all server blocks
  * - checking double location paths for each server block
- * - checking double error path for each server block
+ * - checking double ports on all server blocks
+ * - checking double post max body size for each server block
  * @return true 
  * @return false 
  */
-bool ConfigFileParsing::validateConfiguration() {
+bool ConfigFileParsing::validationDuplicationCheck() {
 	USE_DEBUGGER;
 	std::vector<unsigned int> allServerPorts = getAllServerPortsFromAllServerBlocks(this->serverBlocks);
-	std::vector<std::string> allServerNames = getAllServerNamesFromAllServerBlocks(this->serverBlocks);
-
+	std::vector<std::string> allServerNames = getAllServerNamesFromAllServerBlocks(this->serverBlocks); 
 	if (checksIfAnyServerBlockHasDoubleErrorPages(this->serverBlocks)) {
 		debugger.error("Error: Double error pages found in configuration file.");
 		throw InvalidConfigurationFile();
@@ -50,6 +50,41 @@ bool ConfigFileParsing::validateConfiguration() {
 	}
 	if (vector_has_duplicate_element(allServerNames)) {
 		debugger.error("Configuration file has duplicate server names.");
+		throw InvalidConfigurationFile();
+	}
+	if (!checkIfKeyIsUniqueInEachServerBlock(serverBlocks, POST_MAX_SIZE)) {
+		debugger.error("Configuration file has duplicate post_max_body_size.");
+		throw InvalidConfigurationFile();
+	}
+	return true;
+}
+
+/**
+ * GENERAL VALIDATION FUNCITON
+ * 
+ * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
+ * - runs validationDuplicationCheck(), checking for logic duplicates
+ * - checks that there is a root available in each server block
+ * - checks that for every location cgi there is a file ending available
+ * @return true 
+ * @return false 
+ */
+bool ConfigFileParsing::validateConfiguration() {
+	USE_DEBUGGER;
+
+	if (validationDuplicationCheck()) {
+		debugger.debug("Configuration file has no detected duplicates in ports, server names, error pages or post_max_body_size.");
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, ROOT)) {
+		debugger.error("Configuration file has no root defined in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!checkIfCgiExecutableAndFileEndingAreSet(serverBlocks)) {
+		debugger.error("Configuration file has no cgi_fileending defined in one or more location blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachLocationBlock(serverBlocks, ROOT)) {
+		debugger.error("At least one location block does not contain a ROOT option. This is required.");
 		throw InvalidConfigurationFile();
 	}
 
@@ -92,6 +127,17 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 }
 
 /**
+ * @brief Add the a configuration key type to the location block type collection
+ * Is being used to document which keys were registerd and which not.
+ * This is maninly done for validation purposes.
+ * 
+ * @param key_type 
+ */
+void ConfigFileParsing::addConfigurationKeyTypeToLocation(ConfigurationKeyType keyType, ConfigurationKey &keyToAdd) {
+	keyToAdd.nestedConfigurationKeyTypesinLocationBlock.push_back(keyType);
+}
+
+/**
  * @brief Add a key to a location block key (which is the last key in the vector)
  * @param key original location key
  * @param keyToAdd key to add to the original location key
@@ -101,18 +147,33 @@ bool ConfigFileParsing::isGeneralFaultyFile( std::string &file_content ) {
 void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd ) {
 	if (keyToAdd.configurationType == INDEX) {
 		key.indexes = keyToAdd.indexes;
+		addConfigurationKeyTypeToLocation(INDEX, key);
+	} 
+	else if (keyToAdd.configurationType == LOCATION) {
+		key.location = trim_whitespaces(keyToAdd.location);
+		addConfigurationKeyTypeToLocation(LOCATION, key);
 	}
-	if (keyToAdd.configurationType == LOCATION) {
-		key.location = keyToAdd.location;
+	else if (keyToAdd.configurationType == ROOT) {
+		key.root = trim_whitespaces(keyToAdd.root);
+		addConfigurationKeyTypeToLocation(ROOT, key);
 	}
-	if (keyToAdd.configurationType == ROOT) {
-		key.root = keyToAdd.root;
-	}
-	if (keyToAdd.configurationType == METHODS) {
+	else if (keyToAdd.configurationType == METHODS) {
 		key.methods = keyToAdd.methods;
+		addConfigurationKeyTypeToLocation(METHODS, key);
 	}
-	if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
-		key.cgi_path = keyToAdd.cgi_path;
+	else if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
+		key.cgi_path = trim_whitespaces(keyToAdd.cgi_path);
+		addConfigurationKeyTypeToLocation(CGI_EXECUTABLE_PATH, key);
+	}
+	else if (keyToAdd.configurationType == CGI_FILEENDING) {
+		key.cgi_fileending = trim_whitespaces(keyToAdd.cgi_fileending);
+		addConfigurationKeyTypeToLocation(CGI_FILEENDING, key);
+	}
+	else if (keyToAdd.configurationType == REDIRECTION) {
+		key.redirection = trim_whitespaces(keyToAdd.redirection);
+		addConfigurationKeyTypeToLocation(REDIRECTION, key);
+	} else {
+
 	}
 }
 
@@ -222,8 +283,13 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		std::string trimmedString = line.replace(0, firstNotWhiteSpacePosition, "");
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
+		if (key_value_raw.size() != 2) {
+			debugger.error("Invalid configuration key detected. Line: " + std::to_string(lineNumber));
+			debugger.error("There is no second pair for the key value pair.");
+			throw InvalidConfigurationFile();
+		}
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
-		ConfigurationKey key = ConfigurationKey(key_value_raw[0], key_value_raw[1], this->isCurrentlyInLocationBlock, lineNumber, trimmedString);
+		ConfigurationKey key = ConfigurationKey(key_value_raw[0], trim_whitespaces(key_value_raw[1]), this->isCurrentlyInLocationBlock, lineNumber, trimmedString);
 		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
 		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
 		addConfigurationKeyToCurrentServerBlock(key);

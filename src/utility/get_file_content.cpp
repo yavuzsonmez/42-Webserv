@@ -4,6 +4,8 @@
 std::string get_file_content(std::string path)
 {
 	std::ifstream f(path); //taking file as inputstream
+	if (!f)
+		throw (500);
 	std::string str;
 
 	if(f) {
