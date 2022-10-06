@@ -32,6 +32,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->raw_input = src.raw_input;
 	this->cgi_path = src.cgi_path;
 	this->cgi_fileending = src.cgi_fileending;
+	this->post_max_size = src.post_max_size;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -159,6 +160,60 @@ bool ConfigurationKey::validateCgiFileEnding(std::string to_validate)
 }
 
 /**
+ * @brief Validates Post Max Size.
+ * - has to have an M at the end
+ * - otherwise only can contain numbers
+ * 
+ * @param raw 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::validatePostMaxSize(std::string to_validate)
+{
+	USE_DEBUGGER;
+	if (to_validate.empty())
+	{
+		debugger.error("Post max size is empty.");
+		return false;
+	}
+	if (to_validate[to_validate.length() - 1] != 'M')
+	{
+		throwInvalidConfigurationFileExceptionWithMessage("Invalid post max size. Has to end with M.");
+		return false;
+	}
+	if (!isnumberstring(to_validate.substr(0, to_validate.length() - 1)))
+	{
+		throwInvalidConfigurationFileExceptionWithMessage("Invalid post max size. Only numbers allowed.");
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @brief Checks if the key is a post max size key type. Sets the post max size value.
+ * - only numbers allowed, has to have an M at the end
+ * 
+ * @param raw 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isPostMaxSizeType(internal_keyvalue raw)
+{
+	USE_DEBUGGER;
+	if (raw.first == KEY_POST_MAX_SIZE && !raw.second.empty())
+	{
+		if (!validatePostMaxSize(raw.second))
+		{
+			debugger.error("Invalid post max size.");
+			return false;
+		}
+		this->post_max_size = std::stoi(raw.second.substr(0, raw.second.length() - 1));
+		return true;
+	}
+	return false;
+}
+
+/**
  * @brief Checks if the key is a CGI File endinng key type. Sets the cgi file ending value.
  * 
  * @param raw 
@@ -228,6 +283,11 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 	{
 		debugger.info("Detected not found error page path type.");
 		return NOT_FOUND_ERROR_PAGE;
+	}
+	if (this->isPostMaxSizeType(raw))
+	{
+		debugger.info("Detected post max size type.");
+		return POST_MAX_SIZE;
 	}
 	return INVALID;
 }
