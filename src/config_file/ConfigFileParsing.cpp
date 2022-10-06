@@ -33,6 +33,7 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
  * - checking double location paths for each server block
  * - checking double error path for each server block
  * - checking double post max body size for each server block
+ * - checks that there is a root available in each server block
  * @return true 
  * @return false 
  */
@@ -55,6 +56,10 @@ bool ConfigFileParsing::validateConfiguration() {
 	}
 	if (!checkIfKeyIsUniqueInEachServerBlock(serverBlocks, POST_MAX_SIZE)) {
 		debugger.error("Configuration file has duplicate post_max_body_size.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, ROOT)) {
+		debugger.error("Configuration file has no root defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
 	}
 
@@ -121,6 +126,9 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	}
 	if (keyToAdd.configurationType == CGI_FILEENDING) {
 		key.cgi_fileending = trim_whitespaces(keyToAdd.cgi_fileending);
+	}
+	if (keyToAdd.configurationType == REDIRECTION) {
+		key.redirection = trim_whitespaces(keyToAdd.redirection);
 	}
 }
 

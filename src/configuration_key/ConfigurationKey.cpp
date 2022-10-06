@@ -32,6 +32,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->raw_input = src.raw_input;
 	this->cgi_path = src.cgi_path;
 	this->cgi_fileending = src.cgi_fileending;
+	this->redirection = src.redirection;
 	this->post_max_size = src.post_max_size;
 }
 
@@ -109,6 +110,11 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 		debugger.info("Detected CGI FILE ENDING key type.");
 		return CGI_FILEENDING;
 	}
+	if (this->isRedirectionKeyType(raw))
+	{
+		debugger.info("Detected REDIRECTION key type.");
+		return REDIRECTION;
+	}
 	return INVALID;
 }
 
@@ -127,6 +133,47 @@ bool ConfigurationKey::isCgiExecutableKeyType(internal_keyvalue raw)
 		this->cgi_path = raw.second;
 		return true;
 	}
+	return false;
+}
+
+/**
+ * @brief Validates Redirection value
+ * A redirection key type is only accepted if the redirection is a valid url or a relative path
+ * 
+ * @param value 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::validateRedirection(std::string value)
+{
+	USE_DEBUGGER;
+	if (validate_url(value))
+		return false;
+	return true;
+}
+
+/**
+ * @brief Checks if the key is a redirection key type.
+ * A redirection key type is only accepted if the redirection is a valid url or a relative path
+ * 
+ * @param raw 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isRedirectionKeyType(internal_keyvalue raw)
+{
+	USE_DEBUGGER;
+	if (raw.first == KEY_REDIRECTION && !raw.second.empty())
+	{
+		if (!validate_url(raw.second))
+		{
+			debugger.error("Redirection value incorrect. More information can be found in the error log");
+			return false;
+		}
+		this->redirection = raw.second;
+		return true;
+	}
+	debugger.error("Redirection value incorrect or empty.");
 	return false;
 }
 
@@ -228,7 +275,8 @@ bool ConfigurationKey::isCgiFileEndingKeyType(internal_keyvalue raw)
 		if (!this->validateCgiFileEnding(raw.second)) {
 			throwInvalidConfigurationFileExceptionWithMessage("CGI ending need to start with a dot and cannot contain any spaces.");
 		}
-		this->cgi_fileending = trim_whitespaces(raw.second.substr(1, raw.second.length()));
+		this->cgi_fileending = raw.second.substr(1, raw.second.length());
+		debugger.debug("TESTING CGI file ending is " + this->cgi_fileending);
 		return true;
 	}
 	return false;
@@ -250,22 +298,22 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 	}
 	if (this->isServerNameKeyType(raw))
 	{
-		debugger.info("Detected server name key type.");
+		debugger.info("Detected server name key type in server block.");
 		return SERVER_NAME;
 	}
 	if (this->isListenKeyType(raw))
 	{
-		debugger.info("Detected listen key type.");
+		debugger.info("Detected listen key type in server block.");
 		return LISTEN;
 	}
 	if (this->isRootKeyType(raw))
 	{
-		debugger.info("Detected ROOT key type.");
+		debugger.info("Detected ROOT key type in server block.");
 		return ROOT;
 	}
 	if (this->isIndexKeyType(raw))
 	{
-		debugger.info("Detected index key type.");
+		debugger.info("Detected index key type in server block.");
 		return INDEX;
 	}
 	if (this->isLocationKeyType(raw))
@@ -276,18 +324,28 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 	}
 	if (this->isGeneralErrorPagePathType(raw))
 	{
-		debugger.info("Detected general error page path type.");
+		debugger.info("Detected general error page path type in server block.");
 		return GENERAL_ERROR_PAGE;
 	}
 	if (this->isNotFoundErrorPagePathType(raw))
 	{
-		debugger.info("Detected not found error page path type.");
+		debugger.info("Detected not found error page path type in server block.");
 		return NOT_FOUND_ERROR_PAGE;
 	}
 	if (this->isPostMaxSizeType(raw))
 	{
-		debugger.info("Detected post max size type.");
+		debugger.info("Detected post max size type in server block.");
 		return POST_MAX_SIZE;
+	}
+	if (this->isCgiExecutableKeyType(raw))
+	{
+		debugger.info("Detected CGI PATH key type in server block.");
+		return CGI_EXECUTABLE_PATH;
+	}
+	if (this->isCgiFileEndingKeyType(raw))
+	{
+		debugger.info("Detected CGI FILE ENDING key type in server block.");
+		return CGI_FILEENDING;
 	}
 	return INVALID;
 }
