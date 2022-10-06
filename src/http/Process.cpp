@@ -69,7 +69,6 @@ void	Process::get_request(void)
 	}
 	else
 	{
-		std::cout << "throw" << std::endl;
 		throw(404);
 	}
 }
@@ -90,7 +89,12 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			_response.set_body(cgi.get_buf());
 		}
 		else
-			_response.set_body(get_file_content(path));
+		{
+			try {
+				_response.set_body(get_file_content(path));}
+			catch (int e){
+				throw (500);}
+		}
 		_response.set_content_length(to_str(_response.get_body().length()));
 		_response.set_content_type(_response.get_file_format());
 		_response.create_response();
@@ -138,10 +142,15 @@ void	Process::exception(int e)
 	{
 		case 404:
 			try {
-			build_response("default_pages/404_default.html", "404", "Not Found");}
+				build_response("default_pages/404_default.html", "404", "Not Found");}
+			catch (int e) {
+				throw (e);}
+			break;
+		case 500:
+			try {
+				build_response("default_pages/500_default.html", "500", "Internal Server Error");}
 			catch (int e) {
 				throw (e);}
 			break;
 	}
-		
 }
