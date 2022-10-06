@@ -47,6 +47,9 @@ std::string convert_configuration_key_type(ConfigurationKeyType keyType)
 	if (keyType == GENERAL_ERROR_PAGE) {
 		return "GENERAL_ERROR_PAGE";
 	}
+	if (keyType == POST_MAX_SIZE) {
+		return "POST MAX SIZE";
+	}
 	return "UNKNOWN";
 }
 
@@ -81,6 +84,9 @@ std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std:: cout << intendation;
 	std:: cout << intendation;
 	std::cout << B << "->" << Reset << " CGI_PATH " << key.cgi_path  << std::endl;
+	std:: cout << intendation;
+	std:: cout << intendation;
+	std::cout << B << "->" << Reset << " CGI ENDING " << key.cgi_fileending  << std::endl;
 	return "";
 }
 

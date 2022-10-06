@@ -1,7 +1,10 @@
 #ifndef SERVER_SOCKET_HPP
 # define SERVER_SOCKET_HPP
 
+#include "unistd.h"
+#include <poll.h>
 #include "../utility/utility.hpp"
+#include "../configuration_key/ServerBlock.hpp"
 
 #define BACKLOG 10 // maximum number of allowed incoming connection in the queue until being accept()
 
@@ -13,7 +16,8 @@ class ServerSocket
 
 	public:
 
-		ServerSocket(unsigned short port, unsigned int address);
+		ServerSocket(ServerBlock config, unsigned int address);
+
 		//ServerSocket( const ServerSocket &src );
 		virtual ~ServerSocket();
 
@@ -30,9 +34,9 @@ class ServerSocket
 		};
 
 	private:
-
 		int _fd;
 		struct sockaddr_in	_socket;
+		ServerBlock	_config;
 };
 
 #endif

@@ -1,15 +1,17 @@
 #include "../../inc/network/ServerSocket.hpp"
 #include "../../inc/network/ClientSocket.hpp"
 #include "../../inc/http/Response.hpp"
+#include "../../inc/http/Process.hpp"
+#include <sys/ioctl.h>
 
-ServerSocket::ServerSocket(unsigned short port, unsigned int address)
+ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
 {
 	_fd = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
 	if (_fd < 0)
 		throw SocketCreationError();
 
 	_socket.sin_family = AF_INET;
-	_socket.sin_port = htons(port); //host byte order to network byte order
+	_socket.sin_port = htons(_config.getAllServerPorts().front()); //host byte order to network byte order
 	_socket.sin_addr.s_addr = address;
 	bzero(&(_socket.sin_zero), 8);
 
@@ -26,6 +28,9 @@ ServerSocket::~ServerSocket(){}
 
 int ServerSocket::getFileDescriptor() const { return _fd; }
 
+/**
+ * @brief Handles connections 
+ */
 void ServerSocket::processConnections()
 {
 	int forward;
@@ -39,8 +44,32 @@ void ServerSocket::processConnections()
 
 		// if accept return -1 throw error
 		ClientSocket client(clientSocket);
+		
+		
+		std::string	request_str;
+
+		int len = 0;
+		while (!len && ioctl(forward, FIONREAD, &len) >= 0)
+
+		request_str.resize(len);
+		read(forward, (char*)request_str.data(), len);
+
+		std::cout << request_str << std::endl;
+
+		Request	request(request_str);
 		Response response;
-		std::string httpResponse(response.getResponse());
+		Process	process(response, request, _config);
+		try
+		{
+			process.process_request();
+		}
+		catch (int e)
+		{
+			std::cout << "catch: " << e << std::endl;
+			process.exception(e);
+		}
+		
+		std::string httpResponse(response.get_response());
 
 		int bytes_send;
 		bytes_send = 0;

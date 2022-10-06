@@ -35,6 +35,9 @@ CONFIG_FILE		=		./src/config_file/ConfigFileParsing.cpp \
 
 HTTP			=		./src/http/Request.cpp \
 						./src/http/Response.cpp \
+						./src/http/Cgi.cpp \
+						./src/http/Location.cpp \
+						./src/http/Process.cpp \
 
 NETWORK			=		./src/network/ClientSocket.cpp \
 						./src/network/Multiplexer.cpp \
@@ -51,6 +54,9 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/validate_parantheses.cpp \
 						./src/utility/split_on_delimiter.cpp \
 						./src/utility/convert_configuration_key_type.cpp \
+						./src/utility/inttohex.cpp \
+						./src/utility/trim_whitespaces.cpp \
+						./src/utility/validate_url.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
