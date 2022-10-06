@@ -43,46 +43,41 @@ CGI::~CGI()
 /*executes cgi*/
 void	CGI::execute(void)
 {
-	//std::string cgi_path = "php-cgi";
-	// std::string cgi_index;
-	
-	// for (int j = 0; j < (int) _config.configurationKeys.size(); j++)
-	// {
-	// 	if (_config.configurationKeys[j].configurationType == LOCATION)
-	// 	{
-	// 		cgi_path = _config.configurationKeys[j].cgi_path;
-	// 		cgi_index = _config.configurationKeys[j].indexes.front();
-	// 	}
-	// }
-
 	pid_t	pid;
 	
 	_tmpout = tmpfile();											//File pointer to a temporaryfile
 	_tmpin = tmpfile();
+	if (!(_tmpout || _tmpin))
+		throw (500);
 	fwrite(_request.getBody().first.data(), 1, _request.getBody().first.length(), _tmpin);
 	
 	pid = fork();												//forks a new process
-	
+	if (pid == -1)
+		throw (500);
+
 	if (pid < 0)												//return in case it failes
 		return ;
 	else if (pid == 0)											//in the child process
 	{
-		dup2(fileno(_tmpin), STDIN_FILENO);
-		dup2(fileno(_tmpout), STDOUT_FILENO);								//stdout now points to the tmpfile
-		
+		if (dup2(fileno(_tmpin), STDIN_FILENO) == -1)
+			throw (500);
+		if (dup2(fileno(_tmpout), STDOUT_FILENO) == -1)								//stdout now points to the tmpfile
+			throw (500);
 		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 
-		execve(_cgi_path.c_str(), vec_to_array(_query_parameters), map_to_array(_env));						//executes the executable with its arguments
-		//std::cout << "execve: " << i << std::endl;				//check if execve failes
+		if (execve(_cgi_path.c_str(), vec_to_array(_query_parameters), map_to_array(_env)) == -1)		//executes the executable with its arguments
+			throw (500);
 		exit(1);												//exit the childprocess
 	}
 	else														//int the parent process
 	{
 		int	status;
 		waitpid(pid, &status, 0);								//wait until child terminates
-		fseek(_tmpout, 0, SEEK_END);							//set the courser in the filestream to the end
-		_tmp_size = ftell(_tmpout);								//assign the position of the courser to _tmp_size
+		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
+			throw (500);
+		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
+			throw (500);
 		rewind(_tmpout);											//move the courser back to the beginning
 		_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
 		fread((char*)(_buf.data()), 1, _tmp_size, _tmpout);		//read the data from tmpfile into the char array of _buf

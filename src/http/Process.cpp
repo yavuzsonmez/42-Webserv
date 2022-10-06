@@ -18,12 +18,15 @@ Process::~Process(void)
  */
 void	Process::process_request(void)
 {
-	// if (_request.getMethod().first == GET)
-		get_request();
-	// else if (_request.getMethod().first == POST)
-	// 	post_request();
-	// else if (_request.getMethod().first == DELETE)
-	// 	delete_request();
+	if (_request.getMethod().first == UNKNOWN)
+		throw (501);
+	else
+	{
+		try {
+			get_request();}
+		catch (int e) {
+			throw (e);}
+	}
 }
 
 /**
@@ -36,7 +39,10 @@ void	Process::get_request(void)
 	if (_request.getPath().first == "/")
 	{
 		std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-		build_response(path);
+		try {
+			build_response(path, "200", "OK");}
+		catch (int e){
+			throw (e);}
 		return ;
 	}
 	else if (check_location())
@@ -44,33 +50,43 @@ void	Process::get_request(void)
 		if (_request.getScript().first.empty())
 		{
 			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
-			build_response(path);
+			try {
+				build_response(path, "200", "OK");}
+			catch (int e){
+				throw (e);}
 		}
 		else
 		{
 			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
 			if (is_file_accessible(path))
 			{
-				build_response(path);
+				try {
+					build_response(path, "200", "OK");}
+				catch (int e){
+					throw (e);}
 			}
 		}
 	}
 	else
 	{
-		throw("404");
+		std::cout << "throw" << std::endl;
+		throw(404);
 	}
 }
 
-void	Process::build_response(std::string path)
+void	Process::build_response(std::string path, std::string code, std::string status)
 {
 		_response.set_protocol("HTTP/1.1");
-		_response.set_status_code("200");
-		_response.set_status_text("OK");
+		_response.set_status_code(code);
+		_response.set_status_text(status);
 		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 		if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
 		{
 			CGI	cgi(_request, _config, path, _cgi);
-			cgi.execute();
+			try {
+				cgi.execute();}
+			catch (int e) {
+				throw(e);}
 			_response.set_body(cgi.get_buf());
 		}
 		else
@@ -79,20 +95,6 @@ void	Process::build_response(std::string path)
 		_response.set_content_type(_response.get_file_format());
 		_response.create_response();
 }
-
-void	Process::create_index(void)
-{
-	_response.set_protocol("HTTP/1.1");
-	_response.set_status_code("200");
-	_response.set_status_text("OK");
-
-	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-	_response.set_content_type("text/html");
-	_response.set_body(get_file_content(_config.getConfigurationKeysWithType(INDEX).front().indexes.front()));
-	_response.set_content_length(to_str(_response.get_body().length()));
-	_response.create_response();
-}
-
 
 bool	Process::check_location(void)
 {
@@ -128,4 +130,18 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 		}
 	}
 	return path;
+}
+
+void	Process::exception(int e)
+{
+	switch (e)
+	{
+		case 404:
+			try {
+			build_response("default_pages/404_default.html", "404", "Not Found");}
+			catch (int e) {
+				throw (e);}
+			break;
+	}
+		
 }

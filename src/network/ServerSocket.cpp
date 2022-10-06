@@ -63,9 +63,10 @@ void ServerSocket::processConnections()
 		{
 			process.process_request();
 		}
-		catch (std::string code)
+		catch (int e)
 		{
-			
+			std::cout << "catch: " << e << std::endl;
+			process.exception(e);
 		}
 		
 		std::string httpResponse(response.get_response());
