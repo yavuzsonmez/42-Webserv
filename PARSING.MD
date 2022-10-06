@@ -34,10 +34,27 @@ CGI_PATH
 CGI_EXECUTABLE_PATH
 CGI_FILEENDING
 POST_MAX_SIZE
+REDIRECTION
 
 You can ignore following:   
 INVALID   
 SERVERSTARTSEGMENT   
+
+**These are the according keys**   
+ 	KEY_LOCATION				"location"   
+ 	KEY_INDEX					"index"   
+ 	KEY_SERVER_START_SEGMENT	"server"   
+ 	KEY_ROOT					"root"   
+ 	KEY_SERVER_NAMES			"server_name"   
+ 	KEY_LISTEN					"listen"   
+ 	KEY_INVALID					"INVALID"   
+ 	KEY_METHODS					"methods"   
+ 	KEY_EXECUTABLE_PATH			"cgi_path"   
+ 	KEY_FILEENDING				"cgi_fileending"   
+ 	KEY_NOT_FOUND_PAGE			"not_found_error_page"
+ 	KEY_GENERAL_ERROR_PAGE		"general_error_page"   
+ 	KEY_POST_MAX_SIZE			"post_max_size"   
+ 	KEY_REDIRECTION				"redirection"   
 
 
 Each configuration key has a key and a value, and furthermore the corresponding attributes like indexes or root.

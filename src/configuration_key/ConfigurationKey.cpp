@@ -32,6 +32,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->raw_input = src.raw_input;
 	this->cgi_path = src.cgi_path;
 	this->cgi_fileending = src.cgi_fileending;
+	this->redirection = src.redirection;
 	this->post_max_size = src.post_max_size;
 }
 
@@ -109,6 +110,11 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 		debugger.info("Detected CGI FILE ENDING key type.");
 		return CGI_FILEENDING;
 	}
+	if (this->isRedirectionKeyType(raw))
+	{
+		debugger.info("Detected REDIRECTION key type.");
+		return REDIRECTION;
+	}
 	return INVALID;
 }
 
@@ -127,6 +133,47 @@ bool ConfigurationKey::isCgiExecutableKeyType(internal_keyvalue raw)
 		this->cgi_path = raw.second;
 		return true;
 	}
+	return false;
+}
+
+/**
+ * @brief Validates Redirection value
+ * A redirection key type is only accepted if the redirection is a valid url or a relative path
+ * 
+ * @param value 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::validateRedirection(std::string value)
+{
+	USE_DEBUGGER;
+	if (validate_url(value))
+		return false;
+	return true;
+}
+
+/**
+ * @brief Checks if the key is a redirection key type.
+ * A redirection key type is only accepted if the redirection is a valid url or a relative path
+ * 
+ * @param raw 
+ * @return true 
+ * @return false 
+ */
+bool ConfigurationKey::isRedirectionKeyType(internal_keyvalue raw)
+{
+	USE_DEBUGGER;
+	if (raw.first == KEY_REDIRECTION && !raw.second.empty())
+	{
+		if (!validate_url(raw.second))
+		{
+			debugger.error("Redirection value incorrect. More information can be found in the error log");
+			return false;
+		}
+		this->redirection = raw.second;
+		return true;
+	}
+	debugger.error("Redirection value incorrect or empty.");
 	return false;
 }
 

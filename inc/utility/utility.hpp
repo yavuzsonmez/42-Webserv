@@ -42,8 +42,9 @@ std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<Server
 bool checkIfKeyIsUniqueInEachServerBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType);
 std::string trim_whitespaces(std::string str);
 std::string	inttohex(int n);
-bool isnumberstring(std::string str);
-bool checksIfAnyServerBlockHasDoubleErrorPages(std::vector<ServerBlock> &serverBlocks);
+bool	isnumberstring(std::string str);
+bool	checksIfAnyServerBlockHasDoubleErrorPages(std::vector<ServerBlock> &serverBlocks);
+bool	validate_url(std::string url);
 
 /**
  * @brief converts any type into a string
