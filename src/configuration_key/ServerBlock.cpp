@@ -1,5 +1,6 @@
 #include "../../inc/configuration_key/ServerBlock.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
+#include "../../inc/utility/utility.hpp"
 
 /**
  * Creates Server Block.
@@ -62,7 +63,7 @@ std::string ServerBlock::getCgiPath() {
 		return "";
 	}
 	std::string cgi_path = configKeys[0].value;
-	return cgi_path;
+	return remove_dot_if_first_character_is_dot(cgi_path);
 }
 
 /**
@@ -76,7 +77,7 @@ std::string ServerBlock::getCgiFileEnding() {
 		return "";
 	}
 	std::string cgi_fileending = configKeys[0].value;
-	return cgi_fileending;
+	return remove_dot_if_first_character_is_dot(cgi_fileending);
 }
 
 /**

@@ -1,6 +1,20 @@
 #include "../../inc/utility/utility.hpp"
 
 /**
+ * @brief Removes dot, if first character is a dot.
+ * Hack because I am confused and do not know what I am doign
+ * 
+ * @param to_edit 
+ * @return std::string 
+ */
+std::string remove_dot_if_first_character_is_dot(std::string to_edit) {
+	if (to_edit[0] == '.') {
+		to_edit.erase(0, 1);
+	}
+	return to_edit;
+}
+
+/**
  * Iterates through every character in the string.
  * When it finds the matching comment character (at beginning or within the string)
  * it replaces everything with the newline character.
