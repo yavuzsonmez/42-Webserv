@@ -30,6 +30,7 @@ class Process
 	ServerBlock	&_config;
 	std::string	_cgi;
 	std::string	_cgi_fileending;
+	std::string	_redirection;
 
 
 };

@@ -77,27 +77,37 @@ void	Process::get_request(void)
 void	Process::build_response(std::string path, std::string code, std::string status)
 {
 		_response.set_protocol("HTTP/1.1");
-		_response.set_status_code(code);
-		_response.set_status_text(status);
-		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-		if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
+		if (!_redirection.empty())
 		{
-			CGI	cgi(_request, _config, path, _cgi);
-			try {
-				cgi.execute();}
-			catch (int e) {
-				throw(e);}
-			_response.set_body(cgi.get_buf());
+			std::cout << "test" << std::endl;
+			_response.set_status_code("301");
+			_response.set_status_text("Moved Permanently");
+			_response.set_redirection(_redirection);
 		}
 		else
 		{
-			try {
-				_response.set_body(get_file_content(path));}
-			catch (int e){
-				throw (500);}
+			_response.set_status_code(code);
+			_response.set_status_text(status);
+			_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+			if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
+			{
+				CGI	cgi(_request, _config, path, _cgi);
+				try {
+					cgi.execute();}
+				catch (int e) {
+					throw(e);}
+				_response.set_body(cgi.get_buf());
+			}
+			else
+			{
+				try {
+					_response.set_body(get_file_content(path));}
+				catch (int e){
+					throw (500);}
+			}
+			_response.set_content_length(to_str(_response.get_body().length()));
+			_response.set_content_type(_response.get_file_format());
 		}
-		_response.set_content_length(to_str(_response.get_body().length()));
-		_response.set_content_type(_response.get_file_format());
 		_response.create_response();
 }
 
@@ -130,6 +140,8 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 				_cgi = (*it).cgi_path;
 			if (!(*it).cgi_fileending.empty())
 				_cgi_fileending = (*it).cgi_fileending;
+			if (!(*it).redirection.empty())
+				_redirection = (*it).redirection;
 			if (type == ROOT)
 				return (*it).root;
 			else if (type == INDEX)
@@ -145,7 +157,13 @@ void	Process::exception(int e)
 	{
 		case 404:
 			try {
-				build_response("default_pages/400_default.html", "404", "Not Found");}
+				build_response("default_pages/404_default.html", "404", "Not Found");}
+			catch (int e) {
+				throw (e);}
+			break;
+		case 405:
+			try {
+				build_response("default_pages/405_default.html", "405", "Method Not Allowed");}
 			catch (int e) {
 				throw (e);}
 			break;
@@ -157,7 +175,13 @@ void	Process::exception(int e)
 			break;
 		case 501:
 			try {
-				build_response("default_pages/501_default.html", "501", " Not Implemented");}
+				build_response("default_pages/501_default.html", "501", "Not Implemented");}
+			catch (int e) {
+				throw (e);}
+			break;
+		case 502:
+			try {
+				build_response("default_pages/502_default.html", "502", "Bad Gateway");}
 			catch (int e) {
 				throw (e);}
 			break;
