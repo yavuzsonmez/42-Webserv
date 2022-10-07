@@ -78,7 +78,6 @@ void	CGI::execute(void)
 		int	status;
 		std::cout << "test" << std::endl;
 		waitpid(pid, &status, 0);								//wait until child terminates
-		
 		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
 			throw (500);
 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
