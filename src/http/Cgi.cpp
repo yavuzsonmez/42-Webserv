@@ -67,13 +67,18 @@ void	CGI::execute(void)
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 
 		if (execve(_cgi_path.c_str(), vec_to_array(_query_parameters), map_to_array(_env)) == -1)		//executes the executable with its arguments
-			throw (500);
+		{	
+			throw (502);
+			exit(1);
+		}
 		exit(1);												//exit the childprocess
 	}
 	else														//int the parent process
 	{
 		int	status;
+		std::cout << "test" << std::endl;
 		waitpid(pid, &status, 0);								//wait until child terminates
+		
 		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
 			throw (500);
 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
