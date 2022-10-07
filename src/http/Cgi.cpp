@@ -41,7 +41,8 @@ CGI::~CGI()
 	delete (_envp);
 }
 
-/*executes cgi*/
+
+/*executes cgi to-do timout of child*/
 void	CGI::execute(void)
 {
 	pid_t	pid;
@@ -58,10 +59,8 @@ void	CGI::execute(void)
 		throw (500);
 	else if (pid == 0)											//in the child process
 	{
-		if (dup2(fileno(_tmpin), STDIN_FILENO) == -1)
-			exit(0);
-		if (dup2(fileno(_tmpout), STDOUT_FILENO) == -1)							//stdout now points to the tmpfile
-			exit(0);
+		dup2(fileno(_tmpin), STDIN_FILENO);
+		dup2(fileno(_tmpout), STDOUT_FILENO);						//stdout now points to the tmpfile
 		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
@@ -72,12 +71,12 @@ void	CGI::execute(void)
 	{
 		int	status;
 		waitpid(pid, &status, 0);								//wait until child terminates
+		if (WEXITSTATUS(status))
+			throw (502);
 		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
 			throw (500);
 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
 			throw (500);
-		if (!_tmp_size)
-			throw (502);
 		rewind(_tmpout);											//move the courser back to the beginning
 		_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
 		fread((char*)(_buf.data()), 1, _tmp_size, _tmpout);		//read the data from tmpfile into the char array of _buf
