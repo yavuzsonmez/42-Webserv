@@ -65,7 +65,6 @@ void ServerSocket::processConnections()
 		}
 		catch (int e)
 		{
-			std::cout << "catch: " << e << std::endl;
 			process.exception(e);
 		}
 		

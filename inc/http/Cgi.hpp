@@ -6,6 +6,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <signal.h>
 # include <iostream>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -29,12 +30,16 @@ class	CGI
 	~CGI();
 
 	void	execute(void);
+	static void	sig_handler(int signum);
 	std::string	get_buf(void);
 	std::string	get_query(std::string referer);
 
+
 	private:
 	std::map<std::string, std::string>	_env;
+	char	**_envp;
 	std::vector<std::string>	_query_parameters;
+	char	**_argvp;
 	std::vector<std::string>	_argv;
 	std::string	_buf;
 	FILE	*_tmpout;
