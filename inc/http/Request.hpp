@@ -9,7 +9,7 @@
  * @note Because we have to support multiple method we need enum
  * because they are easier to work with than strings
  */
-enum method { GET, POST, DELETE, UNKNOWN };
+enum method {  GET, POST, DELETE, PUT, UNKNOWN };
 
 /**
  * @note Every member attribute of the request class is stored as pair like that [value, flag]
