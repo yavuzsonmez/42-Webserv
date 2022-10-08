@@ -455,6 +455,25 @@ bool ConfigurationKey::isValidMethod(std::string method) {
 }
 
 /**
+ * @brief Adds the method to the allowed methods. (as enum)
+ * 
+ * @param string methodToAdd
+ * @return true 
+ * @return false 
+ */
+void ConfigurationKey::addMethodToMethodEnum(std::string methodToAdd)
+{
+	//if (methodToAdd == "GET")
+	//	this->allowedMethods.push_back(GET);
+	//else if (methodToAdd == "POST")
+	//	this->allowedMethods.push_back(POST);
+	//else if (methodToAdd == "PUT")
+	//	this->allowedMethods.push_back(PUT);
+	//else if (methodToAdd == "DELETE")
+	//	this->allowedMethods.push_back(DELETE);
+}
+
+/**
  * @brief Check if the key is a methods key type.
  * - also sets the methods
  * TODO: Validate methods values
@@ -473,7 +492,10 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + substr);
 		}
 		if (!substr.empty())
+		{
 			this->methods.push_back( substr );
+			this->addMethodToMethodEnum(substr);
+		}
 		else
 			return false;
 	}
