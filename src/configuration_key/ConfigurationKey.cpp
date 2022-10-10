@@ -463,14 +463,14 @@ bool ConfigurationKey::isValidMethod(std::string method) {
  */
 void ConfigurationKey::addMethodToMethodEnum(std::string methodToAdd)
 {
-	//if (methodToAdd == "GET")
-	//	this->allowedMethods.push_back(GET);
-	//else if (methodToAdd == "POST")
-	//	this->allowedMethods.push_back(POST);
-	//else if (methodToAdd == "PUT")
-	//	this->allowedMethods.push_back(PUT);
-	//else if (methodToAdd == "DELETE")
-	//	this->allowedMethods.push_back(DELETE);
+	if (methodToAdd == "GET")
+		this->allowedMethods.push_back(GET);
+	else if (methodToAdd == "POST")
+		this->allowedMethods.push_back(POST);
+	else if (methodToAdd == "PUT")
+		this->allowedMethods.push_back(PUT);
+	else if (methodToAdd == "DELETE")
+		this->allowedMethods.push_back(DELETE);
 }
 
 /**
