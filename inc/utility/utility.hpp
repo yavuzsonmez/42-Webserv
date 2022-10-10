@@ -19,6 +19,7 @@
 # include <set>
 # include <unistd.h>
 # include "../config_file/ConfigFileParsing.hpp"
+# include "../configuration_key/ServerBlock.hpp"
 
 void strip_from_str(std::string &file_content, const char start, const char end);
 void upper_str(std::string &str);

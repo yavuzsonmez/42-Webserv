@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 #include "../../inc/config_file/InvalidConfigurationFile.hpp"
-#include "../../inc/http/Request.hpp"
+
+enum method {  GET, POST, DELETE, PUT, UNKNOWN };
 
 /**
  * All keys which can be used in the configuration file are defined here.

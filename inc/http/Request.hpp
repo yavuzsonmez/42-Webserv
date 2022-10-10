@@ -2,13 +2,14 @@
 # define REQUEST_HPP
 
 # include "../utility/colors.hpp"
+# include "../utility/utility.hpp"
 # include "../http/status.hpp"
 
 /**
  * @note Because we have to support multiple method we need enum
  * because they are easier to work with than strings
  */
-enum method {  GET, POST, DELETE, PUT, UNKNOWN };
+
 
 /**
  * @note Every member attribute of the request class is stored as pair like that [value, flag]
