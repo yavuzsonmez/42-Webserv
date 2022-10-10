@@ -160,6 +160,7 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	}
 	else if (keyToAdd.configurationType == METHODS) {
 		key.methods = keyToAdd.methods;
+		key.allowedMethods = key.allowedMethods;
 		addConfigurationKeyTypeToLocation(METHODS, key);
 	}
 	else if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {

@@ -464,6 +464,8 @@ bool ConfigurationKey::isValidMethod(std::string method) {
  */
 void ConfigurationKey::addMethodToMethodEnum(std::string methodToAdd)
 {
+	USE_DEBUGGER;
+	debugger.debug("ADDING " + methodToAdd + " to enum array");
 	if (methodToAdd == "GET")
 		this->allowedMethods.push_back(GET);
 	else if (methodToAdd == "POST")
