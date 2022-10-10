@@ -3,6 +3,7 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
 #include "../../inc/utility/colors.hpp"
+#include "../../inc/http/Request.hpp"
 #include <set>
 
 ConfigFileParsing::ConfigFileParsing()
@@ -148,7 +149,7 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	if (keyToAdd.configurationType == INDEX) {
 		key.indexes = keyToAdd.indexes;
 		addConfigurationKeyTypeToLocation(INDEX, key);
-	} 
+	}
 	else if (keyToAdd.configurationType == LOCATION) {
 		key.location = trim_whitespaces(keyToAdd.location);
 		addConfigurationKeyTypeToLocation(LOCATION, key);
