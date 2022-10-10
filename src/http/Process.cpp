@@ -148,6 +148,7 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 			if (!(*it).redirection.empty())
 				_redirection = (*it).redirection;
 			//if (find_vector((*it).allowedMethods, _request.getMethod().first))
+			
 			std::cout << "test: " << (*it).allowedMethods.empty() << std::endl;
 			if (!(*it).allowedMethods.empty())
 				_methods = (*it).allowedMethods;
