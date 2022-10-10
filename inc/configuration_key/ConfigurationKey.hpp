@@ -5,6 +5,8 @@
 #include <vector>
 #include "../../inc/config_file/InvalidConfigurationFile.hpp"
 
+enum method {  GET, POST, DELETE, PUT, UNKNOWN };
+
 /**
  * All keys which can be used in the configuration file are defined here.
  * To add a new key, add it to the KEY_DEFINES and to the enum.
@@ -103,7 +105,8 @@ class ConfigurationKey {
 		// Attributes of the configuration types
 		std::vector <std::string> indexes; // indexes, if type is INDEX. sorted by relevance and position within the key.
 		std::vector <std::string> server_names; // server_names, if type is SERVER_NAMES. sorted by relevance and position within the key.
-		std::vector <std::string> methods; // methids, if type is METHODS. sorted by relevance and position within the key.
+		std::vector <std::string> methods; // methods, if type is METHODS. sorted by relevance and position within the key.
+		std::vector <method> allowedMethods; // allowedMethods, contains all the enums of the allowed methds
 		std::string root; // returns the path of the root
 		std::string location; // returns the locationpath of the location
 		std::string cgi_path; // returns the locationpath of the location
@@ -138,6 +141,7 @@ class ConfigurationKey {
 		bool validateCgiFileEnding(std::string to_validate);
 		bool validatePostMaxSize(std::string to_validate);
 		bool validateRedirection(std::string value);
+		void addMethodToMethodEnum(std::string methodToAdd);
 		
 		
 		/**
