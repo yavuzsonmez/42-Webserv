@@ -146,6 +146,7 @@ void ConfigFileParsing::addConfigurationKeyTypeToLocation(ConfigurationKeyType k
  * Super important function, without adding behavior for key it it will not appear in the location block!
  */
 void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd ) {
+	USE_DEBUGGER;
 	if (keyToAdd.configurationType == INDEX) {
 		key.indexes = keyToAdd.indexes;
 		addConfigurationKeyTypeToLocation(INDEX, key);
@@ -160,7 +161,7 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	}
 	else if (keyToAdd.configurationType == METHODS) {
 		key.methods = keyToAdd.methods;
-		key.allowedMethods = key.allowedMethods;
+		key.allowedMethods = keyToAdd.allowedMethods;
 		addConfigurationKeyTypeToLocation(METHODS, key);
 	}
 	else if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
