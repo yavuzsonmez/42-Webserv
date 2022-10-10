@@ -27,6 +27,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->location = src.location;
 	this->indexes = src.indexes;
 	this->methods = src.methods;
+	this->allowedMethods = src.allowedMethods;
 	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
 	this->current_line = src.current_line;
 	this->raw_input = src.raw_input;

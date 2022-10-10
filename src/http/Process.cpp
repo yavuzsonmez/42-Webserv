@@ -19,14 +19,17 @@ Process::~Process(void)
  */
 void	Process::process_request(void)
 {
-	if (_request.getMethod().first == UNKNOWN)
-		throw (501);
-	else
+	int	method = _request.getMethod().first;
+	if (method == GET || method == POST || method == DELETE || method == PUT)
 	{
 		try {
 			get_request();}
 		catch (int e) {
 			throw (e);}
+	}
+	else
+	{
+		throw (501);
 	}
 }
 
@@ -51,6 +54,8 @@ void	Process::get_request(void)
 		if (_request.getScript().first.empty())
 		{
 			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
+			if (find_vector(_methods, _request.getMethod().first) == -1)
+				throw (501);
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
@@ -137,11 +142,15 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 		if (!(*it).value.compare(location))
 		{
 			if (!(*it).cgi_path.empty())
-				_cgi = (*it).cgi_path;
+				_cgi = (*it).cgi_path; 
 			if (!(*it).cgi_fileending.empty())
 				_cgi_fileending = (*it).cgi_fileending;
 			if (!(*it).redirection.empty())
 				_redirection = (*it).redirection;
+			//if (find_vector((*it).allowedMethods, _request.getMethod().first))
+			std::cout << "test: " << (*it).allowedMethods.empty() << std::endl;
+			if (!(*it).allowedMethods.empty())
+				_methods = (*it).allowedMethods;
 			if (type == ROOT)
 				return (*it).root;
 			else if (type == INDEX)
