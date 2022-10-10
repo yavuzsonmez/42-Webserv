@@ -31,6 +31,7 @@ class Process
 	std::string	_cgi;
 	std::string	_cgi_fileending;
 	std::string	_redirection;
+	std::vector<method>	_methods;
 
 
 };

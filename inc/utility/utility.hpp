@@ -115,12 +115,25 @@ char **vec_to_array(std::vector<T> &vector)
 	return array;
 }
 
-
 template<typename X>
 bool vector_has_duplicate_element(std::vector<X> v)
 {
 	std::set<X> s(v.begin(), v.end());
 	return s.size() != v.size();
-
 }
+
+template<typename T1, typename T2>
+int	find_vector(std::vector<T1> &vector, T2 element)
+{
+	typename std::vector<T1>::iterator	it;
+	//std::cout << "vector: " << vector[0] << std::endl;
+	for (it = vector.begin(); it != vector.end(); it++)
+	{
+		std::cout << "*it: " << *it << std::endl;
+		if (*it == element)
+			return it - vector.begin();
+	}
+	return -1;
+}
+
 #endif
