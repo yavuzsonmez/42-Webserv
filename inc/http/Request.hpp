@@ -1,7 +1,6 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
-#include "../utility/utility.hpp"
 # include "../utility/colors.hpp"
 # include "../http/status.hpp"
 
