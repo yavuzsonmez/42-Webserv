@@ -5,7 +5,7 @@ CGI::CGI()
 
 }
 
-CGI::CGI(/*Request &request*/Request request, ServerBlock &config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
+CGI::CGI(Request request, ServerBlock &config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
 	if (_request.getQuery().second)
 	{
@@ -70,6 +70,8 @@ void	CGI::execute(void)
 	else														//int the parent process
 	{
 		int	status;
+		//time_t	beginning = time(NULL);
+		//difftime(time(NULL), beginning);
 		waitpid(pid, &status, 0);								//wait until child terminates
 		if (WEXITSTATUS(status))
 			throw (502);
