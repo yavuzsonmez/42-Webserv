@@ -87,6 +87,11 @@ std::string printOutNestedKeysFromLocationBlocks(ConfigurationKey &key) {
 	std:: cout << intendation;
 	std:: cout << intendation;
 	std::cout << B << "->" << Reset << " CGI ENDING " << key.cgi_fileending  << std::endl;
+	if (key.directory_listing) {
+		std:: cout << intendation;
+		std:: cout << intendation;
+		std::cout << B << "->" << Reset << " DIRECTORY LISTING " << key.directory_listing  << std::endl;
+	}
 	return "";
 }
 
