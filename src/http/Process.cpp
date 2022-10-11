@@ -1,4 +1,5 @@
 # include	"../../inc/http/Process.hpp"
+# include	"../../inc/debugger/DebuggerPrinter.hpp"
 
 Process::Process(Response &response, Request request, ServerBlock &config) : _response(response), _request(request), _config(config)
 {
@@ -132,11 +133,13 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 
 bool	Process::check_location(void)
 {
+	USE_DEBUGGER;
 	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
 	std::vector<ConfigurationKey>::iterator	it;
 	for (it = locations.begin(); it != locations.end(); it++)
 	{
 		std::string	request_path = _request.getPath().first.insert(0, "/");
+		
 		if (!(*it).value.compare(request_path))
 		{
 			return true;
