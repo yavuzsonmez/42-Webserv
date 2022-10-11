@@ -184,32 +184,68 @@ void Request::setPort(std::string &url) {
 	url.erase(x, y - x );
 }
 
+// /**
+//  * @brief check if client requests a CGI
+//  */
+// void Request::setScript(std::string &url) {
+// 	size_t pos = url.find_last_of("/");
+// 	if (pos == std::string::npos)
+// 		return ;
+// 	_script.first = url.substr(0, pos);
+// 	std::cout << "_script: " << _script.first << std::endl;
+// 	if (_script.first.substr(0, _script.first.find("/")).compare("cgi")) // check if cgi the client request the CGI in the cgi/ folder
+// 		_script.second = false;
+// 	else
+// 		_script.second = true;
+// 	url.erase(0, pos + 1);
+// 	// TODO check if URL containes something after script like /cgi/index.php/ or /cgi/index.php
+// 	// fix research based on last / for script
+// }
+
 /**
  * @brief check if client requests a CGI
  */
 void Request::setScript(std::string &url) {
-	size_t pos = url.find_last_of("/");
+	size_t pos = url.find_last_of(".");
 	if (pos == std::string::npos)
 		return ;
-	_script.first = url.substr(0, pos);
+	pos = url.find_last_of("/");
+	if (pos == std::string::npos)
+		_script.first = url.substr(0);
+	else
+		_script.first = url.substr(pos);
 	if (_script.first.substr(0, _script.first.find("/")).compare("cgi")) // check if cgi the client request the CGI in the cgi/ folder
 		_script.second = false;
 	else
 		_script.second = true;
-	url.erase(0, pos + 1);
+	setFragment(url);
+	setQuery(url);
+	if (pos == std::string::npos)
+		url.erase(0);
+	else
+		url.erase(pos);
 	// TODO check if URL containes something after script like /cgi/index.php/ or /cgi/index.php
 	// fix research based on last / for script
 }
 
+// /**
+//  * @brief
+//  */
+// void Request::setPath(std::string &url)
+// {
+// 	setFragment(url);
+// 	setQuery(url);
+
+// 	if (url.length())
+// 		_path.first = url.substr(0, url.length());
+// 	url.erase(0, url.length());
+// }
 
 /**
  * @brief
  */
 void Request::setPath(std::string &url)
 {
-	setFragment(url);
-	setQuery(url);
-
 	if (url.length())
 		_path.first = url.substr(0, url.length());
 	url.erase(0, url.length());
