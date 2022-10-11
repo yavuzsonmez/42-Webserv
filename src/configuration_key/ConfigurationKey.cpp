@@ -36,6 +36,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->redirection = src.redirection;
 	this->post_max_size = src.post_max_size;
 	this->nestedConfigurationKeyTypesinLocationBlock = src.nestedConfigurationKeyTypesinLocationBlock;
+	this->directory_listing = src.directory_listing;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -61,6 +62,7 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
 ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block, int current_line, std::string raw_input) {
 	this->isCurrentlyParsingLocationBlock = location_block;
 	this->current_line = current_line;
+	this->directory_listing = false;
 	this->raw_input = raw_input;
 	DebuggerPrinter debugger = debugger.getInstance();
 	if (key.empty () || value.empty()) {
@@ -117,7 +119,29 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 		debugger.info("Detected REDIRECTION key type.");
 		return REDIRECTION;
 	}
+	if (this->isDirectoryListingConfigurationKeyType(raw))
+	{
+		debugger.info("Detected DIRECTORY LISTING key type.");
+		return DIRECTORY_LISTING;
+	}
 	return INVALID;
+}
+
+/**
+ * @brief Checks if key is directory listing key type
+ * @param type 
+ * @return true or false
+ */
+bool ConfigurationKey::isDirectoryListingConfigurationKeyType(internal_keyvalue raw)
+{
+	USE_DEBUGGER;
+	if (raw.first == "directory_listing" && trim_whitespaces(raw.second) == "on") {
+		debugger.info("Detected directory listing key type.");
+		this->directory_listing = true;
+		return true;
+	}
+	this->directory_listing = false;
+	return false;
 }
 
 /**
@@ -175,7 +199,6 @@ bool ConfigurationKey::isRedirectionKeyType(internal_keyvalue raw)
 		this->redirection = raw.second;
 		return true;
 	}
-	debugger.error("Redirection value incorrect or empty.");
 	return false;
 }
 
