@@ -135,10 +135,16 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 bool ConfigurationKey::isDirectoryListingConfigurationKeyType(internal_keyvalue raw)
 {
 	USE_DEBUGGER;
-	if (raw.first == "directory_listing" && trim_whitespaces(raw.second) == "on") {
-		debugger.info("Detected directory listing key type.");
-		this->directory_listing = true;
-		return true;
+	if (raw.first == "directory_listing") {
+		if (trim_whitespaces(raw.second) == "on") {
+			this->directory_listing = true;
+			return true;
+		}
+		if (trim_whitespaces(raw.second) == "off") {
+			this->directory_listing = false;
+			return true;
+		}
+		throwInvalidConfigurationFileExceptionWithMessage("Invalid value for directory listing key. Only 'on' or 'off' is allowed.");
 	}
 	this->directory_listing = false;
 	return false;
