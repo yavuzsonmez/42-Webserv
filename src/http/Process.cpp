@@ -42,12 +42,24 @@ void	Process::get_request(void)
 {
 	if (_request.getPath().first == "/")
 	{
-		std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-		try {
-			build_response(path, "200", "OK");}
-		catch (int e){
-			throw (e);}
+		if (_request.getScript().first.empty())
+		{
+			std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+			try {
+				build_response(path, "200", "OK");}
+			catch (int e){
+				throw (e);}
+		}
+		else
+		{
+			std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
+			try {
+				build_response(path, "200", "OK");}
+			catch (int e){
+				throw (e);}
+		}
 		return ;
+
 	}
 	else if (check_location())
 	{
@@ -71,6 +83,8 @@ void	Process::get_request(void)
 				catch (int e){
 					throw (e);}
 			}
+			else
+				throw(404);
 		}
 	}
 	else
@@ -84,7 +98,6 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		_response.set_protocol("HTTP/1.1");
 		if (!_redirection.empty())
 		{
-			std::cout << "test" << std::endl;
 			_response.set_status_code("301");
 			_response.set_status_text("Moved Permanently");
 			_response.set_redirection(_redirection);
@@ -105,6 +118,7 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			}
 			else
 			{
+				std::cout << "build_path: " << path << std::endl;
 				try {
 					_response.set_body(get_file_content(path));}
 				catch (int e){
