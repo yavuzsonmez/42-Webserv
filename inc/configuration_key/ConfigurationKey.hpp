@@ -28,6 +28,7 @@ enum method {  GET, POST, DELETE, PUT, UNKNOWN };
 # define	KEY_GENERAL_ERROR_PAGE		"general_error_page"
 # define	KEY_POST_MAX_SIZE			"post_max_size"
 # define	KEY_REDIRECTION				"redirection"
+# define	KEY_DIRECTORY_LISTING		"directory_listing"
 
 /**
  * Defines the type of information a configuration key holds.
@@ -51,7 +52,8 @@ enum ConfigurationKeyType {
 	POST_MAX_SIZE,
 	NOT_FOUND_ERROR_PAGE,
 	GENERAL_ERROR_PAGE,
-	REDIRECTION
+	REDIRECTION,
+	DIRECTORY_LISTING
 };
 
 /**
@@ -113,6 +115,7 @@ class ConfigurationKey {
 		std::string cgi_fileending; // those file endings should be executed with a cgi
 		std::string redirection; // a redirection which is set in the configuration file for a certain location
 		std::string not_found_error_page_path; // returns the location of the error path to the error file
+		bool directory_listing; // flag if directory listing is enabled or not
 		int post_max_size; // post max size in megabyte
 		std::string general_error_page_path; // returns the location of the error path to the error file
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
@@ -142,6 +145,7 @@ class ConfigurationKey {
 		bool validatePostMaxSize(std::string to_validate);
 		bool validateRedirection(std::string value);
 		void addMethodToMethodEnum(std::string methodToAdd);
+		bool isDirectoryListingConfigurationKeyType(internal_keyvalue raw);
 		
 		
 		/**

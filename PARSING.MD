@@ -76,3 +76,23 @@ METHODS
 
 All the nested configuration keys will be saved in the configuration keys within the LOCATION typed configuration type.
 The attributes of the location configuration key holds the information found in the location block.
+
+
+## How to add a new key   
+Go to ConfigurationKey.hpp and add a new key to the enum.   
+In the same file, add the KEY_CONFIGURATIONKEY to the defines. This is what the parser will look for in the configuration file.   
+Then go to detectConfigurationType (or detectLocationKeyConfiguration) function in ConfigurationKey.cpp and add a new case to the if statement.
+Think of a function name which would be fitting to check for the new key.
+It should look like this:
+```
+if (this->isServerNameKeyType(raw))
+{
+		debugger.info("Detected server name key type in server block.");
+		return SERVER_NAME;
+}
+```
+
+Write the function you just created which checks for the new key.
+If necesssary, add a property to the class which saves the value of the key.
+Make sure to add it in the copy constructor.
+If you added it to the location before, make sure to add it to addConfigurationKeyToLocation function in ConfigFileParsing.cpp as well. It takes care of adding the configuration key to the location and combining all the location attached configuration keys into one configuration key.
