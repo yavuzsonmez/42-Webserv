@@ -41,6 +41,8 @@ void	Process::process_request(void)
  */
 void	Process::get_request(void)
 {
+	// std::cout << "path: " << _request.getPath().first << std::endl;
+	// std::cout << "script: " << _request.getScript().first << std::endl;
 	if (_request.getPath().first == "/")
 	{
 		if (_request.getScript().first.empty())
@@ -119,7 +121,7 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			}
 			else
 			{
-				std::cout << "build_path: " << path << std::endl;
+				//std::cout << "build_path: " << path << std::endl;
 				try {
 					_response.set_body(get_file_content(path));}
 				catch (int e){
