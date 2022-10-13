@@ -299,11 +299,30 @@ void Request::setHttpversion(std::string &req)
  * 			header -> <header, flag>
  *			directive -> <directive, flag>
  */
+// void Request::setHeaders(std::string &req)
+// {
+// 	str_flag hdr, direct;
+// 	size_t pos = req.find(":");
+// 	while (pos != std::string::npos)
+// 	{
+// 		hdr = std::make_pair(req.substr(0, pos), true);
+// 		req.erase(0, pos + 1);
+// 		pos = req.find("\n");
+// 		direct = std::make_pair(req.substr(0, pos), true);
+// 		_headers.push_back(std::make_pair(hdr, direct));
+// 		req.erase(0, pos + 1);
+// 		pos = req.find(":");
+// 	}
+// }
+
 void Request::setHeaders(std::string &req)
 {
+	// std::cout << "req_header: " << req << std::endl;
 	str_flag hdr, direct;
+	size_t end = req.find("\r\n\r\n");
+	// std::cout << "end: " << end << std::endl;
 	size_t pos = req.find(":");
-	while (pos != std::string::npos)
+	while (pos != std::string::npos && pos < end)
 	{
 		hdr = std::make_pair(req.substr(0, pos), true);
 		req.erase(0, pos + 1);
@@ -312,18 +331,32 @@ void Request::setHeaders(std::string &req)
 		_headers.push_back(std::make_pair(hdr, direct));
 		req.erase(0, pos + 1);
 		pos = req.find(":");
+		end = req.find("\r\n");
+		// std::cout << "pos: " << pos << std::endl;
+		// std::cout << "end: " << end << std::endl;
 	}
 }
 
-/**
- * @brief Store the eventual body (POST request) of the request
- */
+// /**
+//  * @brief Store the eventual body (POST request) of the request
+//  */
+// void Request::setBody(std::string &req)
+// {
+// 	size_t pos = req.find("\n");
+// 	_body = std::make_pair(req.substr(pos + 1), true);
+// 	if (req.length())
+// 		req.erase(pos);
+// }
+
 void Request::setBody(std::string &req)
 {
+	//std::cout << "req_body: " << req << std::endl;
 	size_t pos = req.find("\n");
+	std::string	str;
 	_body = std::make_pair(req.substr(pos + 1), true);
-	if (req.length())
-		req.erase(pos);
+	std::cout << "body: " << _body.first << std::endl;
+	/*if (req.length())
+		req.erase(pos);*/
 }
 
 /**
