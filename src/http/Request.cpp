@@ -232,6 +232,17 @@ void Request::setScript(std::string &url) {
 	// fix research based on last / for script
 }
 
+
+/**
+ * @brief
+ */
+void Request::setPath(std::string &url)
+{
+	if (url.length())
+		_path.first = url.substr(0, url.length());
+	url.erase(0, url.length());
+}
+
 // /**
 //  * @brief
 //  */
@@ -245,15 +256,6 @@ void Request::setScript(std::string &url) {
 // 	url.erase(0, url.length());
 // }
 
-/**
- * @brief
- */
-void Request::setPath(std::string &url)
-{
-	if (url.length())
-		_path.first = url.substr(0, url.length());
-	url.erase(0, url.length());
-}
 
 /**
  * @brief
