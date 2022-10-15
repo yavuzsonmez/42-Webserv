@@ -169,10 +169,13 @@ void Request::setDomain(std::string &url) {
  * if not use the default http port (80)
  */
 void Request::setPort(std::string &url) {
+	std::cout << url << std::endl;
 	size_t x = url.find(":");
 	size_t y = url.find("/");
-	if (x == std::string::npos || y == std::string::npos)
+	if (x == std::string::npos)
 		return;
+	if (y == std::string::npos)
+		y = url.length();
 	std::string port = url.substr(x + 1, y - x - 1);
 	std::stringstream ss(port);
 	ss >> _port.first;
@@ -182,6 +185,7 @@ void Request::setPort(std::string &url) {
 		_port.second = false;
 	}
 	url.erase(x, y - x );
+	std::cout << url << std::endl;
 }
 
 // /**
@@ -315,6 +319,12 @@ void Request::setHttpversion(std::string &req)
 // 	}
 // }
 
+/*
+ * @brief Store every single header in a vector of pair
+ * vector -> <header: directive>
+ * 			header -> <header, flag>
+ *			directive -> <directive, flag>
+ */
 void Request::setHeaders(std::string &req)
 {
 	// std::cout << "req_header: " << req << std::endl;
@@ -328,6 +338,8 @@ void Request::setHeaders(std::string &req)
 		req.erase(0, pos + 1);
 		pos = req.find("\n");
 		direct = std::make_pair(req.substr(0, pos), true);
+		if (!hdr.first.compare("Host"))
+			setPort(direct.first);
 		_headers.push_back(std::make_pair(hdr, direct));
 		req.erase(0, pos + 1);
 		pos = req.find(":");
