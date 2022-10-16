@@ -340,8 +340,7 @@ void Request::setHeaders(std::string &req)
 		req.erase(0, pos + 1);
 		pos = req.find("\n");
 		direct = std::make_pair(req.substr(0, pos), true);
-		if (!hdr.first.compare("Host"))
-			setPort(direct.first);
+		checkHeader(hdr, direct);
 		_headers.push_back(std::make_pair(hdr, direct));
 		req.erase(0, pos + 1);
 		pos = req.find(":");
@@ -349,6 +348,25 @@ void Request::setHeaders(std::string &req)
 		// std::cout << "pos: " << pos << std::endl;
 		// std::cout << "end: " << end << std::endl;
 	}
+}
+
+void Request::checkHeader(str_flag &hdr, str_flag &direct)
+{
+	if (hdr.first == Host)
+	{
+		std::string host_header = direct.first;
+		setPort(host_header);
+	}
+	if (hdr.first == Content_Length)
+	{
+		if (_method.first != DELETE && _method.first != POST)
+		{
+			_method.second = false;
+			return ;
+		}
+		//check max content length from the parsed config file
+	}
+	//if (hdr.first == Content_Type)
 }
 
 // /**
