@@ -4,6 +4,7 @@
 # include "../utility/colors.hpp"
 # include "../utility/utility.hpp"
 # include "../http/status.hpp"
+# include "../http/headers.hpp"
 
 /**
  * @note Because we have to support multiple method we need enum
@@ -66,6 +67,7 @@ class Request
 				void				setFragment(std::string &url);
 			void				setHttpversion(std::string &req);
 			void				setHeaders(std::string &req);
+				void			checkHeader(str_flag &hdr, str_flag &direct);
 			void				setBody(std::string &req);
 
 	private:

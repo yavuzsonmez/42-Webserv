@@ -169,10 +169,13 @@ void Request::setDomain(std::string &url) {
  * if not use the default http port (80)
  */
 void Request::setPort(std::string &url) {
+	std::cout << url << std::endl;
 	size_t x = url.find(":");
 	size_t y = url.find("/");
-	if (x == std::string::npos || y == std::string::npos)
+	if (x == std::string::npos)
 		return;
+	if (y == std::string::npos)
+		y = url.length();
 	std::string port = url.substr(x + 1, y - x - 1);
 	std::stringstream ss(port);
 	ss >> _port.first;
@@ -182,6 +185,7 @@ void Request::setPort(std::string &url) {
 		_port.second = false;
 	}
 	url.erase(x, y - x );
+	std::cout << url << std::endl;
 }
 
 // /**
@@ -228,6 +232,17 @@ void Request::setScript(std::string &url) {
 	// fix research based on last / for script
 }
 
+
+/**
+ * @brief
+ */
+void Request::setPath(std::string &url)
+{
+	if (url.length())
+		_path.first = url.substr(0, url.length());
+	url.erase(0, url.length());
+}
+
 // /**
 //  * @brief
 //  */
@@ -241,15 +256,6 @@ void Request::setScript(std::string &url) {
 // 	url.erase(0, url.length());
 // }
 
-/**
- * @brief
- */
-void Request::setPath(std::string &url)
-{
-	if (url.length())
-		_path.first = url.substr(0, url.length());
-	url.erase(0, url.length());
-}
 
 /**
  * @brief
@@ -315,6 +321,12 @@ void Request::setHttpversion(std::string &req)
 // 	}
 // }
 
+/*
+ * @brief Store every single header in a vector of pair
+ * vector -> <header: directive>
+ * 			header -> <header, flag>
+ *			directive -> <directive, flag>
+ */
 void Request::setHeaders(std::string &req)
 {
 	// std::cout << "req_header: " << req << std::endl;
@@ -328,6 +340,7 @@ void Request::setHeaders(std::string &req)
 		req.erase(0, pos + 1);
 		pos = req.find("\n");
 		direct = std::make_pair(req.substr(0, pos), true);
+		checkHeader(hdr, direct);
 		_headers.push_back(std::make_pair(hdr, direct));
 		req.erase(0, pos + 1);
 		pos = req.find(":");
@@ -335,6 +348,25 @@ void Request::setHeaders(std::string &req)
 		// std::cout << "pos: " << pos << std::endl;
 		// std::cout << "end: " << end << std::endl;
 	}
+}
+
+void Request::checkHeader(str_flag &hdr, str_flag &direct)
+{
+	if (hdr.first == Host)
+	{
+		std::string host_header = direct.first;
+		setPort(host_header);
+	}
+	if (hdr.first == Content_Length)
+	{
+		if (_method.first != DELETE && _method.first != POST)
+		{
+			_method.second = false;
+			return ;
+		}
+		//check max content length from the parsed config file
+	}
+	//if (hdr.first == Content_Type)
 }
 
 // /**
