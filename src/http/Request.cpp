@@ -354,7 +354,7 @@ void Request::setBody(std::string &req)
 	size_t pos = req.find("\n");
 	std::string	str;
 	_body = std::make_pair(req.substr(pos + 1), true);
-	std::cout << "body: " << _body.first << std::endl;
+	//std::cout << "body: " << _body.first << std::endl;
 	/*if (req.length())
 		req.erase(pos);*/
 }

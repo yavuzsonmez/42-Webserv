@@ -18,6 +18,8 @@
 # include <algorithm>
 # include "Request.hpp"
 
+extern char **environ;
+
 /**
  * @brief class that gets instantiated whenever a cgiscript is called
  */
