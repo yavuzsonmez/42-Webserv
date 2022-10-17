@@ -1,5 +1,7 @@
-import os
- 
+import cgi, os
+import cgitb; cgitb.enable()
+
+form = cgi.FieldStorage()
 fileitem = form['filename']
  
 # check if the file has been uploaded
