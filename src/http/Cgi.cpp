@@ -45,6 +45,12 @@ CGI::~CGI()
 /*executes cgi to-do timout of child*/
 void	CGI::execute(void)
 {
+	// char **s = environ;
+
+	// for (; *s; s++) {
+	// 	printf("%s\n", *s);
+	// }
+	
 	pid_t	pid;
 	
 	_tmpout = tmpfile();											//File pointer to a temporaryfile
