@@ -392,6 +392,21 @@ void Request::setBody(std::string &req)
 }
 
 /**
+ * @brief returns the value of the in header defined header
+ */
+std::string	Request::findHeader(std::string key) const
+{
+	std::string null;
+	headr_dirctiv::const_iterator	it;
+	for (it = _headers.begin(); it != _headers.end(); it++)
+	{
+		if ((*it).first.first == key)
+			return (*it).second.first;
+	}
+	return null;
+}
+
+/**
  * @brief Overload that print all information of the parsed request
  *	for debugging
  */

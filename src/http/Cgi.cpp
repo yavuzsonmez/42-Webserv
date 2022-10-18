@@ -7,23 +7,20 @@ CGI::CGI()
 
 CGI::CGI(Request request, ServerBlock &config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
-	//std::cout << "header: " << _request.getHeaders()[6].second.first << std::endl;
-	
 	if (_request.getQuery().second)
 	{
 		std::string	query = _request.getQuery().first;
 		_query_parameters = split_on_delimiter(query, '&');
 	}
 
-	// when SERVER_SOFTWARE OR SERVER_NAME is uncommented, there is a weird security warning.
 	_env["SERVER_SOFTWARE"] = "webserv";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
 	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";										//The revision of the CGI specification to which this server complies. Format: CGI/revision
 	_env["SERVER_PROTOCOL"] = _request.getProtocol().first;							//The name and revision of the information protcol this request came in with. Format: protocol/revision
 	_env["SERVER_PORT"] = to_str(_request.getPort().first);									//The port number to which the request was sent.
 	_env["REQUEST_METHOD"] = _request.getMethod().first;							//The method with which the request was made. For HTTP, this is "GET", "HEAD", "POST", etc.
-	_env["PATH_INFO"] = path;														//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
-	_env["PATH_TRANSLATED"] = path;													//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
+	_env["PATH_INFO"] =  get_abs_path(path);														//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
+	_env["PATH_TRANSLATED"] =  get_abs_path(path);													//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
 	_env["SCRIPT_NAME"] = "";														//A virtual path to the script being executed, used for self-referencing URLs.
 	_env["QUERY_STRING"] = _request.getQuery().first;								//The information which follows the ? in the URL which referenced this script. This is the query information. It should not be decoded in any fashion. This variable should always be set when there is query information, regardless of command line decoding.
 	_env["REMOTE_HOST"] = "";														//The hostname making the request. If the server does not have this information, it should set REMOTE_ADDR and leave this unset.
@@ -31,8 +28,8 @@ CGI::CGI(Request request, ServerBlock &config, std::string path, std::string cgi
 	_env["AUTH_TYPE"] = "";															//If the server supports user authentication, and the script is protects, this is the protocol-specific authentication method used to validate the user.
 	_env["REMOTE_USER"] = "";														//If the server supports user authentication, and the script is protected, this is the username they have authenticated as. 
 	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only. 
-	_env["CONTENT_TYPE"] = _request.getHeaders()[5].second.first;	//need the content-type from request header			//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
-	_env["CONTENT_LENGTH"] = _request.getHeaders()[6].second.first;						//The length of the said content as given by the client.
+	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
+	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
 	_env["REDIRECT_STATUS"] = "500";
 
 	_envp = map_to_array(_env);
@@ -47,12 +44,6 @@ CGI::~CGI()
 /*executes cgi to-do timout of child*/
 void	CGI::execute(void)
 {
-	// char **s = environ;
-
-	// for (; *s; s++) {
-	// 	printf("%s\n", *s);
-	// }
-	
 	pid_t	pid;
 	
 	_tmpout = tmpfile();											//File pointer to a temporaryfile
@@ -60,7 +51,8 @@ void	CGI::execute(void)
 	if (!_tmpout || !_tmpin)
 		throw (500);
 	fwrite(_request.getBody().first.c_str(), 1, _request.getBody().first.size(), _tmpin);
-	//std::cout << "cgi_stdin: " << _request.getBody().first << std::endl;
+	rewind(_tmpin);
+
 	pid = fork();												//forks a new process
 
 	if (pid < 0)												//return in case it failes
