@@ -47,29 +47,29 @@ int main(int argc, char **argv)
 
 	/* START TEST REQUEST */
 	//std::string get = get_file_content("./sample/http_request_get");
-	std::string post = get_file_content("./sample/http_request_post");
+	//std::string post = get_file_content("./sample/http_request_post");
 	//std::string del = get_file_content("./sample/http_request_delete");
 	//std::string wrong = get_file_content("./sample/http_request_wrong");
-	Request httpRequestPost(post);
+	//Request httpRequestPost(post);
 	//Request httpRequestGet(get);
 	//Request httpRequestDelete(del);
 	//Request httpRequestDelete(wrong);
 	//std::cout << httpRequestGet << std::endl;
-	std::cout << httpRequestPost << std::endl;
+	//std::cout << httpRequestPost << std::endl;
 	/* END */
 	/* START TEST RESPONSE */
 	//ServerSocket server(4242, INADDR_ANY);
 	/* END */
 
 
-	//for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
-	//{
-	//	ServerSocket server(configurationFileParsing->serverBlocks[i], INADDR_ANY);
-	//}
+	for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
+	{
+		ServerSocket server(configurationFileParsing->serverBlocks[i], INADDR_ANY);
+	}
 
-	//ServerSocket server(configurationFileParsing->serverBlocks[0], INADDR_ANY);
+	ServerSocket server(configurationFileParsing->serverBlocks[0], INADDR_ANY);
 
-	//delete configurationFileParsing;
+	delete configurationFileParsing;
 
 
 	return (0);

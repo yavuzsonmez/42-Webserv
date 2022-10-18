@@ -118,7 +118,7 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 				catch (int e) {
 					throw(e);}
 				_response.set_body(cgi.get_buf());
-				std::cout << "response_body: " << _response.get_body() << std::endl;
+				//std::cout << "response_body: " << _response.get_body() << std::endl;
 			}
 			else
 			{

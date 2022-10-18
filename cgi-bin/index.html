@@ -1,13 +1,8 @@
-<!DOCTYPE html>
 <html>
-<head>
-	<title></title>
-</head>
 <body>
-<form action="upload/upload.py" method="POST" enctype="multipart/form-data">
-	<input type="file" name="file">
-	<button type="submit" name="submit">UPLOAD</button>
-
-</form>
+   <form enctype = "multipart/form-data" action = "upload/upload.py" method = "post">
+   <p>File: <input type = "file" name = "filename" /></p>
+   <p><input type = "submit" value = "Upload" /></p>
+   </form>
 </body>
 </html>

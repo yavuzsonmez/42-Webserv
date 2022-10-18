@@ -1,5 +1,7 @@
 import cgi, fileinput, os, sys
 
+message = 'test: '
+
 try:
 	parsed = cgi.FieldStorage()
 	fileitem = parsed['filename']
@@ -20,7 +22,7 @@ try:
 	else:
 		message = 'No file was uploaded'
 except:
-	message = 'No file was uploaded'
+	message + 'No file was uploaded'
 
 print("""\
 Content-Type: text/html\r\n\r\n

@@ -7,6 +7,8 @@ CGI::CGI()
 
 CGI::CGI(Request request, ServerBlock &config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
+	//std::cout << "header: " << _request.getHeaders()[6].second.first << std::endl;
+	
 	if (_request.getQuery().second)
 	{
 		std::string	query = _request.getQuery().first;
@@ -29,8 +31,8 @@ CGI::CGI(Request request, ServerBlock &config, std::string path, std::string cgi
 	_env["AUTH_TYPE"] = "";															//If the server supports user authentication, and the script is protects, this is the protocol-specific authentication method used to validate the user.
 	_env["REMOTE_USER"] = "";														//If the server supports user authentication, and the script is protected, this is the username they have authenticated as. 
 	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only. 
-	_env["CONTENT_TYPE"] = "20000";	//need the content-type from request header			//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
-	_env["CONTENT_LENGTH"] = _request.getBody().first.length();						//The length of the said content as given by the client.
+	_env["CONTENT_TYPE"] = _request.getHeaders()[5].second.first;	//need the content-type from request header			//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
+	_env["CONTENT_LENGTH"] = _request.getHeaders()[6].second.first;						//The length of the said content as given by the client.
 	_env["REDIRECT_STATUS"] = "500";
 
 	_envp = map_to_array(_env);
@@ -57,8 +59,8 @@ void	CGI::execute(void)
 	_tmpin = tmpfile();
 	if (!_tmpout || !_tmpin)
 		throw (500);
-	fwrite(_request.getBody().first.data(), 1, _request.getBody().first.length(), _tmpin);
-	
+	fwrite(_request.getBody().first.c_str(), 1, _request.getBody().first.size(), _tmpin);
+	//std::cout << "cgi_stdin: " << _request.getBody().first << std::endl;
 	pid = fork();												//forks a new process
 
 	if (pid < 0)												//return in case it failes

@@ -9,7 +9,6 @@
 # include "../configuration_key/ServerBlock.hpp"
 # include "../configuration_key/ConfigurationKey.hpp"
 # include "Request.hpp"
-# include "Location.hpp"
 
 /**
  * @brief class that is used to generate the response
@@ -53,7 +52,6 @@ class Response
 	private:
 	Request		_request;
 	ServerBlock	_config;
-	Location	_location;
 	std::vector<ConfigurationKey>	_vec_loc;
 	std::string	_protocol;
 	std::string	_status_code;
