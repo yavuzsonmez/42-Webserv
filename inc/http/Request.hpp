@@ -52,6 +52,7 @@ class Request
 		str_flag			getFragment(void) const;
 		str_flag			getHttpversion(void) const;
 		headr_dirctiv		getHeaders(void) const;
+		std::string	findHeader(std::string key) const;
 		str_flag			getBody(void) const;
 		std::string			getStatus(void) const;
 

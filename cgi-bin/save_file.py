@@ -1,6 +1,5 @@
 import cgi, fileinput, os, sys
 
-message = 'test: '
 
 try:
 	parsed = cgi.FieldStorage()

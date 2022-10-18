@@ -44,6 +44,7 @@ NETWORK			=		./src/network/ClientSocket.cpp \
 
 UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/is_file_accessible.cpp \
+						./src/utility/get_abs_path.cpp \
 						./src/utility/lower_upper_str.cpp \
 						./src/utility/check_config_file.cpp \
 						./src/utility/filter_characters.cpp \
