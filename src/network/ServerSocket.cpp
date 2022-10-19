@@ -50,7 +50,7 @@ void ServerSocket::processConnections()
 
 		int len = 0;
 		while (!len && ioctl(forward, FIONREAD, &len) >= 0)
-
+		
 		request_str.resize(len);
 		read(forward, (char*)request_str.data(), len);
 
