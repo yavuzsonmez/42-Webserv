@@ -50,7 +50,8 @@ void	CGI::execute(void)
 	_tmpin = tmpfile();
 	if (!_tmpout || !_tmpin)
 		throw (500);
-	fwrite(_request.getBody().first.c_str(), 1, _request.getBody().first.size(), _tmpin);
+
+	fwrite(_request.getBody().first.data(), 1, _request.getBody().first.length(), _tmpin);
 	rewind(_tmpin);
 
 	pid = fork();												//forks a new process
@@ -59,22 +60,35 @@ void	CGI::execute(void)
 		throw (500);
 	else if (pid == 0)											//in the child process
 	{
-		dup2(fileno(_tmpin), STDIN_FILENO);
-		dup2(fileno(_tmpout), STDOUT_FILENO);						//stdout now points to the tmpfile
-		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
-		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
-		_argvp = vec_to_array(_query_parameters);
-		execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
-		exit(1);												//exit the childprocess
+		pid = fork();
+		if (pid == 0)
+		{
+			sleep(2);
+			pid_t	ppid = getppid();
+			if (pid != 1)
+				kill(ppid, SIGKILL);
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			dup2(fileno(_tmpin), STDIN_FILENO);
+			dup2(fileno(_tmpout), STDOUT_FILENO);						//stdout now points to the tmpfile
+			_query_parameters.insert(_query_parameters.begin(), _path.c_str());
+			_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
+			_argvp = vec_to_array(_query_parameters);
+			execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
+			kill(pid, SIGKILL);
+			exit(EXIT_SUCCESS);												//exit the childprocess
+		}
 	}
 	else														//int the parent process
 	{
 		int	status;
-		//time_t	beginning = time(NULL);
-		//difftime(time(NULL), beginning);
 		waitpid(pid, &status, 0);								//wait until child terminates
 		if (WEXITSTATUS(status))
 			throw (502);
+		else if (WIFSIGNALED(status))
+			throw (504);
 		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
 			throw (500);
 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size

@@ -212,5 +212,11 @@ void	Process::exception(int e)
 			catch (int e) {
 				throw (e);}
 			break;
+		case 504:
+			try {
+				build_response("default_pages/504_default.html", "504", "Gateway Timeout");}
+			catch (int e) {
+				throw (e);}
+			break;
 	}
 }
