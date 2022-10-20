@@ -69,43 +69,45 @@ int findClosingBracket(std::string file_content) {
 	return -1;
 }
 
-/**
- * Returns the server blocks as strings.
- * Each block returned represents a server block.
- *
- * @param file_content
- * @return server_blocks as string vector
- *
- * Will read in file line by line.
- * If a server_block is being found, it sets the bool in_server_block = true;
- * Then we keep iterating until the server block is being closed.
- *
- */
-std::vector<std::string> get_server_blocks(std::string &file_content)
-{
-	std::vector<std::string> servers;
-	bool in_server_block = false;
+///**
+// * Returns the server blocks as strings.
+// * Each block returned represents a server block.
+// *
+// * @param file_content
+// * @return server_blocks as string vector
+// *
+// * Will read in file line by line.
+// * If a server_block is being found, it sets the bool in_server_block = true;
+// * Then we keep iterating until the server block is being closed.
+// *
+// */
+//std::vector<std::string> get_server_blocks(std::string &file_content)
+//{
+//	std::vector<std::string> servers;
+//	bool in_server_block;
 
-	std::istringstream iss(file_content);
-	std::string result;
-	for (std::string line; std::getline(iss, line); )
-	{
-		// Check if server block closes
-		if (line.find("{") == 0) {
+//	in_server_block = false;
 
-		}
-		// Check for server {
-		if (line.find("server {") == 0)
-		{
-			if (line == "server {")
-				in_server_block = true;
-			else
-				throw("Invalid configuration file!");
-		}
-	};
+//	std::istringstream iss(file_content);
+//	std::string result;
+//	for (std::string line; std::getline(iss, line); )
+//	{
+//		// Check if server block closes
+//		if (line.find("{") == 0) {
 
-	return servers;
-}
+//		}
+//		// Check for server {
+//		if (line.find("server {") == 0)
+//		{
+//			if (line == "server {")
+//				in_server_block = true;
+//			else
+//				throw("Invalid configuration file!");
+//		}
+//	};
+
+//	return servers;
+//}
 
 
 
