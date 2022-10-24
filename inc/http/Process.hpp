@@ -6,6 +6,7 @@
 # include "Cgi.hpp"
 # include "../configuration_key/ConfigurationKey.hpp"
 # include <cstdio>
+# include <filesystem>
 
 class Process
 {
@@ -19,7 +20,8 @@ class Process
 	void	delete_request(void);
 	void	build_response(std::string path, std::string code, std::string status);
 	bool	check_location(void);
-	std::string	get_location(std::string path, ConfigurationKeyType type);
+	std::string	get_location(std::string location, ConfigurationKeyType type);
+	bool	get_location_dl(std::string path);
 	void	exception(int code);
 
 	

@@ -44,6 +44,7 @@ CGI::~CGI()
 /*executes cgi to-do timout of child*/
 void	CGI::execute(void)
 {
+	std::cout << "body: " << _request.getBody().first << std::endl;
 	pid_t	pid;
 	
 	_tmpout = tmpfile();											//File pointer to a temporaryfile

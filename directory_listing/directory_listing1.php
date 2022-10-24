@@ -7,11 +7,11 @@
     </p>
     <p class="subtitle">
 	<?php
-		$line = fgets(fopen("php://stdin","r"));
-		if ($line == false) {
+
+		if ($POST['dir'] == '') {
 			$dirpath = '.';
 		} else {
-			$dirpath = $line;
+			$dirpath = $POST['dir'];
 		}
 		function buildPath($file) {
 			return $pathdir . '/' . $file;
