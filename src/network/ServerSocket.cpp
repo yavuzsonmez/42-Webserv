@@ -70,6 +70,7 @@ void ServerSocket::processConnections()
 		
 		std::string httpResponse(response.get_response());
 
+		//std::cout << "httpResponse: " << httpResponse << std::endl;
 		int bytes_send;
 		bytes_send = 0;
 		// if bytes_send < len we have to handle it and keep send until everything was sent

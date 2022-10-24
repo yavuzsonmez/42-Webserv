@@ -43,11 +43,12 @@ void	Process::get_request(void)
 {
 	// std::cout << "path: " << _request.getPath().first << std::endl;
 	// std::cout << "script: " << _request.getScript().first << std::endl;
+	std::string	path;
 	if (_request.getPath().first == "/")
 	{
 		if (_request.getScript().first.empty())
 		{
-			std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
@@ -55,7 +56,7 @@ void	Process::get_request(void)
 		}
 		else
 		{
-			std::string path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
+			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
@@ -68,17 +69,38 @@ void	Process::get_request(void)
 	{
 		if (_request.getScript().first.empty())
 		{
-			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
-			if (find_vector(_methods, _request.getMethod().first) == -1)
-				throw (501);
-			try {
-				build_response(path, "200", "OK");}
-			catch (int e){
-				throw (e);}
+			
+			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
+			{
+				path = "./directory_listing/directory_listing.php";
+				std::string	directory;
+				char	tmp[1000];
+				getcwd(tmp, 1000);
+				std::string abs(tmp);
+				directory = "\n" + abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT);
+				std::cout << "directory: " << directory << std::endl;
+				_request.setBody(directory);
+				try {
+					build_response(path, "200", "OK");}
+				catch (int e){
+					throw (e);}
+			}
+			else
+			{
+				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
+				if (find_vector(_methods, _request.getMethod().first) == -1)
+					throw (501);
+				try {
+					build_response(path, "200", "OK");}
+				catch (int e){
+					throw (e);}
+			}
 		}
 		else
 		{
-			std::string path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
+			path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
+			if (find_vector(_methods, _request.getMethod().first) == -1)
+				throw (501);
 			if (is_file_accessible(path))
 			{
 				try {
@@ -153,7 +175,6 @@ bool	Process::check_location(void)
 
 std::string	Process::get_location(std::string location, ConfigurationKeyType type)
 {
-	
 	std::vector<ConfigurationKey>	vec = _config.getConfigurationKeysWithType(LOCATION);
 	std::vector<ConfigurationKey>::iterator	it;
 	std::string	path;
@@ -172,10 +193,29 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 			if (type == ROOT)
 				return (*it).root;
 			else if (type == INDEX)
+			{
+				if ((*it).indexes.empty())
+				{
+					std::string empty;
+					return empty;
+				}
 				return (*it).indexes.front();
+			}
 		}
 	}
 	return path;
+}
+
+bool	Process::get_location_dl(std::string location)
+{
+	std::vector<ConfigurationKey>	vec = _config.getConfigurationKeysWithType(LOCATION);
+	std::vector<ConfigurationKey>::iterator	it;
+	for (it = vec.begin(); it != vec.end(); it++)
+	{
+		if (!(*it).value.compare(location))
+			return (*it).directory_listing;
+	}
+	return false;
 }
 
 void	Process::exception(int e)
