@@ -75,9 +75,12 @@ void	Process::get_request(void)
 				path = "./directory_listing/directory_listing.php";
 				std::string	directory;
 				char	tmp[1000];
+				// std::string	tmp;
+				// tmp.resize(1000);
 				getcwd(tmp, 1000);
+				// getcwd((char*)(tmp.data()), 1000);
 				std::string abs(tmp);
-				directory = "\n" + abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT);
+				directory = "\n" + abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
 				std::cout << "directory: " << directory << std::endl;
 				_request.setBody(directory);
 				try {
