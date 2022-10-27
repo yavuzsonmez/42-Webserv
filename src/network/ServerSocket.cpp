@@ -17,6 +17,7 @@ ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(c
 		bzero(&((*so).sin_zero), 8);
 	}
 
+	const int	enable = 1;
 	_fds.resize(_sockets.size());
 	std::vector<int>::iterator	fd;
 	for (fd = _fds.begin(); fd != _fds.end(); fd++)
@@ -24,6 +25,7 @@ ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(c
 		(*fd) = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
 		if (*fd < 0)
 			throw SocketCreationError();
+		setsockopt(*fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
 	}
 
 	for (fd = _fds.begin(), so = _sockets.begin(); fd != _fds.end(); fd++, so++)
