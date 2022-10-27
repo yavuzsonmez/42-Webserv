@@ -6,27 +6,40 @@
 
 ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
 {
-	_fd = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
-	if (_fd < 0)
-		throw SocketCreationError();
+	std::vector<struct sockaddr_in>::iterator	so;
+	_sockets.resize(_config.getAllServerPorts().size());
+	int	i = 0;
+	for (so = _sockets.begin(); so != _sockets.end(); so++, i++)
+	{
+		(*so).sin_family = AF_INET;
+		(*so).sin_port = htons(_config.getAllServerPorts()[i]);
+		(*so).sin_addr.s_addr = address;
+		bzero(&((*so).sin_zero), 8);
+	}
 
-	_socket.sin_family = AF_INET;
-	_socket.sin_port = htons(_config.getAllServerPorts().front()); //host byte order to network byte order
-	_socket.sin_addr.s_addr = address;
-	bzero(&(_socket.sin_zero), 8);
+	_fds.resize(_sockets.size());
+	std::vector<int>::iterator	fd;
+	for (fd = _fds.begin(); fd != _fds.end(); fd++)
+	{
+		(*fd) = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
+		if (*fd < 0)
+			throw SocketCreationError();
+	}
 
-	if (bind(_fd, (struct sockaddr *)&_socket, sizeof(struct sockaddr_in)))
-		throw SocketCreationError();
-
-	if (listen(_fd, BACKLOG))
-		throw SocketCreationError();
+	for (fd = _fds.begin(), so = _sockets.begin(); fd != _fds.end(); fd++, so++)
+	{
+		if (bind(*fd, (struct sockaddr *)&(*so), sizeof(struct sockaddr_in)))
+			throw SocketCreationError();
+		if (listen(*fd, BACKLOG))
+			throw SocketCreationError();
+	}
 
 	processConnections();
 }
 
 ServerSocket::~ServerSocket(){}
 
-int ServerSocket::getFileDescriptor() const { return _fd; }
+//int ServerSocket::getFileDescriptor() const { return _fd; }
 
 /**
  * @brief Handles connections 
@@ -37,26 +50,60 @@ void ServerSocket::processConnections()
 	struct sockaddr_in clientSocket;
 	socklen_t socketSize = sizeof(struct sockaddr_in);
 
+	std::string	request_str;
+	int len;
+	int	bytes;
+	int	position;
+
+	int	afd;
+	pollfd *pollfds;
+
+	pollfds = (pollfd *)calloc(_fds.size(), sizeof(pollfd));
+	int	i;
+	std::vector<int>::iterator	fd;
+	for (fd = _fds.begin(), i = 0; fd != _fds.end(); fd++, i++)
+	{
+		pollfds[i].fd = *fd;
+		pollfds[i].events = POLLIN;
+		pollfds[i].revents = 0;
+	}
+
 	while (1)
 	{
-		forward = accept(_fd, (struct sockaddr *)&clientSocket, &socketSize);
+		poll(pollfds, _fds.size(), -1);
+		for (unsigned long i = 0; i < _fds.size(); i++)
+		{
+			if (((pollfds[i].revents & POLLIN) == POLLIN))
+			{
+				afd = pollfds[i].fd;
+				break ;
+			}
+		}
+
+		forward = accept(afd, (struct sockaddr *)&clientSocket, &socketSize);
+
 		std::cout << "Request" << std::endl;
 
 		// if accept return -1 throw error
-		ClientSocket client(clientSocket);
-		
-		
-		std::string	request_str;
+		ClientSocket client(clientSocket);;
 
-		int len = 0;
-		while (!len && ioctl(forward, FIONREAD, &len) >= 0)
 		
+		len = 1024;
+		bytes = 0;
+		position = 0;
 		request_str.resize(len);
-		read(forward, (char*)request_str.data(), len);
+		bytes = read(forward, (char*)request_str.data(), len);
+		while (bytes == len)
+		{
+			position += bytes;
+			request_str.resize(request_str.size() + len);
+			bytes = read(forward, (char*)request_str.data() + position, len);
+		}
 
 		std::cout << request_str << std::endl;
 
 		Request	request(request_str);
+		request_str.clear();
 		Response response;
 		Process	process(response, request, _config);
 		try

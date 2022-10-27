@@ -3,6 +3,7 @@
 
 #include "unistd.h"
 #include <poll.h>
+#include <cerrno>
 #include "../utility/utility.hpp"
 #include "../configuration_key/ServerBlock.hpp"
 
@@ -21,7 +22,7 @@ class ServerSocket
 		//ServerSocket( const ServerSocket &src );
 		virtual ~ServerSocket();
 
-		int getFileDescriptor() const;
+		//int getFileDescriptor() const;
 
 		void processConnections();
 
@@ -34,8 +35,8 @@ class ServerSocket
 		};
 
 	private:
-		int _fd;
-		struct sockaddr_in	_socket;
+		std::vector<int>	_fds;
+		std::vector<struct sockaddr_in>	_sockets;
 		ServerBlock	_config;
 };
 

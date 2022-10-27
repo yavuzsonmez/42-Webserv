@@ -11,12 +11,6 @@
 		$array = explode("&", $line);
 		$dirpath = $array[0];
 		$location = $array[1];
-		// echo $location;
-		// if ($line == false) {
-		// 	$dirpath = '.';
-		// } else {
-		// 	$dirpath = $line;
-		// }
 		function buildPath($file, $location) {
 			return $location . '/' . $file;
 		}
