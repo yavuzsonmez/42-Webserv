@@ -83,6 +83,7 @@ void	CGI::execute(void)
 	}
 	else														//int the parent process
 	{
+		close(fileno(_tmpin));
 		int	status;
 		waitpid(pid, &status, 0);								//wait until child terminates
 		if (WEXITSTATUS(status))
@@ -96,6 +97,7 @@ void	CGI::execute(void)
 		rewind(_tmpout);											//move the courser back to the beginning
 		_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
 		fread((char*)(_buf.data()), 1, _tmp_size, _tmpout);		//read the data from tmpfile into the char array of _buf
+		close(fileno(_tmpout));
 		return;
 	}
 

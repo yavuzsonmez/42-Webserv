@@ -41,8 +41,6 @@ void	Process::process_request(void)
  */
 void	Process::get_request(void)
 {
-	// std::cout << "path: " << _request.getPath().first << std::endl;
-	// std::cout << "script: " << _request.getScript().first << std::endl;
 	std::string	path;
 	if (_request.getPath().first == "/")
 	{
@@ -72,15 +70,8 @@ void	Process::get_request(void)
 			
 			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
 			{
-				path = "./directory_listing/directory_listing.php";
-				std::string	directory;
-				char	tmp[1000];
-				getcwd(tmp, 1000);
-				std::string abs(tmp);
-				directory = "\n" + abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
-				_request.setBody(directory);
 				try {
-					build_response(path, "200", "OK");}
+					build_dl_response();}
 				catch (int e){
 					throw (e);}
 			}
@@ -139,11 +130,9 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 				catch (int e) {
 					throw(e);}
 				_response.set_body(cgi.get_buf());
-				//std::cout << "response_body: " << _response.get_body() << std::endl;
 			}
 			else
 			{
-				//std::cout << "build_path: " << path << std::endl;
 				try {
 					_response.set_body(get_file_content(path));}
 				catch (int e){
@@ -153,6 +142,29 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			_response.set_content_type(_response.get_file_format());
 		}
 		_response.create_response();
+}
+
+void	Process::build_dl_response(void)
+{
+	std::string	directory;
+	char	tmp[1000];
+	getcwd(tmp, 1000);
+	std::string abs(tmp);
+	directory = "\n" + abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
+	_request.setBody(directory);
+	
+	_response.set_protocol("HTTP/1.1");
+	_response.set_status_code("200");
+	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+	CGI	cgi(_request, _config, "./directory_listing/directory_listing.php", "php-cgi");
+	try {
+		cgi.execute();}
+	catch (int e) {
+		throw(e);}
+	_response.set_body(cgi.get_buf());
+	_response.set_content_length(to_str(_response.get_body().length()));
+	_response.set_content_type(_response.get_file_format());
+	_response.create_response();
 }
 
 bool	Process::check_location(void)

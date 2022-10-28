@@ -19,6 +19,7 @@ class Process
 	void	post_request(void);
 	void	delete_request(void);
 	void	build_response(std::string path, std::string code, std::string status);
+	void	build_dl_response(void);
 	bool	check_location(void);
 	std::string	get_location(std::string location, ConfigurationKeyType type);
 	bool	get_location_dl(std::string path);

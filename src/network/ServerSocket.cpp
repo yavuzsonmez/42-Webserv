@@ -25,6 +25,7 @@ ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(c
 		(*fd) = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
 		if (*fd < 0)
 			throw SocketCreationError();
+		//fcntl(*fd, F_SETFL, fcntl(*fd, F_GETFL, 0) | O_NONBLOCK);
 		setsockopt(*fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
 	}
 
@@ -127,7 +128,7 @@ void ServerSocket::processConnections()
 		{
 			//if (bytes_send == -1)
 				// if send return -1, throw error; + perror
-			bytes_send = send(forward, httpResponse.c_str(), httpResponse.length(), 0);
+			bytes_send = send(forward, httpResponse.data(), httpResponse.length(), 0);
 			httpResponse.erase(0, bytes_send);
 		}
 
