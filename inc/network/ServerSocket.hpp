@@ -1,7 +1,6 @@
 #ifndef SERVER_SOCKET_HPP
 # define SERVER_SOCKET_HPP
 
-#include "unistd.h"
 #include <poll.h>
 #include <cerrno>
 #include "../utility/utility.hpp"
@@ -38,6 +37,7 @@ class ServerSocket
 		std::vector<int>	_fds;
 		std::vector<struct sockaddr_in>	_sockets;
 		ServerBlock	_config;
+		unsigned int listeningSockets;
 };
 
 #endif

@@ -11,12 +11,10 @@ class ClientSocket
 		ClientSocket(struct sockaddr_in clientSocket);
 		virtual ~ClientSocket();
 
-		struct sockaddr_in	* getSocket();
-
 	private:
 
-		struct sockaddr_in	* _socket;
-
+		struct sockaddr_in	_socket;
+		std::string			buffer;
 
 };
 
