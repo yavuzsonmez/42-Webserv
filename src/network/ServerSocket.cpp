@@ -4,10 +4,14 @@
 #include "../../inc/http/Process.hpp"
 #include <sys/ioctl.h>
 
+
+
+
 ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
 {
 	std::vector<struct sockaddr_in>::iterator	so;
-	_sockets.resize(_config.getAllServerPorts().size());
+	listeningSockets = _config.getAllServerPorts().size();
+	_sockets.resize(listeningSockets);
 	int	i = 0;
 	for (so = _sockets.begin(); so != _sockets.end(); so++, i++)
 	{
@@ -52,6 +56,7 @@ void ServerSocket::processConnections()
 	int forward;
 	struct sockaddr_in clientSocket;
 	socklen_t socketSize = sizeof(struct sockaddr_in);
+	std::map<int, ClientSocket> clients;
 
 	std::string	request_str;
 	int len;
@@ -59,37 +64,53 @@ void ServerSocket::processConnections()
 	int	position;
 
 	int	afd;
-	pollfd *pollfds;
+	std::vector<pollfd> pollfds;
+	pollfds.resize(3);
 
-	pollfds = (pollfd *)calloc(_fds.size(), sizeof(pollfd));
-	int	i;
-	std::vector<int>::iterator	fd;
-	for (fd = _fds.begin(), i = 0; fd != _fds.end(); fd++, i++)
+	std::vector<int>::iterator	it = _fds.begin();
+	std::vector<int>::iterator	ite = _fds.end();
+	for (unsigned int i = 0; it != ite; ++it, ++i)
 	{
-		pollfds[i].fd = *fd;
-		pollfds[i].events = POLLIN | POLLOUT;
+		pollfds[i].fd = *it;
+		pollfds[i].events = POLLIN;
 		pollfds[i].revents = 0;
 	}
-
 	while (1)
 	{
-		poll(pollfds, _fds.size(), -1);
-		for (unsigned long i = 0; i < _fds.size(); i++)
+		if (poll((struct pollfd *)(pollfds.data()), _fds.size(), -1) < 1)
+			std::cout << "An error occured when polling."
+		for (unsigned long i = 0; i < _fds.size(); ++i)
 		{
-			if (((pollfds[i].revents == (POLLIN | POLLOUT))))
+			if (i < listeningSockets)
 			{
-				afd = pollfds[i].fd;
-				break ;
+				if (pollfds[i].revents == POLLIN)
+				{
+					struct pollfd tmp;
+					forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
+					tmp[i].fd = forward;
+					tmp[i].events = POLLIN;
+					tmp[i].revents = 0;
+					pollfds.push_back(tmp)
+					clients.insert(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket)) );
+				}
 			}
+			else
+			{
+				if (pollfds[i].revents == POLLIN)
+					//read what is readable
+
+				else if (pollfds[i].revents == 	POLLOUT)
+					//if the response was build write the response to the fd
+			}
+			
 		}
 
-		forward = accept(afd, (struct sockaddr *)&clientSocket, &socketSize);
+		//
 
 		std::cout << "Request" << std::endl;
 
 		// if accept return -1 throw error
-		ClientSocket client(clientSocket);;
-
+		ClientSocket client(clientSocket);
 		
 		len = 1024;
 		bytes = 0;
