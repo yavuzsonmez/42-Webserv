@@ -67,7 +67,7 @@ void ServerSocket::processConnections()
 	for (fd = _fds.begin(), i = 0; fd != _fds.end(); fd++, i++)
 	{
 		pollfds[i].fd = *fd;
-		pollfds[i].events = POLLIN;
+		pollfds[i].events = POLLIN | POLLOUT;
 		pollfds[i].revents = 0;
 	}
 
@@ -76,7 +76,7 @@ void ServerSocket::processConnections()
 		poll(pollfds, _fds.size(), -1);
 		for (unsigned long i = 0; i < _fds.size(); i++)
 		{
-			if (((pollfds[i].revents & POLLIN) == POLLIN))
+			if (((pollfds[i].revents == (POLLIN | POLLOUT))))
 			{
 				afd = pollfds[i].fd;
 				break ;
