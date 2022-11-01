@@ -1,5 +1,4 @@
 #include "../../inc/network/ServerSocket.hpp"
-#include "../../inc/network/ClientSocket.hpp"
 #include "../../inc/http/Response.hpp"
 #include "../../inc/http/Process.hpp"
 #include <sys/ioctl.h>
@@ -29,7 +28,7 @@ ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(c
 		(*fd) = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
 		if (*fd < 0)
 			throw SocketCreationError();
-		//fcntl(*fd, F_SETFL, fcntl(*fd, F_GETFL, 0) | O_NONBLOCK);
+		fcntl(*fd, F_SETFL, fcntl(*fd, F_GETFL, 0) | O_NONBLOCK);
 		setsockopt(*fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
 	}
 
@@ -56,14 +55,12 @@ void ServerSocket::processConnections()
 	int forward;
 	struct sockaddr_in clientSocket;
 	socklen_t socketSize = sizeof(struct sockaddr_in);
-	std::map<int, ClientSocket> clients;
 
 	std::string	request_str;
 	int len;
 	int	bytes;
 	int	position;
-
-	int	afd;
+	
 	std::vector<pollfd> pollfds;
 	pollfds.resize(3);
 
@@ -78,7 +75,7 @@ void ServerSocket::processConnections()
 	while (1)
 	{
 		if (poll((struct pollfd *)(pollfds.data()), _fds.size(), -1) < 1)
-			std::cout << "An error occured when polling."
+			std::cout << "An error occured when polling.";
 		for (unsigned long i = 0; i < _fds.size(); ++i)
 		{
 			if (i < listeningSockets)
@@ -87,20 +84,32 @@ void ServerSocket::processConnections()
 				{
 					struct pollfd tmp;
 					forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
-					tmp[i].fd = forward;
-					tmp[i].events = POLLIN;
-					tmp[i].revents = 0;
-					pollfds.push_back(tmp)
-					clients.insert(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket)) );
+					fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
+					tmp.fd = forward;
+					tmp.events = POLLIN;
+					tmp.revents = 0;
+					pollfds.push_back(tmp);
+					_clients.insert(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, forward)) );
 				}
 			}
 			else
 			{
 				if (pollfds[i].revents == POLLIN)
 					//read what is readable
+				{
+					try {
+						_clients[pollfds[i].fd].read_in_buffer();
+					}
+					catch (std::string error) {
 
-				else if (pollfds[i].revents == 	POLLOUT)
-					//if the response was build write the response to the fd
+						if (error == Request_Timeout)
+							pollfds[i].events = POLLOUT;
+					}
+					
+				}
+
+			 	else if (pollfds[i].revents == 	POLLOUT)
+			 		//if the response was build write the response to the fd
 			}
 			
 		}
@@ -110,7 +119,6 @@ void ServerSocket::processConnections()
 		std::cout << "Request" << std::endl;
 
 		// if accept return -1 throw error
-		ClientSocket client(clientSocket);
 		
 		len = 1024;
 		bytes = 0;

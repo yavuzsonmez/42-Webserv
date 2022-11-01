@@ -16,28 +16,8 @@ Request::Request() :
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
 	_headers(),
-	_body("", false),
-	_status("")
+	_body("", false)
 	{}
-
-/**
- * @brief Prefered constructor, default values
- * @param req, raw request sent by the client
- */
-Request::Request(std::string &req) :
-	_method(UNKNOWN, false),
-	_protocol("http", true),
-	_domain("", true),
-	_port(80, true),
-	_script("", false),
-	_path("/", true),
-	_query("", false),
-	_fragment("", false),
-	_httpVersion("HTTP/1.1", true),
-	_headers(),
-	_body("", false),
-	_status("")
-	{ parser(req);}
 
 /**
  * @brief Copy constructor
@@ -70,7 +50,6 @@ str_flag			Request::getFragment() const	{ return _fragment; }
 str_flag			Request::getHttpversion() const	{ return _httpVersion; }
 headr_dirctiv		Request::getHeaders() const		{ return _headers; }
 str_flag			Request::getBody() const		{ return _body; }
-std::string			Request::getStatus() const		{ return _status; }
 
 /**
  * @brief Main parsing function, each subfunction will
@@ -79,17 +58,17 @@ std::string			Request::getStatus() const		{ return _status; }
  */
 void Request::parser(std::string &req) {
 	if (req.empty())
-	{
-		_status = Bad_Request;
-		return ;
+		throw (Bad_Request);
+	try {
+		setMethod(req);
+		setUrl(req);
+		setHttpversion(req);
+		setHeaders(req);
+		setBody(req);
 	}
-	setMethod(req);
-	if (!_status.empty())
-		return ;
-	setUrl(req);
-	setHttpversion(req);
-	setHeaders(req);
-	setBody(req);
+	catch (std::string status) {
+		throw (status);
+	}
 }
 
 /**
@@ -99,15 +78,12 @@ void Request::setMethod(std::string &req) {
 	std::string tmp;
 	size_t pos = req.find(" ");
 	if (pos == std::string::npos)
-	{
-		_status = Bad_Request;
-		return ;
-	}
+		throw(Bad_Request);
 	tmp = req.substr(0, pos);
 	if (!tmp.compare("GET"))			{ _method.first = GET; _method.second = true; }
 	else if (!tmp.compare("POST"))		{ _method.first = POST; _method.second = true; }
 	else if (!tmp.compare("DELETE"))	{ _method.first = DELETE; _method.second = true; }
-	else { _method.first = UNKNOWN; _method.second = false; _status =  Method_Not_Allowed; }
+	else { _method.first = UNKNOWN; _method.second = false; throw(Method_Not_Allowed); }
 	req.erase(0, pos + 1);
 }
 
@@ -120,10 +96,7 @@ void Request::setMethod(std::string &req) {
 void Request::setUrl(std::string &req) {
 	size_t pos = req.find(" ");
 	if (pos == std::string::npos)
-	{
-		_status = Bad_Request;
-		return ;
-	}
+		throw(Bad_Request);
 	std::string url = req.substr(0, pos);
 	req.erase(0, pos + 1);
 	setProtocol(url);
@@ -157,8 +130,7 @@ void Request::setDomain(std::string &url) {
 	{
 		_domain.first.clear();
 		_domain.second = false;
-		_status = Bad_Request;
-		return ;
+		throw(Bad_Request);
 	}
 	_domain.first = url.substr(0, pos);
 	url.erase(0, pos + 1);
@@ -181,8 +153,8 @@ void Request::setPort(std::string &url) {
 	ss >> _port.first;
 	if (_port.first < 0)
 	{
-		_status = Bad_Request;
 		_port.second = false;
+		throw(Bad_Request);
 	}
 	url.erase(x, y - x );
 	std::cout << url << std::endl;
@@ -384,6 +356,11 @@ void Request::setBody(std::string &req)
 {
 	//std::cout << "req_body: " << req << std::endl;
 	size_t pos = req.find("\n");
+	if (pos != std::string::npos && _method.first == GET)
+	{
+		_method.second = false;
+		throw (Forbidden);
+	}
 	std::string	str;
 	_body = std::make_pair(req.substr(pos + 1), true);
 	//std::cout << "body: " << _body.first << std::endl;
