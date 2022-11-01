@@ -5,6 +5,7 @@
 #include <cerrno>
 #include "../utility/utility.hpp"
 #include "../configuration_key/ServerBlock.hpp"
+#include "./ClientSocket.hpp"
 
 #define BACKLOG 10 // maximum number of allowed incoming connection in the queue until being accept()
 
@@ -36,6 +37,7 @@ class ServerSocket
 	private:
 		std::vector<int>	_fds;
 		std::vector<struct sockaddr_in>	_sockets;
+		std::map<int, ClientSocket> _clients;
 		ServerBlock	_config;
 		unsigned int listeningSockets;
 };

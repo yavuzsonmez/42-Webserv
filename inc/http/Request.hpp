@@ -30,7 +30,6 @@ typedef std::vector < std::pair < str_flag, str_flag > >	headr_dirctiv;
 /**
  * @brief Request class who get the request as raw string and
  * store separately every element of the request in order to process it.
- * Set _status if Method not allowed (405) or Bad Request (400)
  */
 class Request
 {
@@ -38,7 +37,6 @@ class Request
 	public:
 
 		Request();
-		Request( std::string &req ); // prefered constructor where the raw request is passed
 		Request( const Request &src );
 		~Request();
 
@@ -84,8 +82,6 @@ class Request
 		str_flag			_httpVersion;
 		headr_dirctiv		_headers;
 		str_flag			_body;
-
-		std::string			_status;
 };
 
 /**

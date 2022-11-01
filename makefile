@@ -18,7 +18,6 @@ HDRS			=		./inc/config_file/ConfigFileParsing.hpp \
 						./inc/http/Response.hpp \
 						./inc/http/status.hpp \
 						./inc/network/ClientSocket.hpp \
-						./inc/network/Multiplexer.hpp \
 						./inc/network/ServerSocket.hpp \
 						./inc/utility/colors.hpp \
 						./inc/utility/utility.hpp \
@@ -39,7 +38,6 @@ HTTP			=		./src/http/Request.cpp \
 						./src/http/Process.cpp \
 
 NETWORK			=		./src/network/ClientSocket.cpp \
-						./src/network/Multiplexer.cpp \
 						./src/network/ServerSocket.cpp \
 
 UTILS			=		./src/utility/get_file_content.cpp \
