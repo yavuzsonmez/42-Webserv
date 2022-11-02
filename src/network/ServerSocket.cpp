@@ -89,7 +89,7 @@ void ServerSocket::processConnections()
 					tmp.events = POLLIN;
 					tmp.revents = 0;
 					pollfds.push_back(tmp);
-					_clients.insert(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, forward)) );
+					_clients.insert(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward)) );
 				}
 			}
 			else
@@ -98,70 +98,76 @@ void ServerSocket::processConnections()
 					//read what is readable
 				{
 					try {
-						_clients[pollfds[i].fd].read_in_buffer();
+						if (!_clients[pollfds[i].fd].read_in_buffer())
+							pollfds[i].events = POLLOUT;
 					}
 					catch (std::string error) {
 
 						if (error == Request_Timeout)
 							pollfds[i].events = POLLOUT;
 					}
-					
 				}
-
 			 	else if (pollfds[i].revents == 	POLLOUT)
+				{
+					if (!_clients[pollfds[i].fd].write_from_buffer())
+					{
+						_clients.erase(pollfds[i].fd);
+						std::vector<pollfd>::iterator	del = pollfds.begin() + i;
+						pollfds.erase(del);
+					}
+				}
 			 		//if the response was build write the response to the fd
 			}
-			
 		}
 
 		//
 
-		std::cout << "Request" << std::endl;
+	// 	std::cout << "Request" << std::endl;
 
-		// if accept return -1 throw error
+	// 	// if accept return -1 throw error
 		
-		len = 1024;
-		bytes = 0;
-		position = 0;
-		request_str.resize(len);
-		bytes = read(forward, (char*)request_str.data(), len);
-		while (bytes == len)
-		{
-			position += bytes;
-			request_str.resize(request_str.size() + len);
-			bytes = read(forward, (char*)request_str.data() + position, len);
-		}
+	// 	len = 1024;
+	// 	bytes = 0;
+	// 	position = 0;
+	// 	request_str.resize(len);
+	// 	bytes = read(forward, (char*)request_str.data(), len);
+	// 	while (bytes == len)
+	// 	{
+	// 		position += bytes;
+	// 		request_str.resize(request_str.size() + len);
+	// 		bytes = read(forward, (char*)request_str.data() + position, len);
+	// 	}
 
-		std::cout << request_str << std::endl;
+	// 	std::cout << request_str << std::endl;
 
-		Request	request(request_str);
-		request_str.clear();
-		Response response;
-		Process	process(response, request, _config);
-		try
-		{
-			process.process_request();
-		}
-		catch (int e)
-		{
-			process.exception(e);
-		}
+	// 	Request	request(request_str);
+	// 	request_str.clear();
+	// 	Response response;
+	// 	Process	process(response, request, _config);
+	// 	try
+	// 	{
+	// 		process.process_request();
+	// 	}
+	// 	catch (int e)
+	// 	{
+	// 		process.exception(e);
+	// 	}
 		
-		std::string httpResponse(response.get_response());
+	// 	std::string httpResponse(response.get_response());
 
-		//std::cout << "httpResponse: " << httpResponse << std::endl;
-		int bytes_send;
-		bytes_send = 0;
-		// if bytes_send < len we have to handle it and keep send until everything was sent
-		while (bytes_send < (int)httpResponse.length())
-		{
-			//if (bytes_send == -1)
-				// if send return -1, throw error; + perror
-			bytes_send = send(forward, httpResponse.data(), httpResponse.length(), 0);
-			httpResponse.erase(0, bytes_send);
-		}
+	// 	//std::cout << "httpResponse: " << httpResponse << std::endl;
+	// 	int bytes_send;
+	// 	bytes_send = 0;
+	// 	// if bytes_send < len we have to handle it and keep send until everything was sent
+	// 	while (bytes_send < (int)httpResponse.length())
+	// 	{
+	// 		//if (bytes_send == -1)
+	// 			// if send return -1, throw error; + perror
+	// 		bytes_send = send(forward, httpResponse.data(), httpResponse.length(), 0);
+	// 		httpResponse.erase(0, bytes_send);
+	// 	}
 
-		close(forward);
-		//if close(server) //throw error; + perror
-	}
+	// 	close(forward);
+	// 	//if close(server) //throw error; + perror
+	// }
 }
