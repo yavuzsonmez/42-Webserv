@@ -11,6 +11,7 @@
 class Process
 {
 	public:
+	Process(void);
 	Process(Response &response, Request request, ServerBlock &config);
 	~Process(void);
 

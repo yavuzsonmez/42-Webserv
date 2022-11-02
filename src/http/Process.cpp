@@ -1,6 +1,11 @@
 # include	"../../inc/http/Process.hpp"
 # include	"../../inc/debugger/DebuggerPrinter.hpp"
 
+Process::Process(void)
+{
+	
+}
+
 Process::Process(Response &response, Request request, ServerBlock &config) : _response(response), _request(request), _config(config)
 {
 	_cgi = _config.getCgiPath();
