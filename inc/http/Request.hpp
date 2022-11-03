@@ -52,7 +52,7 @@ class Request
 		headr_dirctiv		getHeaders(void) const;
 		std::string	findHeader(std::string key) const;
 		str_flag			getBody(void) const;
-		std::string			getStatus(void) const;
+		//std::string			getStatus(void) const;
 
 		void				parser(std::string &req);
 			void				setMethod(std::string &req);
