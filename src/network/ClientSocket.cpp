@@ -2,7 +2,7 @@
 
 
 
-ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock config, int forward)
+ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config, int forward) : _config(config)
 {
 	//if (!_socket)
 	// fail exit
@@ -11,8 +11,6 @@ ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock config, 
 	_socket.sin_port = clientSocket.sin_port;
 	_socket.sin_addr.s_addr = clientSocket.sin_addr.s_addr;
 	bzero(&(_socket.sin_zero), 8);
-
-	_config = config;
 
 	_state = HEADER;
 	_fd = forward;
@@ -43,6 +41,7 @@ int	ClientSocket::read_in_buffer(void)
 		size_t pos = buffer.find("\r\n\r\n");
 		if (pos != std::string::npos)
 		{
+			
 			std::string httpRequestHead = buffer.substr(0, pos + 3);
 			_clientRequest.parser(httpRequestHead);
 			buffer.erase(0, pos + 3);
@@ -58,8 +57,9 @@ int	ClientSocket::read_in_buffer(void)
 	}
 	else if (_state == BODY)
 	{
-		if (_position == _content_length)
+		if (_position >= _content_length)
 		{
+			_clientRequest.setBody(buffer);
 			set_up();
 			return 0;
 		}
@@ -74,28 +74,28 @@ int	ClientSocket::read_in_buffer(void)
 
 int	ClientSocket::write_from_buffer(void)
 {
-	_bytes = send(_fd, _response_buffer.data() + position, _response_buffer.length(), 0);
-	_positiom += bytes;
-	if (_position >= _response_buffer.length())
+	_bytes = send(_fd, _response.get_response().data() + _position,_response.get_response().length(), 0);
+	_position += _bytes;
+	if (_position >= _response.get_response().length())
 	{
 		close(_fd);
-		return 0
+		return 0;
 	}
 	return 1;
 }
 
 int	ClientSocket::set_up(void)
 {
-	_process = Process(_response, _clientRequest, _config);
+	
+	Process	process(_response, _clientRequest, _config);
 	try
 	{
-		_process.process_request();
+		process.process_request();
 	}
 	catch (int e)
 	{
-		_process.exception(e);
+		process.exception(e);
 	}
-	std::string _response_buffer(_response.get_response());
 	_state = RESPONSE;
 	_bytes = 0;
 	_position = 0;

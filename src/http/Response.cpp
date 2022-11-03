@@ -37,7 +37,7 @@ std::string	Response::get_content_length(void){return _content_length;}
 std::string	Response::get_transfer_encoding(void){return _transfer_encoding;}
 std::string	Response::get_body(void){return _body;}
 
-std::string	Response::get_response(void)
+std::string	&Response::get_response(void)
 {
 	return _response;
 }

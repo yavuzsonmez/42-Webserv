@@ -23,7 +23,7 @@ class Response
 
 	void	process_request(void);
 	void	create_response(void);
-	std::string	get_response(void);
+	std::string	&get_response(void);
 
 	void	set_protocol(std::string protocol);
 	void	set_status_code(std::string status_code);

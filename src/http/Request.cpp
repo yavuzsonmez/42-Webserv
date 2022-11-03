@@ -436,7 +436,7 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	}
 	o << P << "/* ************************************************************************** */" <<  std::endl << "/* "
 	<< R << "body:\t" << B << body.first << Reset << "\t\t\t\t" << body.second << std::endl
-	<< P << "/* ************************************************************************** */" <<  std::endl
-	<< G << i.getStatus() << Reset << std::endl;
+	<< P << "/* ************************************************************************** */" <<  std::endl;
+	//<< G << i.getStatus() << Reset << std::endl;
 	return o;
 }
