@@ -8,7 +8,7 @@
 #include "../http/Process.hpp"
 #include <ctime>
 
-enum	states {HEADER, BODY, RESPONSE};
+enum	states {HEADER, BODY, RESPONSE, PIPE};
 
 class ClientSocket
 {

@@ -53,6 +53,9 @@ class	CGI
 	ServerBlock	_config;
 	std::string	_path;
 	std::string	_cgi_path;
+
+	int			_pipefd_in[2];
+	int			_pipefd_out[2];
 };
 
 # endif
