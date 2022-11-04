@@ -35,8 +35,8 @@ class Process
 	std::string	_cgi_fileending;
 	std::string	_redirection;
 	std::vector<method>	_methods;
-
-
+	int			_pipefd_in[2];
+	int			_pipefd_out[2];
 };
 
 

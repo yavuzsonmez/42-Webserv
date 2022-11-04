@@ -15,7 +15,7 @@ ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config,
 	_state = HEADER;
 	_fd = forward;
 	_position = 0;
-	_count = 32000;
+	_count = 3;
 }
 
 ClientSocket::~ClientSocket()

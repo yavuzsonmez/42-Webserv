@@ -37,7 +37,8 @@ class ServerSocket
 	private:
 		std::vector<int>	_fds;
 		std::vector<struct sockaddr_in>	_sockets;
-		std::map<int, ClientSocket> _clients;
+		//std::map<int, ClientSocket> _clients;
+		std::map<unsigned long, ClientSocket> _clients;
 		ServerBlock	_config;
 		unsigned int listeningSockets;
 };

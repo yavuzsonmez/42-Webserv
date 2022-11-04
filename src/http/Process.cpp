@@ -61,7 +61,6 @@ void	Process::get_request(void)
 				throw (e);}
 		}
 		return ;
-
 	}
 	else if (check_location())
 	{
@@ -125,6 +124,8 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
 			{
 				CGI	cgi(_request, _config, path, _cgi);
+				// pipe(_pipefd_in);
+				// pipe(_pipefd_out);
 				try {
 					cgi.execute();}
 				catch (int e) {
