@@ -12,7 +12,6 @@
 		$dirpath = $array[0];
 		$location = $array[1];
 		function buildPath($file, $location) {
-			echo $location . '/' . $file;
 			return $location . '/' . $file;
 		}
 		$dir = opendir($dirpath);

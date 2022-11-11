@@ -6,7 +6,7 @@ Process::Process()
 
 }
 
-Process::Process(/*Response &response, */Request request, ServerBlock config) : /*_response(response),*/ _request(request), _config(config)
+Process::Process(Request request, ServerBlock config) : _request(request), _config(config)
 {
 	_with_cgi = false;
 	_cgi = _config.getCgiPath();
@@ -122,6 +122,10 @@ void	Process::get_request(void)
 	}
 }
 
+/**
+ * @brief sets the header and the body of the response.
+ * In case of a cgi it creates a cgi object and returns.
+ */
 void	Process::build_response(std::string path, std::string code, std::string status)
 {
 		_response.set_protocol("HTTP/1.1");
@@ -156,6 +160,9 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		_response.create_response();
 }
 
+/**
+ * @brief builds the response in case of a cgi
+ */
 void	Process::build_cgi_response(void)
 {
 	_response.set_body(_CGI.get_buf());
@@ -164,15 +171,17 @@ void	Process::build_cgi_response(void)
 	_response.create_response();
 }
 
+/**
+ * @brief creates the response for a directory listing
+ */
 void	Process::build_dl_response(void)
 {
 	std::string	directory;
 	char	tmp[1000];
 	getcwd(tmp, 1000);
 	std::string abs(tmp);
-	directory = "\n" + abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
+	directory = abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
 	_request.setBody(directory);
-	
 	_response.set_protocol("HTTP/1.1");
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
@@ -181,6 +190,9 @@ void	Process::build_dl_response(void)
 	_CGI.set_tmps();
 }
 
+/**
+ * @brief checks if the given location exists
+ */
 bool	Process::check_location(void)
 {
 	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
@@ -197,6 +209,9 @@ bool	Process::check_location(void)
 	return false;
 }
 
+/**
+ * @brief gets all the information of a given location
+ */
 std::string	Process::get_location(std::string location, ConfigurationKeyType type)
 {
 	std::vector<ConfigurationKey>	vec = _config.getConfigurationKeysWithType(LOCATION);

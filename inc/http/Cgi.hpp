@@ -34,9 +34,9 @@ class	CGI
 
 	//void	execute(void);
 	void	set_tmps(void);
-	int		write_in_std_in(void);
-	int		write_in_std_out(void);
-	int		read_in_buff(void);
+	void		write_in_std_in(void);
+	void		write_in_std_out(void);
+	void		read_in_buff(void);
 	static void	sig_handler(int signum);
 	std::string	get_buf(void);
 
@@ -44,8 +44,8 @@ class	CGI
 
 	//int			_pipefd_in[2];
 	//int			_pipefd_out[2];
-	int			_tmp_in;
-	int			_tmp_out;
+	int			_fd_in;
+	int			_fd_out;
 
 	private:
 	std::map<std::string, std::string>	_env;
