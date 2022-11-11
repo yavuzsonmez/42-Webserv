@@ -90,26 +90,19 @@ void ServerSocket::processConnections()
 				client_iter	pos;
 				if (pollfds[i].revents == POLLIN)
 				{
-					try {
-						pos = get_CS_position(_clients, pollfds[i].fd);
-						(*pos).second.call_func_ptr();
-						if ((*pos).second._remove)
-						{
-							_clients.erase(pos);
-							std::vector<pollfd>::iterator	del = pollfds.begin() + i;
-							pollfds.erase(del);
-						}
-						else
-						{
-							pollfds[i].events = (*pos).second._event;
-							pollfds[i].fd = (*pos).second._fd;
-							(*pos).first = (*pos).second._fd;
-						}
+					pos = get_CS_position(_clients, pollfds[i].fd);
+					(*pos).second.call_func_ptr();
+					if ((*pos).second._remove)
+					{
+						_clients.erase(pos);
+						std::vector<pollfd>::iterator	del = pollfds.begin() + i;
+						pollfds.erase(del);
 					}
-					catch (std::string error) {
-
-						if (error == Request_Timeout)
-							pollfds[i].events = POLLOUT;
+					else
+					{
+						pollfds[i].events = (*pos).second._event;
+						pollfds[i].fd = (*pos).second._fd;
+						(*pos).first = (*pos).second._fd;
 					}
 				}
 			 	else if (pollfds[i].revents == 	POLLOUT)

@@ -32,12 +32,16 @@ bool ClientSocket::Timeout()
 
 }
 
-int	ClientSocket::call_func_ptr(void)
+void	ClientSocket::call_func_ptr(void)
 {
-	return (this->*_func_ptr)();
+	(this->*_func_ptr)();
 }
 
-int	ClientSocket::read_in_buffer(void)
+/**
+ * @brief reads the requst from the clientSocket until \r\n\r\n.
+ * If a Body is appended change the _state = BODY and reads until it reaches content_lenght as it is defined in the header.
+ */
+void	ClientSocket::read_in_buffer(void)
 {
 	buffer.resize(buffer.size() + _count);
 	_bytes = read(_fd, (char*)buffer.data() + _position, _count);
@@ -56,7 +60,7 @@ int	ClientSocket::read_in_buffer(void)
 			if (!_content_length)
 			{
 				set_up();
-				return 0;
+				return ;
 			}
 		}
 	}
@@ -66,13 +70,16 @@ int	ClientSocket::read_in_buffer(void)
 		{
 			_clientRequest.setBody(buffer);
 			set_up();
-			return 0;
+			return ;
 		}
 	}
-	return 1;
+	return ;
 }
 
-int	ClientSocket::write_from_buffer(void)
+/**
+ * @brief writes the the response to the clientSocket
+ */
+void	ClientSocket::write_from_buffer(void)
 {
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length(), 0);
 	_position += _bytes;
@@ -80,12 +87,16 @@ int	ClientSocket::write_from_buffer(void)
 	{
 		close(_fd);
 		_remove = true;
-		return 0;
+		return ;
 	}
-	return 1;
+	return ;
 }
 
-int	ClientSocket::set_up(void)
+/**
+ * @brief sets up the process object.
+ * in case of an cgi, it sets the _func_ptr to the next function that handels the cgi and updates the filedescriptor
+ */
+void	ClientSocket::set_up(void)
 {
 	_process = Process(_clientRequest, _config);
 	try
@@ -101,7 +112,7 @@ int	ClientSocket::set_up(void)
 		_bytes = 0;
 		_position = 0;
 		_func_ptr = &ClientSocket::one;
-		_fd = _process._CGI._tmp_in;
+		_fd = _process._CGI._fd_in;
 		_event = POLLOUT;
 	}
 	else
@@ -111,33 +122,36 @@ int	ClientSocket::set_up(void)
 		_func_ptr = &ClientSocket::write_from_buffer;
 		_event = POLLOUT;
 	}
-	return 1;
+	return ;
 }
 
-int	ClientSocket::one(void)
+/**
+ * @brief executes the function related to the filedescriptor and prepare for the next one
+ */
+void	ClientSocket::one(void)
 {
 	_process._CGI.write_in_std_in();
-	_fd = _process._CGI._tmp_out;
+	_fd = _process._CGI._fd_out;
 	_event = POLLOUT;
 	_func_ptr = &ClientSocket::two;
-	return 0;
+	return ;
 }
 
-int	ClientSocket::two(void)
+void	ClientSocket::two(void)
 {
 	_process._CGI.write_in_std_out();
-	_fd = _process._CGI._tmp_out;
+	_fd = _process._CGI._fd_out;
 	_event = POLLIN;
 	_func_ptr = &ClientSocket::three;
-	return 0;
+	return ;
 }
 
-int	ClientSocket::three(void)
+void	ClientSocket::three(void)
 {
 	_process._CGI.read_in_buff();
 	_process.build_cgi_response();
 	_fd = _client_fd;
 	_event = POLLOUT;
 	_func_ptr = &ClientSocket::write_from_buffer;
-	return 0;
+	return ;
 }

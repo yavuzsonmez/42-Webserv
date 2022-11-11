@@ -50,28 +50,36 @@ CGI & CGI::operator=(const CGI &src)
 	return *this;
 }
 
+/**
+ * @brief creates the tmpfiles and makes their fds nonblocking
+ * 
+ */
 void	CGI::set_tmps(void)
 {
-	_tmp_in = fileno(tmpfile());
-	_tmp_out = fileno(tmpfile());
-	// pipe(_pipefd_in);
-	// pipe(_pipefd_out);
-	if (_tmp_in == -1 || _tmp_out == -1)
-		throw (500);
-	fcntl(_tmp_in, F_SETFL, fcntl(_tmp_in, F_GETFL, 0) | O_NONBLOCK);
-	fcntl(_tmp_out, F_SETFL, fcntl(_tmp_out, F_GETFL, 0) | O_NONBLOCK);
-	// fcntl(_pipefd_out[0], F_SETFL, fcntl(_pipefd_out[0], F_GETFL, 0) | O_NONBLOCK);
-	// fcntl(_pipefd_out[1], F_SETFL, fcntl(_pipefd_out[1], F_GETFL, 0) | O_NONBLOCK);
+	_tmpout = tmpfile();
+	_tmpin = tmpfile();
+	_fd_in = fileno(_tmpin);
+	_fd_out = fileno(_tmpout);
+	fcntl(_fd_in, F_SETFL, fcntl(_fd_in, F_GETFL, 0) | O_NONBLOCK);
+	fcntl(_fd_out, F_SETFL, fcntl(_fd_out, F_GETFL, 0) | O_NONBLOCK);
+
 }
 
-int	CGI::write_in_std_in()
+/**
+ * @brief writes the body from the request in _tmp_in which later will be dupped to the STDIN
+ * 
+ */
+void	CGI::write_in_std_in()
 {
-	write(_tmp_in, _request.getBody().first.data(), _request.getBody().first.length());
-	//close(_pipefd_in[1]);
-	return 0;
+	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());
+	rewind(_tmpin);
+	return ;
 }
 
-int	CGI::write_in_std_out(void)
+/**
+ * @brief executes the cgi an writes the return of it into _tmp_out
+ */
+void	CGI::write_in_std_out(void)
 {
 	int	pid = fork();												//forks a new process
 
@@ -90,8 +98,8 @@ int	CGI::write_in_std_out(void)
 		}
 		else
 		{
-			dup2(_tmp_in, STDIN_FILENO);
-			dup2(_tmp_out, STDOUT_FILENO);						//stdout now points to the tmpfile
+			dup2(_fd_in, STDIN_FILENO);
+			dup2(_fd_out, STDOUT_FILENO);						//stdout now points to the tmpfile
 			_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 			_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 			_argvp = vec_to_array(_query_parameters);
@@ -102,24 +110,31 @@ int	CGI::write_in_std_out(void)
 	}
 	else														//int the parent process
 	{
-		close(_tmp_in);
-		//close(_pipefd_out[1]);
 		int	status;
 		waitpid(pid, &status, 0);								//wait until child terminates
+		close(_fd_in);
 		if (WEXITSTATUS(status))
 			throw (502);
 		else if (WIFSIGNALED(status))
 			throw (504);
 	}
-	return 0;
+	return ;
 }
 
-int	CGI::read_in_buff(void)
+/**
+ * @brief writes the return of the cgi into the body of the responseo
+ */
+void	CGI::read_in_buff(void)
 {
-	_buf.resize(100000);									//inrease the underlying char array in _buf by the value of _tmp_size
-	read(_tmp_out, (char*)(_buf.data()), 100000);		//read the data from tmpfile into the char array of _buf
-	close(_tmp_out);
-	return 0;
+	if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
+		throw (500);
+	if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
+		throw (500);
+	rewind(_tmpout);											//move the courser back to the beginning
+	_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
+	read(_fd_out, (char*)(_buf.data()), _tmp_size);
+	close(_fd_out);
+	return ;
 }
 
 std::string	CGI::get_buf(void)
