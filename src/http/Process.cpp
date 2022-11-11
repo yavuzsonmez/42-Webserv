@@ -1,8 +1,14 @@
 # include	"../../inc/http/Process.hpp"
 # include	"../../inc/debugger/DebuggerPrinter.hpp"
 
-Process::Process(Response &response, Request request, ServerBlock &config) : _response(response), _request(request), _config(config)
+Process::Process()
 {
+
+}
+
+Process::Process(/*Response &response, */Request request, ServerBlock config) : /*_response(response),*/ _request(request), _config(config)
+{
+	_with_cgi = false;
 	_cgi = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
 }
@@ -10,6 +16,15 @@ Process::Process(Response &response, Request request, ServerBlock &config) : _re
 Process::~Process(void)
 {
 
+}
+
+Process & Process::operator = (const Process &src)
+{
+	_request = src._request;
+	_config = src._config;
+	_cgi = src._cgi;
+	_cgi_fileending = src._cgi_fileending;
+	return *this;
 }
 
 /**
@@ -123,14 +138,10 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 			if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
 			{
-				CGI	cgi(_request, _config, path, _cgi);
-				// pipe(_pipefd_in);
-				// pipe(_pipefd_out);
-				try {
-					cgi.execute();}
-				catch (int e) {
-					throw(e);}
-				_response.set_body(cgi.get_buf());
+				_with_cgi = true;
+				_CGI = CGI(_request, _config, path, _cgi);
+				_CGI.set_tmps();
+				return ;
 			}
 			else
 			{
@@ -145,6 +156,14 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		_response.create_response();
 }
 
+void	Process::build_cgi_response(void)
+{
+	_response.set_body(_CGI.get_buf());
+	_response.set_content_length(to_str(_response.get_body().length()));
+	_response.set_content_type(_response.get_file_format());
+	_response.create_response();
+}
+
 void	Process::build_dl_response(void)
 {
 	std::string	directory;
@@ -157,15 +176,9 @@ void	Process::build_dl_response(void)
 	_response.set_protocol("HTTP/1.1");
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-	CGI	cgi(_request, _config, "./directory_listing/directory_listing.php", "php-cgi");
-	try {
-		cgi.execute();}
-	catch (int e) {
-		throw(e);}
-	_response.set_body(cgi.get_buf());
-	_response.set_content_length(to_str(_response.get_body().length()));
-	_response.set_content_type(_response.get_file_format());
-	_response.create_response();
+	_with_cgi = true;
+	_CGI = CGI(_request, _config, "./directory_listing/directory_listing.php", "php-cgi");
+	_CGI.set_tmps();
 }
 
 bool	Process::check_location(void)

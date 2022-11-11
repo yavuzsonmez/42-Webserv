@@ -12,6 +12,8 @@
 /**
  * @brief Server Socket listening for requests
  */
+typedef std::vector<std::pair<int, ClientSocket> >::iterator	client_iter;
+
 class ServerSocket
 {
 
@@ -26,6 +28,8 @@ class ServerSocket
 
 		void processConnections();
 
+		client_iter	get_CS_position(std::vector<std::pair<int, ClientSocket> > &vector, int key);
+
 		// gets thrown if socket creation is faulty.
 		class SocketCreationError : public std::exception {
 			public:
@@ -38,7 +42,8 @@ class ServerSocket
 		std::vector<int>	_fds;
 		std::vector<struct sockaddr_in>	_sockets;
 		//std::map<int, ClientSocket> _clients;
-		std::map<unsigned long, ClientSocket> _clients;
+		//std::map<unsigned long, ClientSocket> _clients;
+		std::vector<std::pair<int, ClientSocket> >	_clients;
 		ServerBlock	_config;
 		unsigned int listeningSockets;
 };
