@@ -5,7 +5,7 @@ CGI::CGI()
 
 }
 
-CGI::CGI(Request request, ServerBlock &config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
+CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
 	if (_request.getQuery().second)
 	{
@@ -37,87 +37,43 @@ CGI::CGI(Request request, ServerBlock &config, std::string path, std::string cgi
 
 CGI::~CGI()
 {
-	delete (_envp);
+	//delete (_envp);
 }
 
-
-// /*executes cgi to-do timout of child*/
-// void	CGI::execute(void)
-// {
-// 	pid_t	pid;
-	
-// 	_tmpout = tmpfile();											//File pointer to a temporaryfile
-// 	_tmpin = tmpfile();
-// 	if (!_tmpout || !_tmpin)
-// 		throw (500);
-
-// 	fwrite(_request.getBody().first.data(), 1, _request.getBody().first.length(), _tmpin);
-// 	rewind(_tmpin);
-
-// 	pid = fork();												//forks a new process
-
-// 	if (pid < 0)												//return in case it failes
-// 		throw (500);
-// 	else if (pid == 0)											//in the child process
-// 	{
-// 		pid = fork();
-// 		if (pid == 0)
-// 		{
-// 			sleep(2);
-// 			pid_t	ppid = getppid();
-// 			if (pid != 1)
-// 				kill(ppid, SIGKILL);
-// 			exit(EXIT_SUCCESS);
-// 		}
-// 		else
-// 		{
-// 			dup2(fileno(_tmpin), STDIN_FILENO);
-// 			dup2(fileno(_tmpout), STDOUT_FILENO);						//stdout now points to the tmpfile
-// 			_query_parameters.insert(_query_parameters.begin(), _path.c_str());
-// 			_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
-// 			_argvp = vec_to_array(_query_parameters);
-// 			execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
-// 			kill(pid, SIGKILL);
-// 			exit(EXIT_SUCCESS);												//exit the childprocess
-// 		}
-// 	}
-// 	else														//int the parent process
-// 	{
-// 		close(fileno(_tmpin));
-// 		int	status;
-// 		waitpid(pid, &status, 0);								//wait until child terminates
-// 		if (WEXITSTATUS(status))
-// 			throw (502);
-// 		else if (WIFSIGNALED(status))
-// 			throw (504);
-// 		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
-// 			throw (500);
-// 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
-// 			throw (500);
-// 		rewind(_tmpout);											//move the courser back to the beginning
-// 		_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
-// 		fread((char*)(_buf.data()), 1, _tmp_size, _tmpout);		//read the data from tmpfile into the char array of _buf
-// 		close(fileno(_tmpout));
-// 		return;
-// 	}
-// }
-
-/*executes cgi to-do timout of child*/
-void	CGI::execute(void)
+CGI & CGI::operator=(const CGI &src)
 {
-	int	pid;
-	int	pipefd_in[2];
-	int	pipefd_out[2];
-	
-	pipe(pipefd_in);
-	pipe(pipefd_out);
-	if (pipe(pipefd_in) || pipe(pipefd_out))
+	_request = src._request;
+	_config = src._config;
+	_path = src._path;
+	_cgi_path = src._cgi_path;
+	_envp = src._envp;
+	return *this;
+}
+
+void	CGI::set_tmps(void)
+{
+	_tmp_in = fileno(tmpfile());
+	_tmp_out = fileno(tmpfile());
+	// pipe(_pipefd_in);
+	// pipe(_pipefd_out);
+	if (_tmp_in == -1 || _tmp_out == -1)
 		throw (500);
+	fcntl(_tmp_in, F_SETFL, fcntl(_tmp_in, F_GETFL, 0) | O_NONBLOCK);
+	fcntl(_tmp_out, F_SETFL, fcntl(_tmp_out, F_GETFL, 0) | O_NONBLOCK);
+	// fcntl(_pipefd_out[0], F_SETFL, fcntl(_pipefd_out[0], F_GETFL, 0) | O_NONBLOCK);
+	// fcntl(_pipefd_out[1], F_SETFL, fcntl(_pipefd_out[1], F_GETFL, 0) | O_NONBLOCK);
+}
 
-	write(pipefd_in[1], _request.getBody().first.data(), _request.getBody().first.length());
-	close(pipefd_in[1]);
+int	CGI::write_in_std_in()
+{
+	write(_tmp_in, _request.getBody().first.data(), _request.getBody().first.length());
+	//close(_pipefd_in[1]);
+	return 0;
+}
 
-	pid = fork();												//forks a new process
+int	CGI::write_in_std_out(void)
+{
+	int	pid = fork();												//forks a new process
 
 	if (pid < 0)												//return in case it failes
 		throw (500);
@@ -134,8 +90,8 @@ void	CGI::execute(void)
 		}
 		else
 		{
-			dup2(pipefd_in[0], STDIN_FILENO);
-			dup2(pipefd_out[1], STDOUT_FILENO);						//stdout now points to the tmpfile
+			dup2(_tmp_in, STDIN_FILENO);
+			dup2(_tmp_out, STDOUT_FILENO);						//stdout now points to the tmpfile
 			_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 			_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 			_argvp = vec_to_array(_query_parameters);
@@ -146,19 +102,24 @@ void	CGI::execute(void)
 	}
 	else														//int the parent process
 	{
-		close(pipefd_in[0]);
-		close(pipefd_out[1]);
+		close(_tmp_in);
+		//close(_pipefd_out[1]);
 		int	status;
 		waitpid(pid, &status, 0);								//wait until child terminates
 		if (WEXITSTATUS(status))
 			throw (502);
 		else if (WIFSIGNALED(status))
 			throw (504);
-		_buf.resize(100000);									//inrease the underlying char array in _buf by the value of _tmp_size
-		read(pipefd_out[0], (char*)(_buf.data()), 100000);		//read the data from tmpfile into the char array of _buf
-		close(pipefd_out[0]);
-		return;
 	}
+	return 0;
+}
+
+int	CGI::read_in_buff(void)
+{
+	_buf.resize(100000);									//inrease the underlying char array in _buf by the value of _tmp_size
+	read(_tmp_out, (char*)(_buf.data()), 100000);		//read the data from tmpfile into the char array of _buf
+	close(_tmp_out);
+	return 0;
 }
 
 std::string	CGI::get_buf(void)

@@ -50,8 +50,6 @@ ServerSocket::~ServerSocket(){}
  */
 void ServerSocket::processConnections()
 {
-	std::map<int, unsigned long>	router;
-	
 	int forward;
 	struct sockaddr_in clientSocket;
 	socklen_t socketSize = sizeof(struct sockaddr_in);
@@ -84,27 +82,30 @@ void ServerSocket::processConnections()
 					tmp.events = POLLIN;
 					tmp.revents = 0;
 					pollfds.push_back(tmp);
-					router.insert(std::pair<int, unsigned long>(forward, _clients.size()+1));
-					_clients.insert(std::pair<unsigned long, ClientSocket>(_clients.size()+1, ClientSocket(clientSocket, _config, forward)));
-					//_clients.insert(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward)));
+					_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward)));
 				}
 			}
 			else
 			{
+				client_iter	pos;
 				if (pollfds[i].revents == POLLIN)
 				{
 					try {
-						if (!(_clients.at(router.at(pollfds[i].fd)).read_in_buffer()))
+						pos = get_CS_position(_clients, pollfds[i].fd);
+						(*pos).second.call_func_ptr();
+						if ((*pos).second._remove)
 						{
-							pollfds[i].events = POLLOUT;
+							_clients.erase(pos);
+							std::vector<pollfd>::iterator	del = pollfds.begin() + i;
+							pollfds.erase(del);
+						}
+						else
+						{
+							pollfds[i].events = (*pos).second._event;
+							pollfds[i].fd = (*pos).second._fd;
+							(*pos).first = (*pos).second._fd;
 						}
 					}
-					// try {
-					// 	if (!(_clients.at(pollfds[i].fd).read_in_buffer()))
-					// 	{
-					// 		pollfds[i].events = POLLOUT;
-					// 	}
-					// }
 					catch (std::string error) {
 
 						if (error == Request_Timeout)
@@ -113,15 +114,36 @@ void ServerSocket::processConnections()
 				}
 			 	else if (pollfds[i].revents == 	POLLOUT)
 				{
-					if (!_clients.at(router.at(pollfds[i].fd)).write_from_buffer())
+					pos = get_CS_position(_clients, pollfds[i].fd);
+					(*pos).second.call_func_ptr();
+					if ((*pos).second._remove)
 					{
-						_clients.erase(router.at(pollfds[i].fd));
-						router.erase(pollfds[i].fd);
+						_clients.erase(pos);
 						std::vector<pollfd>::iterator	del = pollfds.begin() + i;
 						pollfds.erase(del);
+					}
+					else
+					{
+						pollfds[i].events = (*pos).second._event;
+						pollfds[i].fd = (*pos).second._fd;
+						(*pos).first = (*pos).second._fd;
 					}
 				}
 			}
 		}
 	}
 }
+
+client_iter	ServerSocket::get_CS_position(std::vector<std::pair<int, ClientSocket> > &vector, int key)
+{
+	client_iter	it;
+	client_iter ite	= vector.end();
+	for (it = vector.begin(); it < ite; it++)
+	{
+		if ((*it).first == key)
+			return it;
+	}
+	return ite;
+}
+
+

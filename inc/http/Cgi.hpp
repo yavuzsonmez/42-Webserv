@@ -28,14 +28,24 @@ class	CGI
 {
 	public:
 	CGI();
-	CGI(Request request, ServerBlock &config, std::string path, std::string cgi_path);
+	CGI(Request request, ServerBlock config, std::string path, std::string cgi_path);
 	~CGI();
+	CGI	&operator=(const CGI &src);
 
-	void	execute(void);
+	//void	execute(void);
+	void	set_tmps(void);
+	int		write_in_std_in(void);
+	int		write_in_std_out(void);
+	int		read_in_buff(void);
 	static void	sig_handler(int signum);
 	std::string	get_buf(void);
+
 	std::string	get_query(std::string referer);
 
+	//int			_pipefd_in[2];
+	//int			_pipefd_out[2];
+	int			_tmp_in;
+	int			_tmp_out;
 
 	private:
 	std::map<std::string, std::string>	_env;
@@ -53,9 +63,6 @@ class	CGI
 	ServerBlock	_config;
 	std::string	_path;
 	std::string	_cgi_path;
-
-	int			_pipefd_in[2];
-	int			_pipefd_out[2];
 };
 
 # endif
