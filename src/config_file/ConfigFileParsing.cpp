@@ -85,6 +85,10 @@ bool ConfigFileParsing::validateConfiguration() {
 		debugger.error("Configuration file has no ports defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
 	}
+	if (!keyExistsInEachServerBlock(serverBlocks, INDEX)) {
+		debugger.error("Configuration file has no index file defined in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
 	if (!keyExistsInEachServerBlock(serverBlocks, SERVER_NAME)) {
 		debugger.error("Configuration file has no server name defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
