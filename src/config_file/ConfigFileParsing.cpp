@@ -66,6 +66,7 @@ bool ConfigFileParsing::validationDuplicationCheck() {
  * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
  * - runs validationDuplicationCheck(), checking for logic duplicates
  * - checks that there is a root available in each server block
+ * - checks that there is a server name available in each server block
  * - checks that for every location cgi there is a file ending available
  * @return true 
  * @return false 
@@ -78,6 +79,10 @@ bool ConfigFileParsing::validateConfiguration() {
 	}
 	if (!keyExistsInEachServerBlock(serverBlocks, ROOT)) {
 		debugger.error("Configuration file has no root defined in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, SERVER_NAME)) {
+		debugger.error("Configuration file has no server name defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
 	}
 	if (!checkIfCgiExecutableAndFileEndingAreSet(serverBlocks)) {
