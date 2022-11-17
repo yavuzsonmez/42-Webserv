@@ -77,10 +77,6 @@ bool ConfigFileParsing::validateConfiguration() {
 	if (validationDuplicationCheck()) {
 		debugger.debug("Configuration file has no detected duplicates in ports, server names, error pages or post_max_body_size.");
 	}
-	if (!keyExistsInEachServerBlock(serverBlocks, ROOT)) {
-		debugger.error("Configuration file has no root defined in one or more server blocks.");
-		throw InvalidConfigurationFile();
-	}
 	if (keyExistsInEachServerBlock(serverBlocks, CGI_EXECUTABLE_PATH) != keyExistsInEachServerBlock(serverBlocks, CGI_FILEENDING)) {
 		debugger.error("Configuration file has a cgi executable or cgi fileendinged defined but not the other in one or more server blocks.");
 		throw InvalidConfigurationFile();
