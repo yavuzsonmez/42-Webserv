@@ -31,7 +31,7 @@ Process & Process::operator = (const Process &src)
  * @brief  Process request and handle method type
  * 
  * TODO: Check if given request method is allowed, otherwise sent back a method forbidden page.
- * 
+ * Currently accepted methods are GET, POST, DELETE and PUT.
  */
 void	Process::process_request(void)
 {
@@ -39,9 +39,10 @@ void	Process::process_request(void)
 	if (method == GET || method == POST || method == DELETE || method == PUT)
 	{
 		try {
-			get_request();}
+			handle_request();}
 		catch (int e) {
-			throw (e);}
+			throw (e);
+		}
 	}
 	else
 	{
@@ -54,7 +55,7 @@ void	Process::process_request(void)
  * TODO: Add method enum to handle all request in one place
  * 
  */
-void	Process::get_request(void)
+void	Process::handle_request(void)
 {
 	std::string	path;
 	if (_request.getPath().first == "/")

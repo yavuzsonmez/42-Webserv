@@ -17,7 +17,7 @@ class Process
 	Process &operator=(const Process &src);
 
 	void	process_request(void);
-	void	get_request(void);
+	void	handle_request(void);
 	void	post_request(void);
 	void	delete_request(void);
 	void	build_response(std::string path, std::string code, std::string status);
