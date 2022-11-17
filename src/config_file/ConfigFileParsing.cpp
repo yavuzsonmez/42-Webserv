@@ -81,6 +81,10 @@ bool ConfigFileParsing::validateConfiguration() {
 		debugger.error("Configuration file has no root defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
 	}
+	if (keyExistsInEachServerBlock(serverBlocks, CGI_EXECUTABLE_PATH) != keyExistsInEachServerBlock(serverBlocks, CGI_FILEENDING)) {
+		debugger.error("Configuration file has a cgi executable or cgi fileendinged defined but not the other in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
 	if (!keyExistsInEachServerBlock(serverBlocks, LISTEN)) {
 		debugger.error("Configuration file has no ports defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
