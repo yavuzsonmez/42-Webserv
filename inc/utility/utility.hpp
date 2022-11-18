@@ -86,7 +86,7 @@ char **map_to_array(std::map<key, value> &map)
 	int	i = 0;
 	for (it = map.begin(); it != map.end(); ++it)
 	{
-		array[i] = (char *) (to_str(it->first) + "=" + to_str(it->second)).c_str(); // ATTENTION: I removed a strdup here
+		array[i] = strdup((to_str(it->first) + "=" + to_str(it->second)).c_str());
 		++i;
 	}
 	array[i] = NULL;
@@ -109,7 +109,7 @@ char **vec_to_array(std::vector<T> &vector)
 	int	i = 0;
 	for (it = vector.begin(); it != vector.end(); ++it)
 	{
-		array[i] = (char *) to_str(*it).c_str(); // Attention: I removed a strdup here
+		array[i] = strdup(to_str(*it).c_str());
 		++i;
 	}
 	array[i] = NULL;
