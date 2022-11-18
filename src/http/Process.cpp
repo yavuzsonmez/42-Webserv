@@ -173,7 +173,8 @@ void	Process::build_cgi_response(void)
 }
 
 /**
- * @brief creates the response for a directory listing
+ * @brief creates the response for a directory listing using the file at the directory_listing directory.
+ * It passes on the path of the directory where we list information on to the file.
  */
 void	Process::build_dl_response(void)
 {
