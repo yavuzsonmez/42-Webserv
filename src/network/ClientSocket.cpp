@@ -1,4 +1,5 @@
 #include "../../inc/network/ClientSocket.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 
 
 
@@ -139,7 +140,13 @@ void	ClientSocket::one(void)
 
 void	ClientSocket::two(void)
 {
-	_process._CGI.write_in_std_out();
+	USE_DEBUGGER;
+	try {
+		_process._CGI.write_in_std_out();
+	} catch (int error) {
+		debugger.error("Error in CGI");
+		return ;
+	}
 	_fd = _process._CGI._fd_out;
 	_event = POLLIN;
 	_func_ptr = &ClientSocket::three;
