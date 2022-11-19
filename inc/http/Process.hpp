@@ -24,6 +24,7 @@ class Process
 	void	build_dl_response(void);
 	void	build_cgi_response(void);
 	bool	check_location(void);
+	void	set_redirection_response(void);
 	std::string	get_location(std::string location, ConfigurationKeyType type);
 	bool	get_location_dl(std::string path);
 	void	exception(int code);

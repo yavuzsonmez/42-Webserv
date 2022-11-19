@@ -124,17 +124,25 @@ void	Process::handle_request(void)
 }
 
 /**
+ * @brief Sets the response headers for a redirection
+ */
+void Process::set_redirection_response()
+{
+	_response.set_status_code("301");
+	_response.set_status_text("Moved Permanently");
+	_response.set_redirection(_redirection);
+}
+/**
  * @brief sets the header and the body of the response.
- * In case of a cgi it creates a cgi object and returns.
+ * - In case of a cgi it creates a cgi object and returns.
+ * - In case of a redirection it sets the redirection response.
  */
 void	Process::build_response(std::string path, std::string code, std::string status)
 {
 		_response.set_protocol("HTTP/1.1");
 		if (!_redirection.empty())
 		{
-			_response.set_status_code("301");
-			_response.set_status_text("Moved Permanently");
-			_response.set_redirection(_redirection);
+			set_redirection_response();
 		}
 		else
 		{
