@@ -51,7 +51,6 @@ class	CGI
 
 	private:
 	std::map<std::string, std::string>	_env;
-	char	**_envp;
 	std::vector<std::string>	_query_parameters;
 	char	**_argvp;
 	std::vector<std::string>	_argv;

@@ -107,16 +107,16 @@ void CGI::wait_for_child(pid_t worker_pid)
 {
 	USE_DEBUGGER;
 	pid_t timeout_pid = fork();
-	if (timeout_pid < 0)
+	if (timeout_pid < 0) // did not fork properly
 	{
 		debugger.error("[TIMEOUT] fork failed in timeout pid");
 		kill(worker_pid, SIGKILL);
-		throw(500);
+		throw(503); // we throw an 503 / overloaded error
 	}
 	else if (timeout_pid == 0) // timeout child
 	{
-		sleep(5);
-		std::exit(EXIT_SUCCESS);
+		sleep(5); // this is the timeout we wait for the child to finish
+		std::exit(EXIT_SUCCESS); // ok cool, we exit successfully
 	}
 	else // parent
 	{
@@ -126,7 +126,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 		// wait for the forks to be ready
 		while ((pid = waitpid(worker_pid, &stat_loc, WNOHANG)) == 0 &&
 				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
-			usleep(50);
+			usleep(150); // check every 50 microseconds
 
 		if (pid == -1) // this is being called when fork failed
 		{
@@ -153,7 +153,6 @@ void CGI::wait_for_child(pid_t worker_pid)
 
 /**
  * @brief executes the cgi an writes the return of it into _tmp_out
- * TODO: Fork leak!
  */
 void	CGI::execute_cgi(void)
 {
