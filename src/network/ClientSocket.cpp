@@ -94,6 +94,8 @@ void	ClientSocket::read_in_buffer(void)
  */
 void	ClientSocket::write_from_buffer(void)
 {
+	// Next crash is happening here. Investigate!
+	// Maybe check the file descriptors for validity
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length(), 0);
 	_position += _bytes;
 	if (_position >= _process._response.get_response().length())
@@ -147,6 +149,7 @@ void	ClientSocket::one(void)
 	try {
 		_process._CGI.write_in_std_in();
 	} catch (int e) {
+		_event = POLLERR;
 		_process.exception(e);
 		return ;
 	}
