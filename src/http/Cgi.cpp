@@ -106,46 +106,55 @@ void	CGI::write_in_std_in()
 void	CGI::write_in_std_out(void)
 {
 	USE_DEBUGGER;
-	int	pid = fork();												//forks a new process
+	try {
+		int	pid = fork();												//forks a new process
 
-	if (pid < 0)												//return in case it failes
-		throw (500);
-	else if (pid == 0)											//in the child process
-	{
-		pid = fork();
 		if (pid < 0)												//return in case it failes
 			throw (500);
-		if (pid == 0) // timeout handling. for that we are using a fork
+		else if (pid == 0)											//in the child process
 		{
-			sleep(2);
-			pid_t	ppid = getppid();
-			if (pid != 1)
-				kill(ppid, SIGKILL);
-			exit(EXIT_SUCCESS);
+			pid = fork();
+			if (pid < 0)												//return in case it failes
+				throw (500);
+			if (pid == 0) // timeout handling. for that we are using a fork
+			{
+				sleep(2);
+				pid_t	ppid = getppid();
+				debugger.debug("CGI timeout: killing pid " + std::to_string(ppid));
+				if (pid != 1)
+					kill(ppid, SIGKILL);
+				exit(EXIT_SUCCESS);
+			}
+			else  // execute the php in the child
+			{
+				int check1 = dup2(_fd_in, STDIN_FILENO);
+				int check2 = dup2(_fd_out, STDOUT_FILENO);						//stdout now points to the tmpfile
+				if (check1 == -1 || check2 == -1)
+					throw (500);
+				_query_parameters.insert(_query_parameters.begin(), _path.c_str());
+				_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
+				_argvp = vec_to_array(_query_parameters);
+				int check3 = execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
+				if (check3 == -1)
+					throw (500);
+				kill(pid, SIGKILL);
+				exit(EXIT_SUCCESS);
+			}
 		}
-		else
+		else														//int the parent process
 		{
-			dup2(_fd_in, STDIN_FILENO);
-			dup2(_fd_out, STDOUT_FILENO);						//stdout now points to the tmpfile
-			_query_parameters.insert(_query_parameters.begin(), _path.c_str());
-			_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
-			_argvp = vec_to_array(_query_parameters);
-			execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
-			kill(pid, SIGKILL);
-			exit(EXIT_SUCCESS);										//exit the childprocess
+			int	status;
+			waitpid(pid, &status, 0);								// wait until child terminates, status of the pid gets written in status variable
+			close(_fd_in);
+			if (WEXITSTATUS(status))
+				throw (502);
+			else if (WIFSIGNALED(status))
+				throw (504);
 		}
+		return ;
+	} catch (int error) {
+		debugger.error("CGI error: " + std::to_string(error));
 	}
-	else														//int the parent process
-	{
-		int	status;
-		waitpid(pid, &status, 0);								// wait until child terminates, status of the pid gets written in status variable
-		close(_fd_in);
-		if (WEXITSTATUS(status))
-			throw (502);
-		else if (WIFSIGNALED(status))
-			throw (504);
-	}
-	return ;
 }
 
 /**
@@ -153,10 +162,15 @@ void	CGI::write_in_std_out(void)
  */
 void	CGI::read_in_buff(void)
 {
-	if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
-		throw (500);
-	if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
-		throw (500);
+	USE_DEBUGGER;
+	try {
+		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
+			throw (500);
+		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
+			throw (500);
+	} catch (int error) {
+		debugger.error("CGI error: " + std::to_string(error));
+	}
 	rewind(_tmpout);											//move the courser back to the beginning
 	_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
 	read(_fd_out, (char*)(_buf.data()), _tmp_size);
