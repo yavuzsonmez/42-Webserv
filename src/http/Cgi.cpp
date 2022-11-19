@@ -6,21 +6,15 @@ CGI::CGI()
 }
 
 /**
- * @brief Construct a new CGI::CGI object
+ * @brief Sets all the environment variables for the CGI script.
  * 
  * @param request The request to handle 
  * @param config The server block configuration of the request
  * @param path the path 
  * @param cgi_path the cgi path
  */
-CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
+void CGI::set_environment(Request request, ServerBlock config, std::string path, std::string cgi_path)
 {
-	if (_request.getQuery().second)
-	{
-		std::string	query = _request.getQuery().first; //Get query string
-		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
-	}
-
 	_env["SERVER_SOFTWARE"] = "webserv";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
 	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";										//The revision of the CGI specification to which this server complies. Format: CGI/revision
@@ -39,6 +33,26 @@ CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
 	_env["REDIRECT_STATUS"] = "500";
+}
+
+/**
+ * @brief Construct a new CGI::CGI object
+ * - Parses the query parameters
+ * 
+ * @param request The request to handle 
+ * @param config The server block configuration of the request
+ * @param path the path 
+ * @param cgi_path the cgi path
+ */
+CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
+{
+	if (_request.getQuery().second)
+	{
+		std::string	query = _request.getQuery().first; //Get query string
+		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
+	}
+
+	set_environment(request, config, path, cgi_path);
 
 	_envp = map_to_array(_env);
 }

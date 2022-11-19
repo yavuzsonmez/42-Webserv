@@ -33,8 +33,9 @@ class	CGI
 	CGI	&operator=(const CGI &src);
 
 	//void	execute(void);
-	void	set_tmps(void);
+	void		set_tmps(void);
 	void		write_in_std_in(void);
+	void		set_environment(Request request, ServerBlock config, std::string path, std::string cgi_path);
 	void		write_in_std_out(void);
 	void		read_in_buff(void);
 	static void	sig_handler(int signum);
