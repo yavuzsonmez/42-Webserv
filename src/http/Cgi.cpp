@@ -201,7 +201,6 @@ void	CGI::read_in_buff(void)
 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
 			throw (500);
 	} catch (int error) {
-		debugger.error("CGI error: " + std::to_string(error));
 		throw (501);
 		return ;
 	}
