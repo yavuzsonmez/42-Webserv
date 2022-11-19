@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	ConfigFileParsing static *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	if (argc == 1)
-		file_content = get_file_content("./conf/webserv.default.conf");
+		file_content = get_file_content("./conf/webserv.conf");
 	else
 		file_content = get_file_content(argv[1]);
 
