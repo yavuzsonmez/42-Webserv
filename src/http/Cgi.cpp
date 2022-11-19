@@ -72,12 +72,14 @@ void	CGI::set_tmps(void)
 void	CGI::write_in_std_in()
 {
 	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());
-	rewind(_tmpin);
+	if (_tmpin != NULL)
+		rewind(_tmpin);
 	return ;
 }
 
 /**
  * @brief executes the cgi an writes the return of it into _tmp_out
+ * TODO: Fork leak!
  */
 void	CGI::write_in_std_out(void)
 {

@@ -1,6 +1,7 @@
 #include "../../inc/network/ServerSocket.hpp"
 #include "../../inc/http/Response.hpp"
 #include "../../inc/http/Process.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 #include <sys/ioctl.h>
 
 
@@ -50,13 +51,12 @@ ServerSocket::~ServerSocket(){}
  */
 void ServerSocket::processConnections()
 {
+	USE_DEBUGGER;
 	int forward;
 	struct sockaddr_in clientSocket;
 	socklen_t socketSize = sizeof(struct sockaddr_in);
-	
 	std::vector<pollfd> pollfds;
 	pollfds.resize(_config.getAllServerPorts().size());
-
 	std::vector<int>::iterator	it = _fds.begin();
 	std::vector<int>::iterator	ite = _fds.end();
 	for (unsigned int i = 0; it != ite; ++it, ++i)
