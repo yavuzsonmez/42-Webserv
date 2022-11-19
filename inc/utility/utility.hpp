@@ -107,6 +107,8 @@ char **vec_to_array(std::vector<T> &vector)
 	typename std::vector<T>::iterator	it;
 	
 	char **array = new char*[sizeof(char*) * (vector.size() + 1)];
+	if (array == nullptr)
+		exit(1); // we have no memory or allocation just failed, so there is nothing we can do
 	int	i = 0;
 	for (it = vector.begin(); it != vector.end(); ++it)
 	{
