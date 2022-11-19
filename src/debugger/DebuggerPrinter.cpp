@@ -26,6 +26,7 @@ DebuggerPrinter & DebuggerPrinter::operator = (const DebuggerPrinter &src) {
  * @param message
  */
 void DebuggerPrinter::printString( const std::string &message, LogLevel level ) {
+	if (ENABLE_LOGGING == 0) return ;
 	std::string prefix = "";
 	switch (level) {
 		case INFO:

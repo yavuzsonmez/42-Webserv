@@ -168,10 +168,11 @@ void	ClientSocket::two(void)
 
 void	ClientSocket::three(void)
 {
+	USE_DEBUGGER;
 	try {
 		_process._CGI.read_in_buff();
 	} catch (int error) {
-		std::cout << "OH NOOO I AM GETTING ASS FUCKED!" << std::endl;
+		debugger.error("Error in CGI::three");
 		return ;
 	}
 	_process.build_cgi_response();

@@ -59,6 +59,7 @@ void	Process::process_request(void)
  */
 void	Process::handle_request(void)
 {
+	USE_DEBUGGER;
 	std::string	path;
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
@@ -68,6 +69,7 @@ void	Process::handle_request(void)
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
+				debugger.error("UNABLE TO BUILD RESPONSE!");
 				throw(404);
 				return ;
 			}
@@ -78,6 +80,7 @@ void	Process::handle_request(void)
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
+
 				throw(500);
 				return ;
 			}
