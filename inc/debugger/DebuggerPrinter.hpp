@@ -4,7 +4,6 @@
 #include "Singleton.hpp"
 #include "../utility/utility.hpp"
 
-#define ENABLE_LOGGING 0 // enables or disables logging. Set to zero before evaluation or high speed testing.
 #define USE_DEBUGGER DebuggerPrinter debugger = debugger.getInstance();
 
 /**
