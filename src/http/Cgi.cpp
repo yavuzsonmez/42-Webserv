@@ -154,6 +154,7 @@ void	CGI::write_in_std_out(void)
 		return ;
 	} catch (int error) {
 		debugger.error("CGI error: " + std::to_string(error));
+		return ;
 	}
 }
 
@@ -170,6 +171,7 @@ void	CGI::read_in_buff(void)
 			throw (500);
 	} catch (int error) {
 		debugger.error("CGI error: " + std::to_string(error));
+		return ;
 	}
 	rewind(_tmpout);											//move the courser back to the beginning
 	_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
