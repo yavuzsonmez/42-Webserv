@@ -82,8 +82,6 @@ template <typename key, typename value>
 char **map_to_array(std::map<key, value> &map)
 {
 	typename std::map<key, value>::iterator	it;
-
-	
 	
 	char **array = new char*[sizeof(char*) * (map.size() + 1)];
 	int	i = 0;
