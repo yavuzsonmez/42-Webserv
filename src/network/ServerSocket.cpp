@@ -20,7 +20,6 @@ ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(c
 		(*so).sin_addr.s_addr = address;
 		bzero(&((*so).sin_zero), 8);
 	}
-
 	const int	enable = 1;
 	_fds.resize(_sockets.size());
 	std::vector<int>::iterator	fd;

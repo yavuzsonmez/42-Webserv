@@ -5,12 +5,20 @@ CGI::CGI()
 
 }
 
+/**
+ * @brief Construct a new CGI::CGI object
+ * 
+ * @param request The request to handle 
+ * @param config The server block configuration of the request
+ * @param path the path 
+ * @param cgi_path the cgi path
+ */
 CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
 	if (_request.getQuery().second)
 	{
-		std::string	query = _request.getQuery().first;
-		_query_parameters = split_on_delimiter(query, '&');
+		std::string	query = _request.getQuery().first; //Get query string
+		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
 	}
 
 	_env["SERVER_SOFTWARE"] = "webserv";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
@@ -62,7 +70,6 @@ void	CGI::set_tmps(void)
 	_fd_out = fileno(_tmpout);
 	fcntl(_fd_in, F_SETFL, fcntl(_fd_in, F_GETFL, 0) | O_NONBLOCK);
 	fcntl(_fd_out, F_SETFL, fcntl(_fd_out, F_GETFL, 0) | O_NONBLOCK);
-
 }
 
 /**
@@ -90,6 +97,8 @@ void	CGI::write_in_std_out(void)
 	else if (pid == 0)											//in the child process
 	{
 		pid = fork();
+		if (pid < 0)												//return in case it failes
+			throw (500);
 		if (pid == 0)
 		{
 			sleep(2);
