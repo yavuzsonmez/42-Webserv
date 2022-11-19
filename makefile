@@ -55,6 +55,7 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/inttohex.cpp \
 						./src/utility/trim_whitespaces.cpp \
 						./src/utility/validate_url.cpp \
+						./src/utility/get_file_content_for_request.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 

@@ -140,7 +140,7 @@ void Process::set_redirection_response()
 void	Process::build_response(std::string path, std::string code, std::string status)
 {
 		_response.set_protocol("HTTP/1.1");
-		if (!_redirection.empty())
+		if (!_redirection.empty()) // if the redirection is not empty
 		{
 			set_redirection_response();
 		}
@@ -149,19 +149,19 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			_response.set_status_code(code);
 			_response.set_status_text(status);
 			_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-			if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending))
+			if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 			{
 				_with_cgi = true;
 				_CGI = CGI(_request, _config, path, _cgi);
 				_CGI.set_tmps();
 				return ;
 			}
-			else
+			else // the request is not cgi or redirection, so we just return the content of the file at the location of path.
 			{
 				try {
-					_response.set_body(get_file_content(path));}
-				catch (int e){
-					throw (500);
+					_response.set_body(get_file_content_for_request(path));
+				} catch (int e) {
+					throw (404);
 				}
 			}
 			_response.set_content_length(to_str(_response.get_body().length()));
