@@ -91,8 +91,11 @@ void	CGI::set_tmps(void)
  */
 void	CGI::write_in_std_in()
 {
-	if (_fd_in < 0)
-		return;
+	if (_fd_in < 0 || _tmpin == NULL || _request.getBody().first.empty())
+	{
+		std::cout << "Error in CGI::write_in_std_in()" << std::endl; // TODO Look into this. This is a problem
+		return ;
+	}
 	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());
 	if (_tmpin != NULL)
 		rewind(_tmpin);
