@@ -1,5 +1,6 @@
 
 #include "../../inc/http/Request.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 
 
 /**
@@ -141,7 +142,8 @@ void Request::setDomain(std::string &url) {
  * if not use the default http port (80)
  */
 void Request::setPort(std::string &url) {
-	std::cout << url << std::endl;
+	USE_DEBUGGER;
+	debugger.debug(url);
 	size_t x = url.find(":");
 	size_t y = url.find("/");
 	if (x == std::string::npos)
@@ -157,7 +159,7 @@ void Request::setPort(std::string &url) {
 		throw(Bad_Request);
 	}
 	url.erase(x, y - x );
-	std::cout << url << std::endl;
+	debugger.debug(url);
 }
 
 // /**
@@ -317,8 +319,6 @@ void Request::setHeaders(std::string &req)
 		req.erase(0, pos + 1);
 		pos = req.find(":");
 		end = req.find("\r\n");
-		// std::cout << "pos: " << pos << std::endl;
-		// std::cout << "end: " << end << std::endl;
 	}
 }
 
@@ -354,7 +354,6 @@ void Request::checkHeader(str_flag &hdr, str_flag &direct)
 
 void Request::setBody(std::string &req)
 {
-	//std::cout << "req_body: " << req << std::endl;
 	size_t pos = req.find("\n");
 	if (pos != std::string::npos && _method.first == GET)
 	{
@@ -363,7 +362,6 @@ void Request::setBody(std::string &req)
 	}
 	std::string	str;
 	_body = std::make_pair(req.substr(pos + 1), true);
-	//std::cout << "body: " << _body.first << std::endl;
 	/*if (req.length())
 		req.erase(pos);*/
 }
