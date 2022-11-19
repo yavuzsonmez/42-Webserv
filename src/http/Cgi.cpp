@@ -101,7 +101,7 @@ void	CGI::write_in_std_in()
 
 /**
  * @brief Here we wait for the child.
- * If it takes too long, it will timeout
+ * If it takes too long, it will timeout.
  */
 void CGI::wait_for_child(pid_t worker_pid)
 {
@@ -120,16 +120,17 @@ void CGI::wait_for_child(pid_t worker_pid)
 	}
 	else // parent
 	{
-		int stat_loc = 0;
+		int stat_loc = 0; 
 		pid_t pid = 0;
 
+		// wait for the forks to be ready
 		while ((pid = waitpid(worker_pid, &stat_loc, WNOHANG)) == 0 &&
 				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
 			usleep(50);
 
-		if (pid == -1)
+		if (pid == -1) // this is being called when fork failed
 		{
-			debugger.error("[TIMEOUT] waitpid failed"); // should never happen, I think but actually I don't know
+			debugger.error("[TIMEOUT] fork failed"); // should never happen, I think but actually I don't know
 			kill(worker_pid, SIGKILL);
 			kill(timeout_pid, SIGKILL);
 			throw(500);
@@ -181,56 +182,6 @@ void	CGI::execute_cgi(void)
 	}
 	else // parent
 		return wait_for_child(pid);
-
-	//try {
-	//	int	pid = fork();												//forks a new process
-
-	//	if (pid < 0)												//return in case it failes
-	//		throw (500);
-	//	else if (pid == 0)											//in the child process
-	//	{
-	//		pid = fork();
-	//		if (pid < 0)												//return in case it failes
-	//			throw (500);
-	//		if (pid == 0) // timeout handling. for that we are using a fork
-	//		{
-	//			sleep(2);
-	//			pid_t	ppid = getppid();
-	//			debugger.debug("CGI timeout: killing pid " + std::to_string(ppid));
-	//			if (pid != 1)
-	//				kill(ppid, SIGKILL);
-	//			exit(EXIT_SUCCESS);
-	//		}
-	//		else  // execute the php in the child
-	//		{
-	//			int check1 = dup2(_fd_in, STDIN_FILENO);
-	//			int check2 = dup2(_fd_out, STDOUT_FILENO);						//stdout now points to the tmpfile
-	//			if (check1 == -1 || check2 == -1)
-	//				throw (500);
-	//			_query_parameters.insert(_query_parameters.begin(), _path.c_str());
-	//			_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
-	//			_argvp = vec_to_array(_query_parameters);
-	//			execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
-	//			kill(pid, SIGKILL);
-	//			exit(EXIT_SUCCESS);
-	//		}
-	//	}
-	//	else														//int the parent process
-	//	{
-	//		int	status;
-	//		waitpid(pid, &status, 0);								// wait until child terminates, status of the pid gets written in status variable
-	//		close(_fd_in);
-	//		if (WEXITSTATUS(status))
-	//			throw (502);
-	//		else if (WIFSIGNALED(status))
-	//			throw (504);
-	//	}
-	//	return ;
-	//} catch (int error) {
-	//	debugger.error("CGI error: " + std::to_string(error));
-		
-	//	return ;
-	//}
 }
 
 /**
