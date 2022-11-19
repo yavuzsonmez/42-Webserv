@@ -57,7 +57,7 @@ void	ClientSocket::call_func_ptr(void)
 void	ClientSocket::read_in_buffer(void)
 {
 	buffer.resize(buffer.size() + _count);
-	_bytes = read(_fd, (char*)buffer.data() + _position, _count);
+	_bytes = read(_fd, (char*)buffer.c_str() + _position, _count);
 	_position += _bytes;
 	if (_state == HEADER)
 	{

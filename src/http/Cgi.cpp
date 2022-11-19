@@ -93,7 +93,7 @@ void	CGI::set_tmps(void)
  */
 void	CGI::write_in_std_in()
 {
-	if (_fd_in == -1)
+	if (_fd_in < 0)
 		return;
 	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());
 	if (_tmpin != NULL)
@@ -136,9 +136,7 @@ void	CGI::write_in_std_out(void)
 				_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 				_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 				_argvp = vec_to_array(_query_parameters);
-				int check3 = execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
-				if (check3 == -1)
-					throw (500);
+				execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
 				kill(pid, SIGKILL);
 				exit(EXIT_SUCCESS);
 			}
@@ -167,8 +165,10 @@ void	CGI::write_in_std_out(void)
 void	CGI::read_in_buff(void)
 {
 	USE_DEBUGGER;
+	if (_fd_in < 0)
+		return;
 	try {
-		if (fseek(_tmpout, 0, SEEK_END) == -1)							//set the courser in the filestream to the end
+		if (fseek(_tmpout, 0, SEEK_END) < 0)							//set the courser in the filestream to the end
 			throw (500);
 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size
 			throw (500);
