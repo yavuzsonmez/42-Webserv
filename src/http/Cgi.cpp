@@ -111,11 +111,13 @@ void CGI::wait_for_child(pid_t worker_pid)
 	{
 		debugger.error("[TIMEOUT] fork failed in timeout pid");
 		kill(worker_pid, SIGKILL);
+		std::cout << "we could not fork successfully" << std::endl;
 		throw(503); // we throw an 503 / overloaded error
 	}
-	else if (timeout_pid == 0) // timeout child
+	else if (timeout_pid == 0) // timeouted child
 	{
-		sleep(5); // this is the timeout we wait for the child to finish
+		sleep(2); // this is the timeout we wait for the child to finish
+		std::cout << "we just had an timeout" << std::endl;
 		std::exit(EXIT_SUCCESS); // ok cool, we exit successfully
 	}
 	else // parent
@@ -128,18 +130,19 @@ void CGI::wait_for_child(pid_t worker_pid)
 				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
 			usleep(150); // check every 50 microseconds
 
-		if (pid == -1) // this is being called when fork failed
+		if (pid == -1) // this is being called when fork failed and we are overloaded.
 		{
-			debugger.error("[TIMEOUT] fork failed"); // should never happen, I think but actually I don't know
+			debugger.error("[TIMEOUT] fork failed");
 			kill(worker_pid, SIGKILL);
 			kill(timeout_pid, SIGKILL);
-			throw(500);
+			return ;
 		}
 		else if (pid == worker_pid) // this is being called if the worker finishes on time
 		{
 			kill(timeout_pid, SIGKILL); // let's kill the timeout child, it's not needed anymore
 			if (!WIFSIGNALED(stat_loc) && WEXITSTATUS(stat_loc) == 0) // if the worker exited normally
 				return ; // we're done
+			throw(500); // else we throw a 500 error
 			return ; 
 		}
 		else

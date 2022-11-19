@@ -80,7 +80,6 @@ void	Process::handle_request(void)
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
-
 				throw(500);
 				return ;
 			}
@@ -170,8 +169,8 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 			{
 				_with_cgi = true;
-				_CGI = CGI(_request, _config, path, _cgi);
-				_CGI.set_tmps();
+				_CGI = CGI(_request, _config, path, _cgi); // activates the cgi
+				_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 				return ;
 			}
 			else // the request is not cgi or redirection, so we just return the content of the file at the location of path.
@@ -186,6 +185,17 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			_response.set_content_type(_response.get_file_format());
 		}
 		_response.create_response();
+}
+
+/**
+ * @brief Sends a server overloaded message to the client
+ */
+void	Process::server_overloaded(void)
+{
+	_response.set_body("Server overloaded. Go away!");
+	_response.set_content_length(to_str(_response.get_body().length()));
+	_response.set_content_type(_response.get_file_format());
+	_response.create_response();
 }
 
 /**
@@ -286,6 +296,10 @@ bool	Process::get_location_dl(std::string location)
 	return false;
 }
 
+/**
+ * @brief If an exception is thrown, we have the option to return a error page that fits.
+ * @param e 
+ */
 void	Process::exception(int e)
 {
 	switch (e)
@@ -328,6 +342,13 @@ void	Process::exception(int e)
 		case 504:
 			try {
 				build_response("default_pages/504_default.html", "504", "Gateway Timeout");}
+			catch (int e) {
+				throw (e);
+			}
+			break;
+		default:
+			try {
+				build_response("default_pages/500_default.html", "504", "Gateway Timeout");}
 			catch (int e) {
 				throw (e);
 			}

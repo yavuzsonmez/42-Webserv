@@ -22,6 +22,7 @@ class Process
 	void	delete_request(void);
 	void	build_response(std::string path, std::string code, std::string status);
 	void	build_dl_response(void);
+	void	server_overloaded(void);
 	void	build_cgi_response(void);
 	bool	check_location(void);
 	void	set_redirection_response(void);
