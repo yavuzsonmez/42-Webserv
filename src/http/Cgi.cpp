@@ -13,7 +13,7 @@ CGI::CGI()
  * @param path the path 
  * @param cgi_path the cgi path
  */
-void CGI::set_environment(Request request, ServerBlock config, std::string path, std::string cgi_path)
+void CGI::set_environment()
 {
 	_env["SERVER_SOFTWARE"] = "webserv";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
 	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
@@ -21,8 +21,8 @@ void CGI::set_environment(Request request, ServerBlock config, std::string path,
 	_env["SERVER_PROTOCOL"] = _request.getProtocol().first;							//The name and revision of the information protcol this request came in with. Format: protocol/revision
 	_env["SERVER_PORT"] = to_str(_request.getPort().first);									//The port number to which the request was sent.
 	_env["REQUEST_METHOD"] = _request.getMethod().first;							//The method with which the request was made. For HTTP, this is "GET", "HEAD", "POST", etc.
-	_env["PATH_INFO"] =  get_abs_path(path);														//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
-	_env["PATH_TRANSLATED"] =  get_abs_path(path);													//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
+	_env["PATH_INFO"] =  get_abs_path(_path);														//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
+	_env["PATH_TRANSLATED"] =  get_abs_path(_path);													//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
 	_env["SCRIPT_NAME"] = "";														//A virtual path to the script being executed, used for self-referencing URLs.
 	_env["QUERY_STRING"] = _request.getQuery().first;								//The information which follows the ? in the URL which referenced this script. This is the query information. It should not be decoded in any fashion. This variable should always be set when there is query information, regardless of command line decoding.
 	_env["REMOTE_HOST"] = "";														//The hostname making the request. If the server does not have this information, it should set REMOTE_ADDR and leave this unset.
@@ -52,7 +52,7 @@ CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_
 		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
 	}
 
-	set_environment(request, config, path, cgi_path);
+	set_environment();
 
 	_envp = map_to_array(_env);
 }
