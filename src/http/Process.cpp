@@ -41,7 +41,7 @@ void	Process::process_request(void)
 		try {
 			handle_request();}
 		catch (int e) {
-			exception(501);
+			exception(e);
 			return ;
 		}
 	}
@@ -68,7 +68,7 @@ void	Process::handle_request(void)
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
-				exception(404);
+				throw(404);
 				return ;
 			}
 		}
@@ -78,7 +78,7 @@ void	Process::handle_request(void)
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
-				exception(500);
+				throw(500);
 				return ;
 			}
 		}
@@ -94,7 +94,7 @@ void	Process::handle_request(void)
 				try {
 					build_dl_response();}
 				catch (int e){
-					exception(404);
+					throw(404);
 					return ;
 				}
 			}
@@ -102,11 +102,11 @@ void	Process::handle_request(void)
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
 				if (find_vector(_methods, _request.getMethod().first) == -1) // the method is not allowed
-					exception(404);
+					throw(404);
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
-					exception(404);
+					throw(404);
 					return ;
 				}
 			}
@@ -121,13 +121,13 @@ void	Process::handle_request(void)
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
-					exception(401);
+					throw(401);
 					return ;
 				}
 			}
 			else
 			{
-				exception(401);
+				throw(401);
 				return ;
 			}
 		}
