@@ -93,6 +93,8 @@ void	CGI::set_tmps(void)
  */
 void	CGI::write_in_std_in()
 {
+	if (_fd_in == -1)
+		return;
 	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());
 	if (_tmpin != NULL)
 		rewind(_tmpin);
@@ -173,6 +175,7 @@ void	CGI::read_in_buff(void)
 	} catch (int error) {
 		debugger.error("CGI error: " + std::to_string(error));
 		close(_fd_out);
+		throw (501);
 		return ;
 	}
 	rewind(_tmpout);											//move the courser back to the beginning

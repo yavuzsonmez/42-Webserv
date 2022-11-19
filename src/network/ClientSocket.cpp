@@ -168,7 +168,11 @@ void	ClientSocket::two(void)
 
 void	ClientSocket::three(void)
 {
-	_process._CGI.read_in_buff();
+	try {
+		_process._CGI.read_in_buff();
+	} catch (int error) {
+		return ;
+	}
 	_process.build_cgi_response();
 	_fd = _client_fd;
 	_event = POLLOUT;
