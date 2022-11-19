@@ -144,7 +144,12 @@ void	ClientSocket::set_up(void)
  */
 void	ClientSocket::one(void)
 {
-	_process._CGI.write_in_std_in();
+	try {
+		_process._CGI.write_in_std_in();
+	} catch (int e) {
+		_process.exception(e);
+		return ;
+	}
 	_fd = _process._CGI._fd_out;
 	_event = POLLOUT;
 	_func_ptr = &ClientSocket::two;
@@ -173,7 +178,7 @@ void	ClientSocket::three(void)
 	try {
 		_process._CGI.read_in_buff();
 	} catch (int error) {
-		debugger.error("Error in CGI::three");
+		// debugger.error("Error in CGI::three");
 		_process.server_overloaded();
 		return ;
 	}
