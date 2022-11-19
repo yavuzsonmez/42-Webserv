@@ -158,7 +158,7 @@ void	ClientSocket::two(void)
 		_process._CGI.execute_cgi();
 	} catch (int error) {
 		debugger.error("Error in CGI");
-		_process.exception(error);
+		_process.server_overloaded();
 		return ;
 	}
 	_fd = _process._CGI._fd_out;
