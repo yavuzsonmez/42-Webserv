@@ -158,6 +158,7 @@ void	ClientSocket::two(void)
 		_process._CGI.write_in_std_out();
 	} catch (int error) {
 		debugger.error("Error in CGI");
+		_event = POLLERR;
 		return ;
 	}
 	_fd = _process._CGI._fd_out;
@@ -171,6 +172,8 @@ void	ClientSocket::three(void)
 	try {
 		_process._CGI.read_in_buff();
 	} catch (int error) {
+		std::cout << "OH NOOO I AM GETTING ASS FUCKED!" << std::endl;
+		_event = POLLERR;
 		return ;
 	}
 	_process.build_cgi_response();
