@@ -55,12 +55,11 @@ CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_
 	}
 
 	set_environment();
-	_envp = map_to_array(_env);
 }
 
 CGI::~CGI()
 {
-	//delete (_envp);
+
 }
 
 CGI & CGI::operator=(const CGI &src)
@@ -69,7 +68,6 @@ CGI & CGI::operator=(const CGI &src)
 	_config = src._config;
 	_path = src._path;
 	_cgi_path = src._cgi_path;
-	_envp = src._envp;
 	return *this;
 }
 
@@ -89,7 +87,7 @@ void	CGI::set_tmps(void)
 
 /**
  * @brief writes the body from the request in _tmp_in which later will be dupped to the STDIN
- * 
+ * Takes the _fd_in and writes to it the body of the request
  */
 void	CGI::write_in_std_in()
 {
@@ -102,61 +100,137 @@ void	CGI::write_in_std_in()
 }
 
 /**
+ * @brief Here we wait for the child.
+ * If it takes too long, it will timeout
+ */
+void CGI::wait_for_child(pid_t worker_pid)
+{
+	USE_DEBUGGER;
+	pid_t timeout_pid = fork();
+	if (timeout_pid < 0)
+	{
+		debugger.error("[TIMEOUT] fork failed in timeout pid");
+		kill(worker_pid, SIGKILL);
+		throw(500);
+	}
+	else if (timeout_pid == 0) // timeout child
+	{
+		sleep(5);
+		std::exit(EXIT_SUCCESS);
+	}
+	else // parent
+	{
+		int stat_loc = 0;
+		pid_t pid = 0;
+
+		while ((pid = waitpid(worker_pid, &stat_loc, WNOHANG)) == 0 &&
+				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
+			usleep(50);
+
+		if (pid == -1)
+		{
+			debugger.error("[TIMEOUT] waitpid failed"); // should never happen, I think but actually I don't know
+			kill(worker_pid, SIGKILL);
+			kill(timeout_pid, SIGKILL);
+			throw(500);
+		}
+		else if (pid == worker_pid) // this is being called if the worker finishes on time
+		{
+			kill(timeout_pid, SIGKILL); // let's kill the timeout child, it's not needed anymore
+			if (!WIFSIGNALED(stat_loc) && WEXITSTATUS(stat_loc) == 0) // if the worker exited normally
+				return ; // we're done
+			return ; 
+		}
+		else
+		{
+			debugger.error("[TIMEOUT] cgi gateway error in wait_for_child"); // this is being called if the worker timed out
+			kill(worker_pid, SIGKILL); // let's kill the worker
+			throw(504); // that is a gateway timeout
+		}
+	}
+}
+
+/**
  * @brief executes the cgi an writes the return of it into _tmp_out
  * TODO: Fork leak!
  */
-void	CGI::write_in_std_out(void)
+void	CGI::execute_cgi(void)
 {
 	USE_DEBUGGER;
-	try {
-		int	pid = fork();												//forks a new process
-
-		if (pid < 0)												//return in case it failes
-			throw (500);
-		else if (pid == 0)											//in the child process
-		{
-			pid = fork();
-			if (pid < 0)												//return in case it failes
-				throw (500);
-			if (pid == 0) // timeout handling. for that we are using a fork
-			{
-				sleep(2);
-				pid_t	ppid = getppid();
-				debugger.debug("CGI timeout: killing pid " + std::to_string(ppid));
-				if (pid != 1)
-					kill(ppid, SIGKILL);
-				exit(EXIT_SUCCESS);
-			}
-			else  // execute the php in the child
-			{
-				int check1 = dup2(_fd_in, STDIN_FILENO);
-				int check2 = dup2(_fd_out, STDOUT_FILENO);						//stdout now points to the tmpfile
-				if (check1 == -1 || check2 == -1)
-					throw (500);
-				_query_parameters.insert(_query_parameters.begin(), _path.c_str());
-				_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
-				_argvp = vec_to_array(_query_parameters);
-				execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
-				kill(pid, SIGKILL);
-				exit(EXIT_SUCCESS);
-			}
-		}
-		else														//int the parent process
-		{
-			int	status;
-			waitpid(pid, &status, 0);								// wait until child terminates, status of the pid gets written in status variable
-			close(_fd_in);
-			if (WEXITSTATUS(status))
-				throw (502);
-			else if (WIFSIGNALED(status))
-				throw (504);
-		}
-		return ;
-	} catch (int error) {
-		debugger.error("CGI error: " + std::to_string(error));
-		
-		return ;
+	pid_t pid = fork();
+	if (pid < 0)
+	{
+		debugger.error("Could not fork CGI.");
+		throw(500);
 	}
+	else if (pid == 0) // child
+	{
+		if (dup2(fileno(_tmpin), STDIN_FILENO) < 0 ||
+			dup2(fileno(_tmpout), STDOUT_FILENO) < 0)
+		{
+			debugger.error("Failed to dup2 the CGI.");
+			std::exit(errno); // exit the child
+		}
+		char** envs = map_to_array(_env);
+		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
+		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
+		_argvp = vec_to_array(_query_parameters);
+		execve(_cgi_path.c_str(), _argvp, envs);
+		debugger.error("Could not execute CGI. Error happened in execute_cgi");
+		std::exit(errno); // exit the child
+	}
+	else // parent
+		return wait_for_child(pid);
+
+	//try {
+	//	int	pid = fork();												//forks a new process
+
+	//	if (pid < 0)												//return in case it failes
+	//		throw (500);
+	//	else if (pid == 0)											//in the child process
+	//	{
+	//		pid = fork();
+	//		if (pid < 0)												//return in case it failes
+	//			throw (500);
+	//		if (pid == 0) // timeout handling. for that we are using a fork
+	//		{
+	//			sleep(2);
+	//			pid_t	ppid = getppid();
+	//			debugger.debug("CGI timeout: killing pid " + std::to_string(ppid));
+	//			if (pid != 1)
+	//				kill(ppid, SIGKILL);
+	//			exit(EXIT_SUCCESS);
+	//		}
+	//		else  // execute the php in the child
+	//		{
+	//			int check1 = dup2(_fd_in, STDIN_FILENO);
+	//			int check2 = dup2(_fd_out, STDOUT_FILENO);						//stdout now points to the tmpfile
+	//			if (check1 == -1 || check2 == -1)
+	//				throw (500);
+	//			_query_parameters.insert(_query_parameters.begin(), _path.c_str());
+	//			_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
+	//			_argvp = vec_to_array(_query_parameters);
+	//			execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
+	//			kill(pid, SIGKILL);
+	//			exit(EXIT_SUCCESS);
+	//		}
+	//	}
+	//	else														//int the parent process
+	//	{
+	//		int	status;
+	//		waitpid(pid, &status, 0);								// wait until child terminates, status of the pid gets written in status variable
+	//		close(_fd_in);
+	//		if (WEXITSTATUS(status))
+	//			throw (502);
+	//		else if (WIFSIGNALED(status))
+	//			throw (504);
+	//	}
+	//	return ;
+	//} catch (int error) {
+	//	debugger.error("CGI error: " + std::to_string(error));
+		
+	//	return ;
+	//}
 }
 
 /**

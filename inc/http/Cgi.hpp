@@ -36,10 +36,11 @@ class	CGI
 	void		set_tmps(void);
 	void		write_in_std_in(void);
 	void		set_environment(void);
-	void		write_in_std_out(void);
+	void		execute_cgi(void);
 	void		read_in_buff(void);
 	static void	sig_handler(int signum);
 	std::string	get_buf(void);
+	void wait_for_child(pid_t worker_pid);
 
 	std::string	get_query(std::string referer);
 

@@ -155,7 +155,7 @@ void	ClientSocket::two(void)
 {
 	USE_DEBUGGER;
 	try {
-		_process._CGI.write_in_std_out();
+		_process._CGI.execute_cgi();
 	} catch (int error) {
 		debugger.error("Error in CGI");
 		_event = POLLERR;
