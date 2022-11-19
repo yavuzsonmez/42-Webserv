@@ -51,7 +51,6 @@ std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<Server
 	return server_names;
 }
 
-
 /**
  * @brief Iterate over all server blocks and makes sure each of them has the given keyType jsut once.
  * 

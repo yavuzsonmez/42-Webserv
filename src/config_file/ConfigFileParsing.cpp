@@ -66,6 +66,7 @@ bool ConfigFileParsing::validationDuplicationCheck() {
  * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
  * - runs validationDuplicationCheck(), checking for logic duplicates
  * - checks that there is a root available in each server block
+ * - checks that there is a server name available in each server block
  * - checks that for every location cgi there is a file ending available
  * @return true 
  * @return false 
@@ -76,8 +77,20 @@ bool ConfigFileParsing::validateConfiguration() {
 	if (validationDuplicationCheck()) {
 		debugger.debug("Configuration file has no detected duplicates in ports, server names, error pages or post_max_body_size.");
 	}
-	if (!keyExistsInEachServerBlock(serverBlocks, ROOT)) {
-		debugger.error("Configuration file has no root defined in one or more server blocks.");
+	if (keyExistsInEachServerBlock(serverBlocks, CGI_EXECUTABLE_PATH) != keyExistsInEachServerBlock(serverBlocks, CGI_FILEENDING)) {
+		debugger.error("Configuration file has a cgi executable or cgi fileendinged defined but not the other in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, LISTEN)) {
+		debugger.error("Configuration file has no ports defined in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, INDEX)) {
+		debugger.error("Configuration file has no index file defined in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, SERVER_NAME)) {
+		debugger.error("Configuration file has no server name defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
 	}
 	if (!checkIfCgiExecutableAndFileEndingAreSet(serverBlocks)) {
