@@ -1,4 +1,5 @@
 #include "../../inc/http/Cgi.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 
 CGI::CGI()
 {
@@ -15,7 +16,7 @@ CGI::CGI()
  */
 void CGI::set_environment()
 {
-	_env["SERVER_SOFTWARE"] = "webserv";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
+	_env["SERVER_SOFTWARE"] = "webserv/1.0";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
 	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";										//The revision of the CGI specification to which this server complies. Format: CGI/revision
 	_env["SERVER_PROTOCOL"] = _request.getProtocol().first;							//The name and revision of the information protcol this request came in with. Format: protocol/revision
@@ -38,6 +39,7 @@ void CGI::set_environment()
 /**
  * @brief Construct a new CGI::CGI object
  * - Parses the query parameters
+ * - Sets the environment variables
  * 
  * @param request The request to handle 
  * @param config The server block configuration of the request
@@ -53,7 +55,6 @@ CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_
 	}
 
 	set_environment();
-
 	_envp = map_to_array(_env);
 }
 
@@ -104,6 +105,7 @@ void	CGI::write_in_std_in()
  */
 void	CGI::write_in_std_out(void)
 {
+	USE_DEBUGGER;
 	int	pid = fork();												//forks a new process
 
 	if (pid < 0)												//return in case it failes
@@ -113,7 +115,7 @@ void	CGI::write_in_std_out(void)
 		pid = fork();
 		if (pid < 0)												//return in case it failes
 			throw (500);
-		if (pid == 0)
+		if (pid == 0) // timeout handling. for that we are using a fork
 		{
 			sleep(2);
 			pid_t	ppid = getppid();
@@ -130,13 +132,13 @@ void	CGI::write_in_std_out(void)
 			_argvp = vec_to_array(_query_parameters);
 			execve(_cgi_path.c_str(), _argvp, _envp);		//executes the executable with its arguments
 			kill(pid, SIGKILL);
-			exit(EXIT_SUCCESS);												//exit the childprocess
+			exit(EXIT_SUCCESS);										//exit the childprocess
 		}
 	}
 	else														//int the parent process
 	{
 		int	status;
-		waitpid(pid, &status, 0);								//wait until child terminates
+		waitpid(pid, &status, 0);								// wait until child terminates, status of the pid gets written in status variable
 		close(_fd_in);
 		if (WEXITSTATUS(status))
 			throw (502);
