@@ -158,6 +158,7 @@ void	ClientSocket::two(void)
 		_process._CGI.execute_cgi();
 	} catch (int error) {
 		debugger.error("Error in CGI");
+		_process.exception(error);
 		return ;
 	}
 	_fd = _process._CGI._fd_out;
@@ -173,6 +174,7 @@ void	ClientSocket::three(void)
 		_process._CGI.read_in_buff();
 	} catch (int error) {
 		debugger.error("Error in CGI::three");
+		_process.server_overloaded();
 		return ;
 	}
 	_process.build_cgi_response();
