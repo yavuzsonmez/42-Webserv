@@ -1,7 +1,13 @@
 #include "../../inc/network/ClientSocket.hpp"
 
 
-
+/**
+ * @brief Store all the data related to the client and link it to the forwarded fd
+ * Initialize the data we need to track the process for one client to read the request and write the response
+ * @param clientSocket, Source information (source port and ip of the client)
+ * @param config, Config of the server
+ * @param forward, Fd linked to the client (where we will read the request and respond)
+ */
 ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config, int forward) : _config(config)
 {
 	_socket.sin_family = clientSocket.sin_family;
@@ -24,6 +30,9 @@ ClientSocket::~ClientSocket()
 
 }
 
+/**
+ * @brief Check if the client if over the defined timeout
+ */
 bool ClientSocket::Timeout()
 {
 	if (std::time(NULL) - _timeout > 5)
@@ -32,6 +41,9 @@ bool ClientSocket::Timeout()
 
 }
 
+/**
+ * @brief Track the next function to execute
+ */
 void	ClientSocket::call_func_ptr(void)
 {
 	(this->*_func_ptr)();
@@ -77,7 +89,7 @@ void	ClientSocket::read_in_buffer(void)
 }
 
 /**
- * @brief writes the the response to the clientSocket
+ * @brief writes the response to the clientSocket
  */
 void	ClientSocket::write_from_buffer(void)
 {
@@ -94,7 +106,7 @@ void	ClientSocket::write_from_buffer(void)
 
 /**
  * @brief sets up the process object.
- * in case of an cgi, it sets the _func_ptr to the next function that handels the cgi and updates the filedescriptor
+ * in case of a cgi, it sets the _func_ptr to the next function that handels the cgi and updates the filedescriptor
  */
 void	ClientSocket::set_up(void)
 {
