@@ -107,6 +107,7 @@ void	ClientSocket::set_up(void)
 	catch (int e)
 	{
 		_process.exception(e);
+		return ;
 	}
 	if (_process._with_cgi)
 	{

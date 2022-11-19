@@ -41,12 +41,14 @@ void	Process::process_request(void)
 		try {
 			handle_request();}
 		catch (int e) {
-			throw (e);
+			exception(501);
+			return ;
 		}
 	}
 	else
 	{
-		throw (501);
+		exception(501);
+		return ;
 	}
 }
 
@@ -58,47 +60,55 @@ void	Process::process_request(void)
 void	Process::handle_request(void)
 {
 	std::string	path;
-	if (_request.getPath().first == "/")
+	if (_request.getPath().first == "/") // if the script is the root path
 	{
-		if (_request.getScript().first.empty())
+		if (_request.getScript().first.empty()) // case: no script and we return the given index if available
 		{
 			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
-				throw (e);}
+				exception(404);
+				return ;
+			}
 		}
-		else
+		else // this is being called when a script is given and we do find it / do not find it 
 		{
 			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
-				throw (e);}
+				exception(500);
+				return ;
+			}
 		}
 		return ;
 	}
-	else if (check_location())
+	else if (check_location()) // here we check if the location exists (target directory)
 	{
-		if (_request.getScript().first.empty())
+		if (_request.getScript().first.empty()) // if no script is given
 		{
-			
+			// here we use the location directory list to list all files in the directory
 			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
 			{
 				try {
 					build_dl_response();}
 				catch (int e){
-					throw (e);}
+					exception(404);
+					return ;
+				}
 			}
 			else
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
-				if (find_vector(_methods, _request.getMethod().first) == -1)
-					throw (501);
+				if (find_vector(_methods, _request.getMethod().first) == -1) // the method is not allowed
+					exception(404);
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
-					throw (e);}
+					exception(404);
+					return ;
+				}
 			}
 		}
 		else
@@ -111,10 +121,15 @@ void	Process::handle_request(void)
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
-					throw (e);}
+					exception(401);
+					return ;
+				}
 			}
 			else
-				throw(404);
+			{
+				exception(401);
+				return ;
+			}
 		}
 	}
 	else
@@ -276,37 +291,43 @@ void	Process::exception(int e)
 			try {
 				build_response("default_pages/404_default.html", "404", "Not Found");}
 			catch (int e) {
-				throw (e);}
+				throw (e);
+			}
 			break;
 		case 405:
 			try {
 				build_response("default_pages/405_default.html", "405", "Method Not Allowed");}
 			catch (int e) {
-				throw (e);}
+				throw (e);
+			}
 			break;
 		case 500:
 			try {
 				build_response("default_pages/500_default.html", "500", "Internal Server Error");}
 			catch (int e) {
-				throw (e);}
+				throw (e);
+			}
 			break;
 		case 501:
 			try {
 				build_response("default_pages/501_default.html", "501", "Not Implemented");}
 			catch (int e) {
-				throw (e);}
+				throw (e);
+			}
 			break;
 		case 502:
 			try {
 				build_response("default_pages/502_default.html", "502", "Bad Gateway");}
 			catch (int e) {
-				throw (e);}
+				throw (e);
+			}
 			break;
 		case 504:
 			try {
 				build_response("default_pages/504_default.html", "504", "Gateway Timeout");}
 			catch (int e) {
-				throw (e);}
+				throw (e);
+			}
 			break;
 	}
 }

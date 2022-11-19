@@ -154,6 +154,7 @@ void	CGI::write_in_std_out(void)
 		return ;
 	} catch (int error) {
 		debugger.error("CGI error: " + std::to_string(error));
+		
 		return ;
 	}
 }
@@ -171,6 +172,7 @@ void	CGI::read_in_buff(void)
 			throw (500);
 	} catch (int error) {
 		debugger.error("CGI error: " + std::to_string(error));
+		close(_fd_out);
 		return ;
 	}
 	rewind(_tmpout);											//move the courser back to the beginning
