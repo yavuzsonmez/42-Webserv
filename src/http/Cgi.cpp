@@ -208,9 +208,9 @@ void	CGI::read_in_buff(void)
 	USE_DEBUGGER;
 	if (_fd_in < 0)
 		return;
-	if (_tmpout != NULL)
+	if (_tmpout == NULL)
 		return;
-	if (_tmpin != NULL)
+	if (_tmpin == NULL)
 		return;
 	try {
 		if (fseek(_tmpout, 0, SEEK_END) < 0)							//set the courser in the filestream to the end

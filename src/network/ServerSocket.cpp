@@ -87,12 +87,12 @@ void ServerSocket::processConnections()
 	{
 		std::cout << "Currently open fds: " << pollfds.size() << std::endl;
 		if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) //Poll will check if fds are rdy for I/O and fill the revents
-			std::cout << "An error occured when polling.";
+			std::cout << "An error occured when polling."; // if an error occured, we shouldn't we skip?
 		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire set of sockets
 		{
 			if (i < listeningSockets) //the first set of struct are the ones of the listening sockets (ServerSockets).
 			{
-				removeIfNecessary(pollfds, i); // remove the client if necessary, not used at the moment!
+				removeIfNecessary(pollfds, i); // remove the client if necessary
 				if (pollfds[i].revents == POLLIN) //if they are rdy for "reading" we accept connection and got a new fd that we add to the set.
 				{
 					struct pollfd tmp;
@@ -140,15 +140,6 @@ void ServerSocket::processConnections()
 						pollfds[i].events = (*pos).second._event;
 						pollfds[i].fd = (*pos).second._fd;
 						(*pos).first = (*pos).second._fd;
-					}
-				}
-				else
-				{
-					if (pollfds[i].revents & POLLHUP || pollfds[i].revents & POLLERR || pollfds[i].revents & POLLNVAL)
-					{
-						close(pollfds[i].fd);
-						pollfds.erase(pollfds.begin() + i);
-						std::cout << "Client removed" << std::endl;
 					}
 				}
 			}
