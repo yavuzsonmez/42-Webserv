@@ -94,7 +94,7 @@ void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
 /**
  * @brief Here we check if the client connection broke. If it does, we make sure to remove it.
  * A connection to a client is being considered broken if the client has an revent of
- * POLLERR, POLLHUP, POLLNVAL or POLLHUP.
+ * POLLERR, POLLHUP.
  * @param pollfds poll fds
  * @param i index
  */
@@ -125,7 +125,7 @@ void ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
 	if (val == -1) { // fcntl failed, we now need to close the socket
-		disconnectClient(pollfds, i); // as we do not have a client to remove, we pass -1 here.
+		socketFailed(pollfds, i); // as we do not have a client to remove, we call socketFailed instead of disconnectClient
 		return; 
 	};
 	// set the pollfd to listen for POLLIN events (read events)
@@ -173,11 +173,17 @@ void ServerSocket::processConnections()
 			 */
 			else //Set of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
 			{
+				std::cout << "Currently connected: " << pollfds.size() << std::endl;
+				std::cout << i << " - status: " << pollfds[i].revents << std::endl;
 				client_iter	pos;
 				pos = get_CS_position(_clients, pollfds[i].fd); //retrieve the right client
 				if (pollfds[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
+					if ((*pos).second.Timeout()) //if the client timeouts, remove it from the list.
+					{
+						disconnectClient(pollfds, i);
+					}
 					if ((*pos).second._remove)
 					{
 						disconnectClient(pollfds, i);
@@ -212,98 +218,6 @@ void ServerSocket::processConnections()
 			}
 		}
 	}
-
-	//for (unsigned int i = 0; it != ite; ++it, ++i) //setup the expected event for the listening sockets to "read"
-	//{
-	//	pollfds[i].fd = *it;
-	//	pollfds[i].events = POLLIN;
-	//	pollfds[i].revents = 0;
-	//}
-	//while (1) //main loop where the magic happends
-	//{
-	//	std::cout << "Currently open fds: " << pollfds.size() << std::endl;
-	//	//std::cout << "Waiting for connections..." << std::endl;
-	//	if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) //Poll will check if fds are rdy for I/O and fill the revents
-	//		std::cout << "An error occured when polling."; 
-	//	for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire set of sockets
-	//	{
-	//		if (i < listeningSockets) //the first set of struct are the ones of the listening sockets (ServerSockets).
-	//		{
-	//			removeIfNecessary(pollfds, i); // remove the client if necessary
-	//			/**
-	//			 * Listening on ports and new connections only
-	//			 */
-	//			if (pollfds[i].revents == POLLIN) //if they are rdy for "reading" we accept connection and got a new fd that we add to the set.
-	//			{
-	//				struct pollfd tmp;
-	//				forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
-	//				if (forward == -1) continue;
-	//				int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
-	//				if (val == -1) {
-	//					close(forward);
-	//					debugger.warning("Closed connection!");
-	//					continue;
-	//				};
-	//				tmp.fd = forward;
-	//				tmp.events = POLLIN;
-	//				tmp.revents = 0;
-	//				pollfds.push_back(tmp); //add the new fd/socket to the set, considered as "client"
-	//				_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward))); //Link the forwarded fd to a new client
-	//			}
-	//		}
-	//		/**
-	//		 * 
-	//		 */
-	//		else //Set of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
-	//		{
-	//			client_iter	pos;
-	//			if (pollfds[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
-	//			{
-	//				pos = get_CS_position(_clients, pollfds[i].fd); //retrieve the right client
-	//				(*pos).second.call_func_ptr(); //execute the next operation on the fd
-	//				if ((*pos).second._remove)
-	//				{
-	//					_clients.erase(pos);
-	//					std::vector<pollfd>::iterator	del = pollfds.begin() + i;
-	//					pollfds.erase(del);
-	//				}
-	//				else
-	//				{
-	//					pollfds[i].events = (*pos).second._event;
-	//					pollfds[i].fd = (*pos).second._fd;
-	//					(*pos).first = (*pos).second._fd;
-	//				}
-	//			}
-	//		 	else if (pollfds[i].revents == 	POLLOUT)
-	//			{
-	//				pos = get_CS_position(_clients, pollfds[i].fd); //retrieve the client associated to the fd
-	//				(*pos).second.call_func_ptr(); //execute the next operation on the fd
-	//				if ((*pos).second._remove) //remove the client
-	//				{
-	//					_clients.erase(pos);
-	//					std::vector<pollfd>::iterator	del = pollfds.begin() + i;
-	//					pollfds.erase(del);
-	//				}
-	//				else
-	//				{
-	//					pollfds[i].events = (*pos).second._event;
-	//					pollfds[i].fd = (*pos).second._fd;
-	//					(*pos).first = (*pos).second._fd;
-	//				}
-	//			}
-	//			else
-	//			{
-	//				if (pollfds[i].revents & POLLHUP || pollfds[i].revents & POLLERR || pollfds[i].revents & POLLNVAL)
-	//				{
-	//					close(pollfds[i].fd);
-	//					std::vector<pollfd>::iterator	del = pollfds.begin() + i;
-	//					pollfds.erase(del);
-	//					std::cout << "Client removed" << std::endl;
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
 }
 
 /**
