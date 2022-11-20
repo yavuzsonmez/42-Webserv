@@ -54,6 +54,7 @@ bool	validate_url(std::string url);
 bool keyExistsInEachLocationBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType);
 bool checkIfCgiExecutableAndFileEndingAreSet(std::vector<ServerBlock> &serverBlocks);
 std::string remove_dot_if_first_character_is_dot(std::string to_edit);
+int is_valid_fd(int fd);
 
 /**
  * @brief converts any type into a string
