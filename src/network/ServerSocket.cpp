@@ -79,6 +79,25 @@ void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i, client_
 }
 
 /**
+ * @brief Here we check if the client connection broke. If it does, we make sure to remove it.
+ * A connection to a client is being considered broken if the client has an revent of
+ * POLLERR, POLLHUP, POLLNVAL or POLLHUP.
+ * @param pollfds poll fds
+ * @param i index
+ * @param pos position of client
+ */
+void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i, client_iter pos)
+{
+	if (pollfds[i].revents & ((POLLERR | POLLHUP | POLLNVAL | POLLHUP)))
+	{
+		close(pollfds[i].fd);
+		std::vector<pollfd>::iterator	del = pollfds.begin() + i;
+		pollfds.erase(del);
+		std::cout << "Client removed" << std::endl;
+	}
+}
+
+/**
  * @brief Here we listen on the ports and accept new incoming connections.
  * 
  * @param pollfds the pollfd vector
@@ -105,6 +124,7 @@ void ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward))); //Link the forwarded fd to a new client
 }
 
+
 /**
  * @brief Handles connections by using POLL
  * and checking if the fds are rdy for I/O operations
@@ -129,15 +149,16 @@ void ServerSocket::processConnections()
 			std::cout << "An error occured when polling."; 
 		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire set of sockets
 		{
-			if (i < listeningSockets) //the first set of struct are the ones of the listening sockets (ServerSockets).
+			/**
+			 * Listen to the listening sockets for new connections (ports)
+			 */
+			if (i < listeningSockets)
 			{
-				if (pollfds[i].revents == POLLIN) //if they are rdy for "reading" we accept connection and got a new fd that we add to the set.
-				{
+				if (pollfds[i].revents == POLLIN)
 					acceptNewConnectionsIfAvailable(pollfds, i);
-				}
 			}
 			/**
-			 * 
+			 * Listen to established connections
 			 */
 			else //Set of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
 			{
@@ -175,13 +196,7 @@ void ServerSocket::processConnections()
 				}
 				else
 				{
-					if (pollfds[i].revents & ((POLLERR | POLLHUP | POLLNVAL | POLLHUP)))
-					{
-						close(pollfds[i].fd);
-						std::vector<pollfd>::iterator	del = pollfds.begin() + i;
-						pollfds.erase(del);
-						std::cout << "Client removed" << std::endl;
-					}
+					checkIfConnectionIsBroken(pollfds, i, pos);
 				}
 			}
 		}

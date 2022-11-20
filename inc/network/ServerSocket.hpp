@@ -46,6 +46,7 @@ class ServerSocket
 		//std::map<unsigned long, ClientSocket> _clients;
 		void disconnectClient(std::vector<pollfd> &pollfds, int i, client_iter pos);
 		void acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds, int i);
+		void checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i, client_iter pos);
 		std::vector<std::pair<int, ClientSocket> >	_clients;
 		ServerBlock	_config;
 		unsigned int listeningSockets;
