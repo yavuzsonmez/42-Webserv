@@ -91,18 +91,12 @@ void	ClientSocket::read_in_buffer(void)
 
 /**
  * @brief writes the response to the clientSocket
+ * We need to check if the bytes are actually zero before we write to the clientSocket.
  */
 void	ClientSocket::write_from_buffer(void)
 {
-	std::cout << "FD: " << _fd << std::endl;
-	std::cout << "Bytes: " << _bytes << std::endl;
 	if (!is_valid_fd(_fd)) return ;
-	if (_bytes != 0)
-	{
-		std::cout << "CATCHED A POTENTIAL CRASH! " << std::endl;
-		_remove = true;
-		return ;
-	}
+	if (_bytes != 0) return;
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length(), 0);
 	_position += _bytes;
 	if (_position >= _process._response.get_response().length())
