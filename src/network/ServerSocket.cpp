@@ -71,7 +71,8 @@ void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
 	client_iter pos = get_CS_position(_clients, pollfds[i].fd);
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
-	_clients.erase(pos);
+	if (pos != _clients.end())
+		_clients.erase(pos);
 	std::cout << "Client removed and connection closed." << std::endl;
 }
 
@@ -88,13 +89,16 @@ void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i
 	{
 		std::cout << "Connection broken. Error code: " << pollfds[i].revents << std::endl;
 		disconnectClient(pollfds, i);
+		return ;
 	}
 	if (pollfds[i].revents & POLLNVAL)
 	{
 		std::cout << "Found an invalid connection. Taking care. " << pollfds[i].revents << std::endl;
-		pollfds.erase(pollfds.begin() + i);
 		client_iter pos = get_CS_position(_clients, pollfds[i].fd);
-		_clients.erase(pos);
+		if (pos != _clients.end())
+			_clients.erase(pos);
+		pollfds.erase(pollfds.begin() + i);
+		return ;
 	}
 }
 
@@ -115,6 +119,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 
 	int forward;
 	forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
+	std::cout << "New connection accepted on fd " << forward << std::endl;
 	if (forward == -1) return false;
 	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
