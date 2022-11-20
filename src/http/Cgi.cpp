@@ -216,7 +216,6 @@ void	CGI::read_in_buff(void)
 		if (!is_valid_fd(_fd_in) || !is_valid_fd(_fd_out))
 		{
 			close(_fd_in);
-			close(_fd_out);
 			throw(503);
 			return ;
 		}
