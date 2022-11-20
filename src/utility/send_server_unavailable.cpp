@@ -5,6 +5,7 @@
 
 /**
  * Sends a server unavailable message to the client (given filedescriptor)
+ * After sending it here, do not forget to close the filedescriptor!
  * @param fd filedescriptor
 */
 int send_server_unavailable(int forward)
