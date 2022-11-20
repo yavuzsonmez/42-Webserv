@@ -75,7 +75,7 @@ void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i, client_
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
 	_clients.erase(pos);
-	std::cout << "Client removed" << std::endl;
+	std::cout << "Client removed and connection closed." << std::endl;
 }
 
 /**
@@ -93,13 +93,12 @@ void ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	int forward;
 	forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
 	if (forward == -1) return;
+	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
-	if (val == -1) {
-		close(forward);
-		debugger.warning("Closed connection!");
+	if (val == -1) { // fcntl failed, we now need to close the socket
+		disconnectClient(pollfds, i, _clients.begin());
 		return;
 	};
-	tmp.fd = forward;
 	tmp.events = POLLIN;
 	tmp.revents = 0;
 	pollfds.push_back(tmp); //add the new fd/socket to the set, considered as "client"
@@ -132,9 +131,6 @@ void ServerSocket::processConnections()
 		{
 			if (i < listeningSockets) //the first set of struct are the ones of the listening sockets (ServerSockets).
 			{
-				/**
-				 * Listening on ports and new connections only
-				 */
 				if (pollfds[i].revents == POLLIN) //if they are rdy for "reading" we accept connection and got a new fd that we add to the set.
 				{
 					acceptNewConnectionsIfAvailable(pollfds, i);
@@ -179,7 +175,7 @@ void ServerSocket::processConnections()
 				}
 				else
 				{
-					if (pollfds[i].revents & POLLHUP || pollfds[i].revents & POLLERR || pollfds[i].revents & POLLNVAL)
+					if (pollfds[i].revents & ((POLLERR | POLLHUP | POLLNVAL | POLLHUP)))
 					{
 						close(pollfds[i].fd);
 						std::vector<pollfd>::iterator	del = pollfds.begin() + i;
