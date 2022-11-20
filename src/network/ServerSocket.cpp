@@ -149,12 +149,17 @@ void ServerSocket::processConnections()
 	std::vector<int>::iterator	it = _fds.begin();
 	std::vector<int>::iterator	ite = _fds.end();
 
-	for (unsigned int i = 0; it != ite; ++it, ++i) //setup the expected event for the listening sockets to "read"
+	//setup the expected event for the listening sockets to "read"
+	for (unsigned int i = 0; it != ite; ++it, ++i)
 	{
 		pollfds[i].fd = *it;
 		pollfds[i].events = POLLIN;
 		pollfds[i].revents = 0;
 	}
+	
+	// TODO:
+	// Remove the unreadable function pointers.
+	// See, when the response is actually being sent
 	// Main routine. This will be called the whole time the server runs
 	while (1) {
 		if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) // Here we wait for poll information.

@@ -56,6 +56,9 @@ void	Process::process_request(void)
  * @brief Handles request
  * TODO: Add method enum to handle all request in one place
  * 
+ * TODO: Please improve readability, this is very confusing. It is not clear what does what.
+ * Use at least 6 seperate functions for everything done in this function
+ * 
  */
 void	Process::handle_request(void)
 {
