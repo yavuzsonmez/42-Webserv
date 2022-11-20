@@ -180,8 +180,6 @@ void ServerSocket::processConnections()
 			 */
 			else //area of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
 			{
-				std::cout << "Currently connected: " << pollfds.size() << std::endl;
-				std::cout << i << " - status: " << pollfds[i].revents << std::endl;
 				client_iter	pos;
 				pos = get_CS_position(_clients, pollfds[i].fd); //retrieve the right client
 				if (pollfds[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.

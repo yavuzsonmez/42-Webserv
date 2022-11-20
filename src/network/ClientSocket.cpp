@@ -95,12 +95,14 @@ void	ClientSocket::read_in_buffer(void)
  */
 void	ClientSocket::send_response(void)
 {
+	USE_DEBUGGER;
 	if (!is_valid_fd(_fd)) return ;
 	if (_bytes != 0) return;
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length(), 0);
 	if (_bytes == -1)
 	{
 		_remove = true;
+		debugger.error("Error while sending response to client");
 		return ;
 	}
 	_position += _bytes;
