@@ -39,6 +39,7 @@ class ServerSocket
 		};
 
 	private:
+		void removeIfNecessary(std::vector<pollfd> pollfds, int i);
 		std::vector<int>	_fds;
 		std::vector<struct sockaddr_in>	_sockets;
 		//std::map<int, ClientSocket> _clients;

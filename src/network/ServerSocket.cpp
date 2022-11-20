@@ -48,6 +48,22 @@ ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(c
 ServerSocket::~ServerSocket(){}
 
 /**
+ * @brief removes a client if necessary
+ * 
+ * @param client 
+ * @param position of current client in the vector
+ */
+void ServerSocket::removeIfNecessary(std::vector<pollfd> pollfds, int i)
+{
+	if (pollfds[i].revents & POLLHUP || pollfds[i].revents & POLLERR || pollfds[i].revents & POLLNVAL)
+	{
+		close(pollfds[i].fd);
+		pollfds.erase(pollfds.begin() + i);
+		std::cout << "Client removed" << std::endl;
+	}
+}
+
+/**
  * @brief Handles connections by using POLL
  * and checking if the fds are rdy for I/O operations
  */
@@ -75,6 +91,7 @@ void ServerSocket::processConnections()
 		{
 			if (i < listeningSockets) //the first set of struct are the ones of the listening sockets (ServerSockets).
 			{
+				//removeIfNecessary(pollfds, i); // remove the client if necessary, not used at the moment!
 				if (pollfds[i].revents == POLLIN) //if they are rdy for "reading" we accept connection and got a new fd that we add to the set.
 				{
 					struct pollfd tmp;
