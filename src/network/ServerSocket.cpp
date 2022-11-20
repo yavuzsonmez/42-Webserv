@@ -203,7 +203,8 @@ void ServerSocket::processConnections()
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second._remove) //remove the client
 					{
-						_clients.erase(pos);
+						if (pos != _clients.end())
+							_clients.erase(pos);
 						std::vector<pollfd>::iterator	del = pollfds.begin() + i;
 						pollfds.erase(del);
 					}
