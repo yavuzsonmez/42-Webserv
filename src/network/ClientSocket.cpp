@@ -94,8 +94,7 @@ void	ClientSocket::read_in_buffer(void)
  */
 void	ClientSocket::write_from_buffer(void)
 {
-	// Next crash is happening here. Investigate!
-	// Maybe check the file descriptors for validity
+	if (!is_valid_fd(_fd)) return ;
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length(), 0);
 	_position += _bytes;
 	if (_position >= _process._response.get_response().length())
