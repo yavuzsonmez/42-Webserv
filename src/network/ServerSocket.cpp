@@ -86,6 +86,7 @@ void ServerSocket::processConnections()
 	while (1) //main loop where the magic happends
 	{
 		std::cout << "Currently open fds: " << pollfds.size() << std::endl;
+		//std::cout << "Waiting for connections..." << std::endl;
 		if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) //Poll will check if fds are rdy for I/O and fill the revents
 			std::cout << "An error occured when polling."; // if an error occured, we shouldn't we skip?
 		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire set of sockets
@@ -140,6 +141,15 @@ void ServerSocket::processConnections()
 						pollfds[i].events = (*pos).second._event;
 						pollfds[i].fd = (*pos).second._fd;
 						(*pos).first = (*pos).second._fd;
+					}
+				}
+				else
+				{
+					if (pollfds[i].revents & POLLHUP || pollfds[i].revents & POLLERR || pollfds[i].revents & POLLNVAL)
+					{
+						close(pollfds[i].fd);
+						pollfds.erase(pollfds.begin() + i);
+						std::cout << "Client removed" << std::endl;
 					}
 				}
 			}
