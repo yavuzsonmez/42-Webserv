@@ -13,3 +13,4 @@ TODO:
 
 - Implement error pages. Error pages can be defined in the configuration already but are not handled yet Error pages need to be able to be defined for every server block.
 - It seems like we are not closing all the forks we open. We should look into this.
+- Seperate the client sockets from the server sockets. There is no reason putting them in the same vector
