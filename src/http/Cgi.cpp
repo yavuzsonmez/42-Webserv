@@ -213,6 +213,13 @@ void	CGI::read_in_buff(void)
 	if (_tmpin == NULL)
 		return;
 	try {
+		if (!is_valid_fd(_fd_in) || !is_valid_fd(_fd_out))
+		{
+			close(_fd_in);
+			close(_fd_out);
+			throw(503);
+			return ;
+		}
 		if (fseek(_tmpout, 0, SEEK_END) < 0)							//set the courser in the filestream to the end
 			throw (500);
 		if ((_tmp_size = ftell(_tmpout)) == -1)								//assign the position of the courser to _tmp_size

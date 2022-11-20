@@ -167,6 +167,7 @@ void	ClientSocket::two(void)
 		_process._CGI.execute_cgi();
 	} catch (int error) {
 		debugger.error("Error in CGI");
+		std::cout << error << std::endl;
 		_event = POLLERR;
 		_process.server_overloaded();
 		return ;
