@@ -95,9 +95,9 @@ void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i
 	{
 		std::cout << "Found an invalid connection. Taking care. " << pollfds[i].revents << std::endl;
 		client_iter pos = get_CS_position(_clients, pollfds[i].fd);
+		pollfds.erase(pollfds.begin() + i);
 		if (pos != _clients.end())
 			_clients.erase(pos);
-		pollfds.erase(pollfds.begin() + i);
 		return ;
 	}
 }
@@ -127,6 +127,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 		socketFailed(pollfds, i); // as we do not have a client to remove, we call socketFailed instead of disconnectClient
 		return false; 
 	};
+
 	// set the pollfd to listen for POLLIN events (read events)
 	tmp.events = POLLIN;
 	tmp.revents = 0;
@@ -157,8 +158,8 @@ void ServerSocket::processConnections()
 	// Main routine. This will be called the whole time the server runs
 	while (1) {
 		if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) // Here we wait for poll information.
-			std::cout << "An error occured when polling."; 
-		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire set of sockets
+			std::cout << "An error occured when polling.";
+		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire area of sockets
 		{
 			/**
 			 * Listen to the listening sockets for new connections (ports)
@@ -172,7 +173,7 @@ void ServerSocket::processConnections()
 			/**
 			 * Listen to established connections
 			 */
-			else //Set of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
+			else //area of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
 			{
 				std::cout << "Currently connected: " << pollfds.size() << std::endl;
 				std::cout << i << " - status: " << pollfds[i].revents << std::endl;
@@ -201,12 +202,10 @@ void ServerSocket::processConnections()
 			 	else if (pollfds[i].revents == 	POLLOUT)
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
-					if ((*pos).second._remove) //remove the client
+					if ((*pos).second._remove) // The client asks to be removed
 					{
-						if (pos != _clients.end())
-							_clients.erase(pos);
-						std::vector<pollfd>::iterator	del = pollfds.begin() + i;
-						pollfds.erase(del);
+						disconnectClient(pollfds, i);
+						continue;
 					}
 					else
 					{
