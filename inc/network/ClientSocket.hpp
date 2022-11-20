@@ -21,7 +21,7 @@ class ClientSocket
 		void	call_func_ptr(void);
 
 		void	read_in_buffer(void);
-		void	write_from_buffer(void);
+		void	send_response(void);
 
 		void	one(void);
 		void	two(void);

@@ -93,7 +93,7 @@ void	ClientSocket::read_in_buffer(void)
  * @brief writes the response to the clientSocket
  * We need to check if the bytes are actually zero before we write to the clientSocket.
  */
-void	ClientSocket::write_from_buffer(void)
+void	ClientSocket::send_response(void)
 {
 	if (!is_valid_fd(_fd)) return ;
 	if (_bytes != 0) return;
@@ -136,7 +136,7 @@ void	ClientSocket::set_up(void)
 	{
 		_bytes = 0;
 		_position = 0;
-		_func_ptr = &ClientSocket::write_from_buffer;
+		_func_ptr = &ClientSocket::send_response;
 		_event = POLLOUT;
 	}
 	return ;
@@ -192,6 +192,6 @@ void	ClientSocket::three(void)
 	_process.build_cgi_response();
 	_fd = _client_fd;
 	_event = POLLOUT;
-	_func_ptr = &ClientSocket::write_from_buffer;
+	_func_ptr = &ClientSocket::send_response;
 	return ;
 }
