@@ -48,22 +48,6 @@ ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(c
 ServerSocket::~ServerSocket(){}
 
 /**
- * @brief removes a client if necessary
- * 
- * @param client 
- * @param position of current client in the vector
- */
-void ServerSocket::removeIfNecessary(std::vector<pollfd> pollfds, int i)
-{
-	if (pollfds[i].revents & POLLHUP || pollfds[i].revents & POLLERR || pollfds[i].revents & POLLNVAL)
-	{
-		close(pollfds[i].fd);
-		pollfds.erase(pollfds.begin() + i);
-		std::cout << "Client removed" << std::endl;
-	}
-}
-
-/**
  * @brief Removes the socket from the vector and closes it.
  * This should be called if the client was not yet created
  * @param pollfds the pollfds 
@@ -73,7 +57,7 @@ void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
 {
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
-	std::cout << "Client removed and connection closed." << std::endl;
+	std::cout << "Socket closed because it failed." << std::endl;
 }
 
 /**
@@ -105,6 +89,13 @@ void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i
 		std::cout << "Connection broken. Error code: " << pollfds[i].revents << std::endl;
 		disconnectClient(pollfds, i);
 	}
+	if (pollfds[i].revents & POLLNVAL)
+	{
+		std::cout << "Found an invalid connection. Taking care. " << pollfds[i].revents << std::endl;
+		pollfds.erase(pollfds.begin() + i);
+		client_iter pos = get_CS_position(_clients, pollfds[i].fd);
+		_clients.erase(pos);
+	}
 }
 
 /**
@@ -112,27 +103,31 @@ void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i
  * 
  * @param pollfds the pollfd vector
  * @param i index of the current pollfd
+ * 
+ * @returns false, if a client was declined
  */
-void ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds, int i) {
+bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds, int i) {
 	USE_DEBUGGER;
+
 	struct pollfd tmp;
 	struct sockaddr_in clientSocket;
 	socklen_t socketSize = sizeof(clientSocket);
 
 	int forward;
 	forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
-	if (forward == -1) return;
+	if (forward == -1) return false;
 	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
 	if (val == -1) { // fcntl failed, we now need to close the socket
 		socketFailed(pollfds, i); // as we do not have a client to remove, we call socketFailed instead of disconnectClient
-		return; 
+		return false; 
 	};
 	// set the pollfd to listen for POLLIN events (read events)
 	tmp.events = POLLIN;
 	tmp.revents = 0;
 	pollfds.push_back(tmp); //add the new fd/socket to the set, considered as "client"
 	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward))); //Link the forwarded fd to a new client
+	return true;
 }
 
 
@@ -166,7 +161,8 @@ void ServerSocket::processConnections()
 			if (i < listeningSockets)
 			{
 				if (pollfds[i].revents == POLLIN)
-					acceptNewConnectionsIfAvailable(pollfds, i);
+					if (!acceptNewConnectionsIfAvailable(pollfds, i))
+						continue;
 			}
 			/**
 			 * Listen to established connections
@@ -183,10 +179,12 @@ void ServerSocket::processConnections()
 					if ((*pos).second.Timeout()) //if the client timeouts, remove it from the list.
 					{
 						disconnectClient(pollfds, i);
+						continue;
 					}
 					if ((*pos).second._remove)
 					{
 						disconnectClient(pollfds, i);
+						continue;
 					}
 					else
 					{
@@ -214,6 +212,7 @@ void ServerSocket::processConnections()
 				else
 				{
 					checkIfConnectionIsBroken(pollfds, i);
+					continue;
 				}
 			}
 		}

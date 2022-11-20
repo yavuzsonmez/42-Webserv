@@ -69,9 +69,9 @@ FLAGS			=		-Werror -Wall -Wextra
 # Here we define how every single file is being compiled.
 # With MAKECMDGOALS we detect if we are running a debug build and then inject the defines.
 ifeq ($(MAKECMDGOALS),rebug)
-    FLAGS += -D DEBUGMODE=1 -g -fsanitize=address -D ENABLE_LOGGING=1
+    FLAGS += -D DEBUGMODE=1 -g -fsanitize=address -D ENABLE_LOGGING=1 -fno-omit-frame-pointer
 else ifeq ($(MAKECMDGOALS),debug)
-    FLAGS += -D DEBUGMODE=1 -g -fsanitize=address -D ENABLE_LOGGING=1
+    FLAGS += -D DEBUGMODE=1 -g -fsanitize=address -D ENABLE_LOGGING=1 -fno-omit-frame-pointer
 else
     FLAGS += -D DEBUGMODE=0 -D ENABLE_LOGGING=0 -O3 -flto
 endif
