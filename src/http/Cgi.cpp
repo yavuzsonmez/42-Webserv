@@ -88,6 +88,7 @@ void	CGI::set_tmps(void)
 /**
  * @brief writes the body from the request in _tmp_in which later will be dupped to the STDIN
  * Takes the _fd_in and writes to it the body of the request
+ * We catch invalid fds and we check if 
  */
 void	CGI::write_in_std_in()
 {
@@ -173,6 +174,13 @@ void	CGI::execute_cgi(void)
 	}
 	else if (pid == 0) // child
 	{
+		// we check if the file descriptors are valid, if not, we close them to not leak them.
+		if (!is_valid_fd(_fd_in) || !is_valid_fd(_fd_out))
+		{
+			close(_fd_in);
+			close(_fd_out);
+			std::exit(EXIT_FAILURE);
+		}
 		if (dup2(fileno(_tmpin), STDIN_FILENO) < 0 ||
 			dup2(fileno(_tmpout), STDOUT_FILENO) < 0)
 		{
@@ -199,6 +207,10 @@ void	CGI::read_in_buff(void)
 {
 	USE_DEBUGGER;
 	if (_fd_in < 0)
+		return;
+	if (_tmpout != NULL)
+		return;
+	if (_tmpin != NULL)
 		return;
 	try {
 		if (fseek(_tmpout, 0, SEEK_END) < 0)							//set the courser in the filestream to the end
