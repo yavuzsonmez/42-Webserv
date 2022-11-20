@@ -64,14 +64,27 @@ void ServerSocket::removeIfNecessary(std::vector<pollfd> pollfds, int i)
 }
 
 /**
+ * @brief Removes the socket from the vector and closes it.
+ * This should be called if the client was not yet created
+ * @param pollfds the pollfds 
+ * @param i index
+ */
+void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
+{
+	close(pollfds[i].fd);
+	pollfds.erase(pollfds.begin() + i);
+	std::cout << "Client removed and connection closed." << std::endl;
+}
+
+/**
  * @brief Disconnects the given client from the server
  * 
  * @param pollfds the pollfds 
  * @param i index
- * @param client_iter position of the client to be disconnected
  */
-void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i, client_iter pos)
+void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
 {
+	client_iter pos = get_CS_position(_clients, pollfds[i].fd);
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
 	_clients.erase(pos);
@@ -84,16 +97,13 @@ void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i, client_
  * POLLERR, POLLHUP, POLLNVAL or POLLHUP.
  * @param pollfds poll fds
  * @param i index
- * @param pos position of client
  */
-void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i, client_iter pos)
+void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i)
 {
-	if (pollfds[i].revents & ((POLLERR | POLLHUP | POLLNVAL | POLLHUP)))
+	if (pollfds[i].revents & ((POLLERR | POLLHUP)))
 	{
-		close(pollfds[i].fd);
-		std::vector<pollfd>::iterator	del = pollfds.begin() + i;
-		pollfds.erase(del);
-		std::cout << "Client removed" << std::endl;
+		std::cout << "Connection broken. Error code: " << pollfds[i].revents << std::endl;
+		disconnectClient(pollfds, i);
 	}
 }
 
@@ -112,12 +122,13 @@ void ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	int forward;
 	forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
 	if (forward == -1) return;
-	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd
+	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
 	if (val == -1) { // fcntl failed, we now need to close the socket
-		disconnectClient(pollfds, i, _clients.begin());
-		return;
+		disconnectClient(pollfds, i); // as we do not have a client to remove, we pass -1 here.
+		return; 
 	};
+	// set the pollfd to listen for POLLIN events (read events)
 	tmp.events = POLLIN;
 	tmp.revents = 0;
 	pollfds.push_back(tmp); //add the new fd/socket to the set, considered as "client"
@@ -169,7 +180,7 @@ void ServerSocket::processConnections()
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second._remove)
 					{
-						disconnectClient(pollfds, i, pos);
+						disconnectClient(pollfds, i);
 					}
 					else
 					{
@@ -196,7 +207,7 @@ void ServerSocket::processConnections()
 				}
 				else
 				{
-					checkIfConnectionIsBroken(pollfds, i, pos);
+					checkIfConnectionIsBroken(pollfds, i);
 				}
 			}
 		}
