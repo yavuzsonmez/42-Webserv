@@ -124,9 +124,20 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
 	if (val == -1) { // fcntl failed, we now need to close the socket
-		socketFailed(pollfds, i); // as we do not have a client to remove, we call socketFailed instead of disconnectClient
+		close(forward);
 		return false; 
 	};
+	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
+		std::cout << "Maximum number of clients reached. Declining connection." << std::endl;
+		int result = send_server_unavailable(forward);
+		if (result == -1) {
+			std::cout << "Error while sending 503 to client. Closing connection." << std::endl;
+			close(forward);
+			return false;
+		}
+		close(forward);
+		return false;
+	}
 
 	// set the pollfd to listen for POLLIN events (read events)
 	tmp.events = POLLIN;

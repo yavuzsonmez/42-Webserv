@@ -351,7 +351,8 @@ void	Process::exception(int e)
 			break;
 		default:
 			try {
-				build_response("default_pages/500_default.html", "504", "Gateway Timeout");}
+				build_response("default_pages/503_default.html", "503", "Server not available");
+			}
 			catch (int e) {
 				throw (e);
 			}
