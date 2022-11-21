@@ -68,12 +68,13 @@ void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
  */
 void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
 {
+	USE_DEBUGGER;
 	client_iter pos = get_CS_position(_clients, pollfds[i].fd);
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
 	if (pos != _clients.end())
 		_clients.erase(pos);
-	std::cout << "Client removed and connection closed." << std::endl;
+	debugger.verbose("Client removed and connection closed.");
 }
 
 /**
