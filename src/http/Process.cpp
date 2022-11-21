@@ -309,49 +309,55 @@ void	Process::exception(int e)
 	{
 		case 404:
 			try {
-				build_response("default_pages/404_default.html", "404", "Not Found");}
+				build_response(_config.getErrorPagePathForCode(404), "404", "Not Found");
+			}
 			catch (int e) {
 				throw (e);
 			}
 			break;
 		case 405:
 			try {
-				build_response("default_pages/405_default.html", "405", "Method Not Allowed");}
+				build_response(_config.getErrorPagePathForCode(405), "405", "Method not allowed");
+			}
 			catch (int e) {
 				throw (e);
 			}
 			break;
 		case 500:
 			try {
-				build_response("default_pages/500_default.html", "500", "Internal Server Error");}
+				build_response(_config.getErrorPagePathForCode(500), "500", "Internal server error");
+			}
 			catch (int e) {
 				throw (e);
 			}
 			break;
 		case 501:
 			try {
-				build_response("default_pages/501_default.html", "501", "Not Implemented");}
+				build_response(_config.getErrorPagePathForCode(501), "501", "Not implemented");
+			}
 			catch (int e) {
 				throw (e);
 			}
 			break;
 		case 502:
 			try {
-				build_response("default_pages/502_default.html", "502", "Bad Gateway");}
+				build_response(_config.getErrorPagePathForCode(502), "502", "Bad gateway");
+			}
 			catch (int e) {
 				throw (e);
 			}
 			break;
 		case 504:
 			try {
-				build_response("default_pages/504_default.html", "504", "Gateway Timeout");}
+				build_response(_config.getErrorPagePathForCode(504), "504", "Gateway timeout");
+			}
 			catch (int e) {
 				throw (e);
 			}
 			break;
 		default:
 			try {
-				build_response("default_pages/503_default.html", "503", "Server not available");
+				build_response(_config.getErrorPagePathForCode(503), "503", "Server not available");
 			}
 			catch (int e) {
 				throw (e);
