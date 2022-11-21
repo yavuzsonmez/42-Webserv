@@ -124,6 +124,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
 	if (val == -1) { // fcntl failed, we now need to close the socket
+		std::cout << "fcntl failed. Closing socket." << std::endl;
 		close(forward);
 		return false; 
 	};
@@ -201,7 +202,7 @@ void ServerSocket::processConnections()
 						disconnectClient(pollfds, i);
 						continue;
 					}
-					if ((*pos).second._remove)
+					if ((*pos).second._remove) // If a client asks to be removed, remove it from the list
 					{
 						disconnectClient(pollfds, i);
 						continue;
