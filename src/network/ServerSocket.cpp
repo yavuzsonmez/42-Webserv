@@ -136,6 +136,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 			close(forward);
 			return false;
 		}
+		std::cout << "Closing connection 3" << std::endl;
 		close(forward);
 		return false;
 	}

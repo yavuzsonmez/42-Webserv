@@ -178,6 +178,7 @@ void	CGI::execute_cgi(void)
 		if (!is_valid_fd(_fd_in) || !is_valid_fd(_fd_out))
 		{
 			close(_fd_in);
+			std::cout << "Closing connection 4" << std::endl;
 			close(_fd_out);
 			std::exit(EXIT_FAILURE);
 		}
@@ -230,6 +231,7 @@ void	CGI::read_in_buff(void)
 	rewind(_tmpout);											//move the courser back to the beginning
 	_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
 	read(_fd_out, (char*)(_buf.data()), _tmp_size);
+	std::cout << "Closing connection 5" << std::endl;
 	close(_fd_out);
 	return ;
 }
