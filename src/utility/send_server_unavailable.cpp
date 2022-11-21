@@ -17,7 +17,6 @@ int send_server_unavailable(int forward)
 	response.set_server("Petroulette Web Server");
 	response.set_content_length(to_str(response.get_body().length()));
 	response.create_response();
-	std::cout << response.get_response() << std::endl;
 	int result = send(forward, response.get_response().data(), response.get_body().length(), 0);
 	return result;
 }
