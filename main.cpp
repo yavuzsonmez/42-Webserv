@@ -45,21 +45,6 @@ int main(int argc, char **argv)
 		return (1);
 	}
 
-	/* START TEST REQUEST */
-	//std::string get = get_file_content("./sample/http_request_get");
-	//std::string post = get_file_content("./sample/http_request_post");
-	//std::string del = get_file_content("./sample/http_request_delete");
-	//std::string wrong = get_file_content("./sample/http_request_wrong");
-	//Request httpRequestPost(post);
-	//Request httpRequestGet(get);
-	//Request httpRequestDelete(del);
-	//Request httpRequestDelete(wrong);
-	/* END */
-	/* START TEST RESPONSE */
-	//ServerSocket server(4242, INADDR_ANY);
-	/* END */
-
-
 	try {
 		for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
 		{

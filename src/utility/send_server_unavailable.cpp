@@ -21,7 +21,7 @@ int send_server_unavailable(int forward, ServerBlock serverblock)
 	response.set_status_code(Service_Unavailable);
 	response.set_protocol("HTTP/1.1");
 	response.set_body("Service Unavailable");
-	response.set_body(get_file_content(serverblock.getErrorPagePathForCode(503)));
+	response.set_body(get_file_content_cached(serverblock.getErrorPagePathForCode(503)));
 	response.set_server("mostlyharmless2.com");
 	response.set_content_type("text/html");
 	response.set_content_length(to_str(response.get_body().length()));
@@ -42,7 +42,7 @@ int send_client_timeout(int forward, ServerBlock serverblock)
 	response.set_status_code(Service_Unavailable);
 	response.set_protocol("HTTP/1.1");
 	response.set_body("Service Unavailable");
-	response.set_body(get_file_content(serverblock.getErrorPagePathForCode(500)));
+	response.set_body(get_file_content_cached(serverblock.getErrorPagePathForCode(500)));
 	response.set_server("mostlyharmless2.com");
 	response.set_content_type("text/html");
 	response.set_content_length(to_str(response.get_body().length()));
