@@ -218,5 +218,6 @@ void	ClientSocket::three(void)
 	_fd = _client_fd;
 	_event = POLLOUT;
 	_func_ptr = &ClientSocket::send_response;
+
 	return ;
 }
