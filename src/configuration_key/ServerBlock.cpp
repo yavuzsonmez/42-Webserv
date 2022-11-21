@@ -167,8 +167,11 @@ std::string ServerBlock::getFallbackErrorPageForCode(int statuscode)
 		case 504:
 			return "default_pages/504_default.html";
 			break;
-		default:
+		case 503:
 			return "default_pages/503_default.html";
+			break;
+		default:
+			return "default_pages/500_default.html";
 			break;
 	}
 }
@@ -180,6 +183,8 @@ std::string ServerBlock::getFallbackErrorPageForCode(int statuscode)
  * @param statuscode http error code
  * @param serverBlock to check in
  * @return std::string path to error code
+ * 
+ * TODO: Replace GENERAL_ERROR_PAGE with the pages which are not customizable by the user
  */
 std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 {
@@ -209,6 +214,10 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
 				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
 			break;
+		case 503:
+			if (getConfigurationKeysWithType(NOT_AVAILABLE_PAGE).size() != 0)
+				path_to_file = getConfigurationKeysWithType(NOT_AVAILABLE_PAGE).front().not_available_page_path;
+		break;
 		case 504:
 			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
 				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;

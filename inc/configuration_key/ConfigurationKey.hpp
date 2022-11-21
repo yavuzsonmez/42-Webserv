@@ -25,6 +25,7 @@ enum method {  GET, POST, DELETE, PUT, UNKNOWN };
 # define	KEY_EXECUTABLE_PATH			"cgi_path"
 # define	KEY_FILEENDING				"cgi_fileending"
 # define	KEY_NOT_FOUND_PAGE			"not_found_error_page"
+# define	KEY_NOT_AVAILABLE_PAGE		"not_available_page"
 # define	KEY_GENERAL_ERROR_PAGE		"general_error_page"
 # define	KEY_POST_MAX_SIZE			"post_max_size"
 # define	KEY_REDIRECTION				"redirection"
@@ -53,7 +54,8 @@ enum ConfigurationKeyType {
 	NOT_FOUND_ERROR_PAGE,
 	GENERAL_ERROR_PAGE,
 	REDIRECTION,
-	DIRECTORY_LISTING
+	DIRECTORY_LISTING,
+	NOT_AVAILABLE_PAGE
 };
 
 /**
@@ -115,9 +117,10 @@ class ConfigurationKey {
 		std::string cgi_fileending; // those file endings should be executed with a cgi
 		std::string redirection; // a redirection which is set in the configuration file for a certain location
 		std::string not_found_error_page_path; // returns the location of the error path to the error file
+		std::string general_error_page_path; // returns the location of the error path to the error file
+		std::string not_available_page_path; // returns the location of the error path to the error file
 		bool directory_listing; // flag if directory listing is enabled or not
 		int post_max_size; // post max size in megabyte
-		std::string general_error_page_path; // returns the location of the error path to the error file
 		std::vector <unsigned int> ports; // returns the ports which are being listened to by the listener handler
 		std::vector<ConfigurationKeyType> nestedConfigurationKeyTypesinLocationBlock; // describes the properties within the location block
 	private:
@@ -136,6 +139,7 @@ class ConfigurationKey {
 		bool isNotFoundErrorPagePathType(internal_keyvalue raw);
 		bool isPostMaxSizeType(internal_keyvalue raw);
 		bool isGeneralErrorPagePathType(internal_keyvalue raw);
+		bool isNotAvailableErrorPagePathType(internal_keyvalue raw);
 		bool isRedirectionKeyType(internal_keyvalue raw);
 		bool isValidMethod(std::string method);
 		bool validatePort(unsigned int port);
