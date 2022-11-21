@@ -9,7 +9,7 @@
 
 #define BACKLOG 10 // maximum number of allowed incoming connection in the queue until being accept()
 
-#define MAXIMUM_CONNECTED_CLIENTS 3 // maximum number of connected clients
+#define MAXIMUM_CONNECTED_CLIENTS 30 // maximum number of connected clients
 
 /**
  * @brief Server Socket listening for requests

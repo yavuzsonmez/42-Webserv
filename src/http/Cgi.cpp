@@ -73,7 +73,7 @@ CGI & CGI::operator=(const CGI &src)
 
 /**
  * @brief creates the tmpfiles and makes their fds nonblocking
- * 
+ * TODO: We can check the fds for validity and throw an exception if they are invalid
  */
 void	CGI::set_tmps(void)
 {
@@ -136,8 +136,6 @@ void CGI::wait_for_child(pid_t worker_pid)
 	else if (timeout_pid == 0) // timeouted child
 	{
 		sleep(2); // this is the timeout we wait for the child to finish
-		debugger.debug("we just had an timeout");
-
 		std::exit(EXIT_SUCCESS); // ok cool, we exit successfully
 	}
 	else // parent
@@ -204,12 +202,11 @@ void	CGI::execute_cgi(void)
 			debugger.verbose("Failed to dup2 the CGI.");
 			std::exit(errno); // exit the child
 		}
-		char** envs = map_to_array(_env);
+		_envp = map_to_array(_env);
 		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
-
-		execve(_cgi_path.c_str(), _argvp, envs);
+		execve(_cgi_path.c_str(), _argvp, _envp);
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
 		std::exit(errno); // exit the child
 	}

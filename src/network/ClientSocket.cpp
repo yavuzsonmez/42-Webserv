@@ -161,7 +161,7 @@ void	ClientSocket::set_up(void)
 }
 
 /**
- * @brief executes the function related to the filedescriptor and prepare for the next one
+ * @brief writes in the std in of the cgi.
  */
 void	ClientSocket::one(void)
 {
@@ -180,6 +180,9 @@ void	ClientSocket::one(void)
 	return ;
 }
 
+/**
+ * If writing in the stdin of the cgi is completed, we run it
+*/
 void	ClientSocket::two(void)
 {
 	USE_DEBUGGER;
@@ -197,6 +200,9 @@ void	ClientSocket::two(void)
 	return ;
 }
 
+/**
+ * After running the cgi, we send the response to the client.
+*/
 void	ClientSocket::three(void)
 {
 	USE_DEBUGGER;
