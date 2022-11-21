@@ -343,3 +343,87 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 		}
 	}
 }
+
+/**
+ * @brief Fallback error pages if the given error page does not exist.
+ * 
+ * @param statuscode 
+ * @param serverBlock
+ * @return std::string 
+ */
+std::string ConfigFileParsing::getFallbackErrorPageForCode(int statuscode)
+{
+	switch (statuscode)
+	{
+		case 404:
+			return "default_pages/404_default.html";
+			break;
+		case 405:
+			return "default_pages/405_default.html";
+			break;
+		case 500:
+			return "default_pages/500_default.html";
+			break;
+		case 501:
+			return "default_pages/501_default.html";
+			break;
+		case 502:
+			return "default_pages/502_default.html";
+			break;
+		case 504:
+			return "default_pages/504_default.html";
+			break;
+		default:
+			return "default_pages/503_default.html";
+			break;
+	}
+}
+/**
+ * @brief Returns the error page path to the given error code
+ * - Handles costum error pages and returns only valid paths that are available
+ * 
+ * @param statuscode http error code
+ * @param serverBlock to check in
+ * @return std::string path to error code
+ */
+std::string ConfigFileParsing::getErrorPagePathForCode(int statuscode, ServerBlock serverBlock)
+{
+	std::string path_to_file;
+
+	switch (statuscode)
+	{
+		case 404:
+			if (serverBlock.getConfigurationKeysWithType(NOT_FOUND_ERROR_PAGE).size() != 0)
+				path_to_file = serverBlock.getConfigurationKeysWithType(NOT_FOUND_ERROR_PAGE).front().not_found_error_page_path;
+			break;
+		case 405:
+			if (serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
+				path_to_file = serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
+			break;
+		case 500:
+			if (serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
+				path_to_file = serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
+			break;
+		case 501:
+			if (serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
+				path_to_file = serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
+			break;
+		case 502:
+			if (serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
+				path_to_file = serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
+			break;
+		case 504:
+			if (serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
+				path_to_file = serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
+			break;
+		default:
+			if (serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
+				path_to_file = serverBlock.getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
+			break;
+	}
+
+	if (is_file_accessible(path_to_file))
+		return path_to_file;
+	
+	return getFallbackErrorPageForCode(statuscode);
+}
