@@ -192,13 +192,11 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 
 /**
  * @brief Sends a server overloaded message to the client
+ * @deprecated won't work because fd will be invalid. do not try to send messages to client!
  */
 void	Process::server_overloaded(void)
 {
-	_response.set_body("Server overloaded. Go away!");
-	_response.set_content_length(to_str(_response.get_body().length()));
-	_response.set_content_type(_response.get_file_format());
-	_response.create_response();
+	return ;
 }
 
 /**
