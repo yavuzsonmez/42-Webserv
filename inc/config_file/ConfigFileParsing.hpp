@@ -19,6 +19,7 @@ class ConfigFileParsing {
 		~ConfigFileParsing();
 		ConfigFileParsing & operator = (const ConfigFileParsing &src);
 		bool parseConfigFile( std::string &file_content );
+		std::string getErrorPagePathForCode(int statuscode, ServerBlock serverBlock);
 
 		// The server block vector which will provide the servers and their configurations
 		std::vector<ServerBlock> serverBlocks;
@@ -34,6 +35,7 @@ class ConfigFileParsing {
 		bool validationDuplicationCheck();
 		bool isCurrentlyInLocationBlock;
 		bool isCurrentlyInServerBlock;
+		std::string getFallbackErrorPageForCode(int statuscode);
 		int server_bracket_counter; // if is zero, we are currently not in a server block and config keys are not allowed
 };
 

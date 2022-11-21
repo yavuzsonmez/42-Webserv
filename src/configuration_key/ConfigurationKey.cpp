@@ -37,6 +37,8 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->post_max_size = src.post_max_size;
 	this->nestedConfigurationKeyTypesinLocationBlock = src.nestedConfigurationKeyTypesinLocationBlock;
 	this->directory_listing = src.directory_listing;
+	this->not_found_error_page_path = src.not_found_error_page_path;
+	this->general_error_page_path = src.general_error_page_path;
 }
 
 ConfigurationKey::~ConfigurationKey() {
