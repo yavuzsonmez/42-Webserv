@@ -104,11 +104,12 @@ void	CGI::set_tmps(void)
  */
 void	CGI::write_in_std_in()
 {
+	USE_DEBUGGER
 	if (!is_valid_fd(_fd_in)) return ;
 	if (!is_valid_fd(_fd_out)) return ;
 	if (_fd_in < 0 || _tmpin == NULL || _request.getBody().first.empty())
 	{
-		std::cout << "Error in CGI::write_in_std_in()" << std::endl; // TODO Look into this. This is a problem
+		debugger.verbose("Error in CGI::write_in_std_in()");
 		return ;
 	}
 	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());
@@ -135,8 +136,8 @@ void CGI::wait_for_child(pid_t worker_pid)
 	else if (timeout_pid == 0) // timeouted child
 	{
 		sleep(2); // this is the timeout we wait for the child to finish
-		std::cout << "we just had an timeout" << std::endl;
 		debugger.debug("we just had an timeout");
+
 		std::exit(EXIT_SUCCESS); // ok cool, we exit successfully
 	}
 	else // parent
@@ -160,7 +161,9 @@ void CGI::wait_for_child(pid_t worker_pid)
 		{
 			kill(timeout_pid, SIGKILL); // let's kill the timeout child, it's not needed anymore
 			if (!WIFSIGNALED(stat_loc) && WEXITSTATUS(stat_loc) == 0) // if the worker exited normally
+			{
 				return ; // we're done
+			}
 			throw(500); // else we throw a 500 error
 			return ; 
 		}

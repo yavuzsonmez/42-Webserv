@@ -69,7 +69,6 @@ void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
 void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
 {
 	client_iter pos = get_CS_position(_clients, pollfds[i].fd);
-	send_server_unavailable(pollfds[i].fd, _config);
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
 	if (pos != _clients.end())

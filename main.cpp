@@ -60,5 +60,7 @@ int main(int argc, char **argv)
 	delete configurationFileParsing;
 
 
+	std::cout << "Program exited cleanly." << std::endl;
+	
 	return (0);
 }
