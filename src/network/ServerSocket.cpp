@@ -130,7 +130,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	};
 	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
 		std::cout << "Maximum number of clients reached. Declining connection." << std::endl;
-		int result = send_server_unavailable(forward);
+		int result = send_server_unavailable(forward, _config);
 		if (result == -1) {
 			std::cout << "Error while sending 503 to client. Closing connection." << std::endl;
 			close(forward);
