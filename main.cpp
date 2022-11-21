@@ -54,8 +54,6 @@ int main(int argc, char **argv)
 	//Request httpRequestGet(get);
 	//Request httpRequestDelete(del);
 	//Request httpRequestDelete(wrong);
-	//std::cout << httpRequestGet << std::endl;
-	//std::cout << httpRequestPost << std::endl;
 	/* END */
 	/* START TEST RESPONSE */
 	//ServerSocket server(4242, INADDR_ANY);

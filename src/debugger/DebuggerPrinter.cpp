@@ -38,6 +38,9 @@ void DebuggerPrinter::printString( const std::string &message, LogLevel level ) 
 		case DEBUG:
 			prefix = "\033[0;36m[DEBUG]\033[0m";
 			break;
+		case VERBOSE:
+			prefix = "\033[0;36m[VERBOSE]\033[0m";
+			break;
 		case ERROR:
 			prefix = "\033[0;31m[ERROR]\033[0m";
 			break;
@@ -76,6 +79,11 @@ void DebuggerPrinter::warning( const std::string &message ) {
 void DebuggerPrinter::debug( const std::string &message ) {
 	if (DEBUGMODE != 1) return ;
 	printString(message, DEBUG);
+}
+
+void DebuggerPrinter::verbose( const std::string &message ) {
+	if (DEBUGMODE != 1) return ;
+	printString(message, VERBOSE);
 }
 
 /**

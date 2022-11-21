@@ -24,6 +24,7 @@ ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config,
 	_count = 30000;
 	_event = POLLIN;
 	_remove = false;
+	_timeout = std::time(NULL);
 }
 
 ClientSocket::~ClientSocket()
@@ -36,10 +37,9 @@ ClientSocket::~ClientSocket()
  */
 bool ClientSocket::Timeout()
 {
-	if (std::time(NULL) - _timeout > 5)
+	if (std::time(NULL) - _timeout > 5000)
 		return true;
 	return false;
-
 }
 
 /**

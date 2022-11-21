@@ -69,6 +69,7 @@ void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
 void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
 {
 	client_iter pos = get_CS_position(_clients, pollfds[i].fd);
+	send_server_unavailable(pollfds[i].fd, _config);
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
 	if (pos != _clients.end())
@@ -124,19 +125,19 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);
 	if (val == -1) { // fcntl failed, we now need to close the socket
-		std::cout << "fcntl failed. Closing socket." << std::endl;
+		debugger.verbose("fcntl failed. Closing socket.");
 		close(forward);
 		return false; 
 	};
 	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
-		std::cout << "Maximum number of clients reached. Declining connection." << std::endl;
+		debugger.debug("Maximum number of clients reached. Declining connection.");
 		int result = send_server_unavailable(forward, _config);
 		if (result == -1) {
-			std::cout << "Error while sending 503 to client. Closing connection." << std::endl;
+			debugger.verbose("Error while sending 503 to client. Closing connection.");
 			close(forward);
 			return false;
 		}
-		std::cout << "Closing connection 3" << std::endl;
+		debugger.verbose("Closing connection 3");
 		close(forward);
 		return false;
 	}
@@ -200,11 +201,13 @@ void ServerSocket::processConnections()
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second.Timeout()) //if the client timeouts, remove it from the list.
 					{
+						debugger.verbose("Client timed out.");
 						disconnectClient(pollfds, i);
 						continue;
 					}
 					if ((*pos).second._remove) // If a client asks to be removed, remove it from the list
 					{
+						debugger.verbose("Client asked to be removed.");
 						disconnectClient(pollfds, i);
 						continue;
 					}
