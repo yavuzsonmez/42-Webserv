@@ -39,6 +39,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->directory_listing = src.directory_listing;
 	this->not_found_error_page_path = src.not_found_error_page_path;
 	this->general_error_page_path = src.general_error_page_path;
+	this->not_available_page_path = src.not_available_page_path;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -365,6 +366,11 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected not found error page path type in server block.");
 		return NOT_FOUND_ERROR_PAGE;
 	}
+	if (this->isNotAvailableErrorPagePathType(raw))
+	{
+		debugger.info("Detected method not  available error page path type in server block.");
+		return NOT_AVAILABLE_PAGE;
+	}
 	if (this->isPostMaxSizeType(raw))
 	{
 		debugger.info("Detected post max size type in server block.");
@@ -621,6 +627,25 @@ bool ConfigurationKey::isGeneralErrorPagePathType(internal_keyvalue raw) {
 			this->general_error_page_path = raw.second;
 		else
 			throwInvalidConfigurationFileExceptionWithMessage("Multiple not general error page paths!");
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Checks if the given key is a path to the not available error page key or not
+ * 
+ * @param raw 
+ * @return true is not available page path
+ * @return false is not available path path
+ */
+bool ConfigurationKey::isNotAvailableErrorPagePathType(internal_keyvalue raw) {
+	if (raw.first == KEY_NOT_AVAILABLE_PAGE && !raw.second.empty())
+	{
+		if (this->not_available_page_path.empty())
+			this->not_available_page_path = raw.second;
+		else
+			throwInvalidConfigurationFileExceptionWithMessage("Multiple not available error page paths!");
 		return true;
 	}
 	return false;
