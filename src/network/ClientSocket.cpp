@@ -92,24 +92,34 @@ void	ClientSocket::read_in_buffer(void)
 /**
  * @brief writes the response to the clientSocket
  * We need to check if the bytes are actually zero before we write to the clientSocket.
+ * _position keeps track of what the client already received.
  */
 void	ClientSocket::send_response(void)
 {
 	USE_DEBUGGER;
-	if (!is_valid_fd(_fd)) return ;
-	if (_bytes != 0) return;
-	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length(), 0);
+	if (_remove) {
+		debugger.error("Not supposed to happen!");
+		return ;
+	};
+	if (!is_valid_fd(_fd))
+	{
+		debugger.error("Error 3 while sending response to client");
+		_remove = true;
+		close(_fd);
+		return ;
+	}
+	std::cout << "fd to write in " << _fd << std::endl;
+	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length() - _position, 0);
 	if (_bytes == -1)
 	{
 		_remove = true;
 		debugger.error("Error while sending response to client");
 		return ;
 	}
-	std::cout << _process._response.get_response().data() << std::endl;
 	_position += _bytes;
 	if (_position >= _process._response.get_response().length())
 	{
-		close(_fd);
+		debugger.debug("Completed sending (chunked) response to client");
 		_remove = true;
 		return ;
 	}
@@ -132,7 +142,7 @@ void	ClientSocket::set_up(void)
 		_process.exception(e);
 		return ;
 	}
-	if (_process._with_cgi)
+	if (_process._with_cgi) // in the next step we will write in the cgi input
 	{
 		_bytes = 0;
 		_position = 0;
@@ -140,7 +150,7 @@ void	ClientSocket::set_up(void)
 		_fd = _process._CGI._fd_in;
 		_event = POLLOUT;
 	}
-	else
+	else  // in the next step we will send the response to the client as soon as it is ready
 	{
 		_bytes = 0;
 		_position = 0;
@@ -155,10 +165,12 @@ void	ClientSocket::set_up(void)
  */
 void	ClientSocket::one(void)
 {
+	USE_DEBUGGER;
 	try {
 		_process._CGI.write_in_std_in();
 	} catch (int e) {
 		_event = POLLERR;
+		debugger.verbose("Thrown exception in ::one");
 		_process.exception(e);
 		return ;
 	}
@@ -174,8 +186,7 @@ void	ClientSocket::two(void)
 	try {
 		_process._CGI.execute_cgi();
 	} catch (int error) {
-		debugger.error("Error in CGI");
-		std::cout << error << std::endl;
+		debugger.verbose("Thrown cgi exception in ::two");
 		_event = POLLERR;
 		_process.server_overloaded();
 		return ;
@@ -192,7 +203,7 @@ void	ClientSocket::three(void)
 	try {
 		_process._CGI.read_in_buff();
 	} catch (int error) {
-		// debugger.error("Error in CGI::three");
+		debugger.verbose("Thrown cgi exception in ::three");
 		_event = POLLERR;
 		_process.server_overloaded();
 		return ;

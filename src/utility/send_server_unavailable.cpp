@@ -26,8 +26,12 @@ int send_server_unavailable(int forward, ServerBlock serverblock)
 	response.set_content_type("text/html");
 	response.set_content_length(to_str(response.get_body().length()));
 	response.create_response();
-	int result = send(forward, response.get_response().data(), response.get_body().length(), 0);
-	return result;
+	if (is_valid_fd(forward))
+	{
+		int result = send(forward, response.get_response().data(), response.get_body().length(), 0);
+		return result;
+	}
+	return -1;
 }
 
 /**

@@ -10,5 +10,6 @@
  */
 int is_valid_fd(int fd)
 {
+	USE_DEBUGGER;
 	return fcntl(fd, F_GETFL) != -1 || errno != EBADF;
 }
