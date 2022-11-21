@@ -105,6 +105,7 @@ void	ClientSocket::send_response(void)
 		debugger.error("Error while sending response to client");
 		return ;
 	}
+	std::cout << _process._response.get_response().data() << std::endl;
 	_position += _bytes;
 	if (_position >= _process._response.get_response().length())
 	{

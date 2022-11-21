@@ -176,6 +176,7 @@ std::string ServerBlock::getFallbackErrorPageForCode(int statuscode)
  * @brief Returns the error page path to the given error code
  * - Handles costum error pages and returns only valid paths that are available
  * 
+ * TODO: add a caching for this so we do not access the file all the time during server runtime
  * @param statuscode http error code
  * @param serverBlock to check in
  * @return std::string path to error code
