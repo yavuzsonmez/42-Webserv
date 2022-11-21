@@ -77,12 +77,24 @@ CGI & CGI::operator=(const CGI &src)
  */
 void	CGI::set_tmps(void)
 {
+	USE_DEBUGGER;
 	_tmpout = tmpfile();
 	_tmpin = tmpfile();
 	_fd_in = fileno(_tmpin);
 	_fd_out = fileno(_tmpout);
-	fcntl(_fd_in, F_SETFL, fcntl(_fd_in, F_GETFL, 0) | O_NONBLOCK);
-	fcntl(_fd_out, F_SETFL, fcntl(_fd_out, F_GETFL, 0) | O_NONBLOCK);
+	// check return values of fcntl
+	int res1 = fcntl(_fd_in, F_SETFL, fcntl(_fd_in, F_GETFL, 0) | O_NONBLOCK);
+	if (res1 == -1)
+	{
+		debugger.verbose("FCNTL ERROR 1");
+		throw(500);
+	}
+	int res2 = fcntl(_fd_out, F_SETFL, fcntl(_fd_out, F_GETFL, 0) | O_NONBLOCK);
+	if (res2 == -1)
+	{
+		debugger.verbose("FCNTL ERROR 1");
+		throw(500);
+	}
 }
 
 /**
@@ -117,13 +129,14 @@ void CGI::wait_for_child(pid_t worker_pid)
 	{
 		debugger.error("[TIMEOUT] fork failed in timeout pid");
 		kill(worker_pid, SIGKILL);
-		std::cout << "we could not fork successfully" << std::endl;
+		debugger.verbose("we could not fork successfully");
 		throw(503); // we throw an 503 / overloaded error
 	}
 	else if (timeout_pid == 0) // timeouted child
 	{
 		sleep(2); // this is the timeout we wait for the child to finish
 		std::cout << "we just had an timeout" << std::endl;
+		debugger.debug("we just had an timeout");
 		std::exit(EXIT_SUCCESS); // ok cool, we exit successfully
 	}
 	else // parent
@@ -178,14 +191,14 @@ void	CGI::execute_cgi(void)
 		if (!is_valid_fd(_fd_in) || !is_valid_fd(_fd_out))
 		{
 			close(_fd_in);
-			std::cout << "Closing connection 4" << std::endl;
+			debugger.verbose("Closing connection 4");
 			close(_fd_out);
 			std::exit(EXIT_FAILURE);
 		}
 		if (dup2(fileno(_tmpin), STDIN_FILENO) < 0 ||
 			dup2(fileno(_tmpout), STDOUT_FILENO) < 0)
 		{
-			debugger.error("Failed to dup2 the CGI.");
+			debugger.verbose("Failed to dup2 the CGI.");
 			std::exit(errno); // exit the child
 		}
 		char** envs = map_to_array(_env);
@@ -231,7 +244,7 @@ void	CGI::read_in_buff(void)
 	rewind(_tmpout);											//move the courser back to the beginning
 	_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
 	read(_fd_out, (char*)(_buf.data()), _tmp_size);
-	std::cout << "Closing connection 5" << std::endl;
+	debugger.verbose("Closing connection 5");
 	close(_fd_out);
 	return ;
 }

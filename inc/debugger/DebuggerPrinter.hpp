@@ -15,7 +15,8 @@ enum LogLevel {
 	INFO = 'I',
 	WARNING = 'W',
 	DEBUG = 'D',
-	ERROR = 'E'
+	ERROR = 'E',
+	VERBOSE = 'V'
 };
 
 /**
@@ -42,6 +43,7 @@ class DebuggerPrinter: public Singleton<DebuggerPrinter> {
 		void warning( const std::string &message );
 		void error( const std::string &message );
 		void debug( const std::string &message );
+		void verbose( const std::string &message );
 	private:
 		void printString( const std::string &message, LogLevel level );
 };
