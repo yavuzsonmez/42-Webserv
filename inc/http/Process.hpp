@@ -31,6 +31,9 @@ class Process
 	bool	get_location_dl(std::string path);
 	void	exception(int code);
 
+	// path builder
+	std::string build_path_with_index__or_script_file();
+
 	Response	_response;
 	CGI			_CGI;
 	bool		_with_cgi;

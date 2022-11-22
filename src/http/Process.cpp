@@ -53,6 +53,28 @@ void	Process::process_request(void)
 }
 
 /**
+ * @brief Returns the path with the index file defined in the configuration.
+ * Will check every index file if available and accessible and chooses the first one that is accessible
+ * @returns std::string path
+ */
+std::string Process::build_path_with_index__or_script_file()
+{
+	if (_request.getPath().first == "/") { // the path is on the top level and not in any subdirectory
+		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+		} else { // there is a script file available like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
+		}
+	} else {
+		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+		} else { // there is a script file available like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
+		}
+	}
+}
+
+/**
  * @brief Handles request
  * TODO: Add method enum to handle all request in one place
  * 
@@ -66,28 +88,13 @@ void	Process::handle_request(void)
 	std::string	path;
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
-		if (_request.getScript().first.empty()) // case: no script and we return the given index if available
-		{
-			// this is where the path is being built.
-			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-			try {
-				build_response(path, "200", "OK");}
-			catch (int e){
-				debugger.error("UNABLE TO BUILD RESPONSE!");
-				throw(404);
-				return ;
-			}
-		}
-		else // this is being called when a script is given and we do find it / do not find it 
-		{
-			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
-			try {
-				build_response(path, "200", "OK");}
-			catch (int e){
-				debugger.error("Could not find the given script!" + path);
-				throw(500);
-				return ;
-			}
+		path = build_path_with_index__or_script_file();
+		try {
+			build_response(path, "200", "OK");}
+		catch (int e){
+			debugger.error("UNABLE TO BUILD RESPONSE!");
+			throw(404);
+			return ;
 		}
 		return ;
 	}
@@ -95,7 +102,7 @@ void	Process::handle_request(void)
 	{
 		if (_request.getScript().first.empty()) // if no script is given
 		{
-			// here we use the location directory list to list all files in the directory
+			// if no script is given we check if we can return the directory listing
 			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
 			{
 				try {
@@ -106,7 +113,7 @@ void	Process::handle_request(void)
 					return ;
 				}
 			}
-			else
+			else // if not, we try to return the index file
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
 				if (find_vector(_methods, _request.getMethod().first) == -1) // the method is not allowed
