@@ -68,6 +68,7 @@ void	Process::handle_request(void)
 	{
 		if (_request.getScript().first.empty()) // case: no script and we return the given index if available
 		{
+			// this is where the path is being built.
 			path = _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
 			try {
 				build_response(path, "200", "OK");}
@@ -83,6 +84,7 @@ void	Process::handle_request(void)
 			try {
 				build_response(path, "200", "OK");}
 			catch (int e){
+				debugger.error("Could not find the given script!" + path);
 				throw(500);
 				return ;
 			}
@@ -99,6 +101,7 @@ void	Process::handle_request(void)
 				try {
 					build_dl_response();}
 				catch (int e){
+					debugger.error("Could not find the file listing script!");
 					throw(404);
 					return ;
 				}
@@ -107,10 +110,12 @@ void	Process::handle_request(void)
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
 				if (find_vector(_methods, _request.getMethod().first) == -1) // the method is not allowed
-					throw(404);
+					debugger.error("Method not allowed!");
+					throw(405);
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
+					debugger.error("Could not find the index script!");
 					throw(404);
 					return ;
 				}
@@ -120,7 +125,7 @@ void	Process::handle_request(void)
 		{
 			path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
 			if (find_vector(_methods, _request.getMethod().first) == -1)
-				throw (501);
+				throw (404);
 			if (is_file_accessible(path))
 			{
 				try {
@@ -167,17 +172,27 @@ bool Process::detectCgi(std::string path, std::string code, std::string status)
 	USE_DEBUGGER;
 	(void) status;
 	(void) code; 
-	// checks if the requested file is an file which has an cgi extension
-	// check if before the ? there is a .cgi ending
+	// checks if the requested file is an file which has an cgi extension. check if before the ? there is a .cgi ending
 	std::string::size_type pos = path.find("?");
-	// get the first part of the path
-	std::string first_part = path.substr(0, pos);
+	std::string first_part = path.substr(0, pos); // then we get the file name
 
+	if (!is_file_accessible(get_abs_path(path)))
+	{
+		debugger.error("File not found!");
+		return false;
+	}
 	// check if the file ending is the cgi ending but there are arguments too
 	if (!first_part.substr(first_part.find_last_of(".") + 1).compare(_cgi_fileending)) {
 		debugger.verbose("DETECTED CGI!");
 		return true;
 	}
+
+	// we also need to check if there is no script given and if the index.php contains what we want.
+	if (_request.getScript().first.empty()) {
+		debugger.verbose("DETECTED EMPTY SCRIPT!");
+		std::cout << "This is the index " << _config.getConfigurationKeysWithType(INDEX).front().indexes.front() << std::endl;
+	}
+
 	// check if the file ending is the cgi ending but there no arguments
 	if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending)) {
 		debugger.verbose("DETECTED CGI!");
@@ -193,38 +208,38 @@ bool Process::detectCgi(std::string path, std::string code, std::string status)
  */
 void	Process::build_response(std::string path, std::string code, std::string status)
 {
-		_response.set_protocol("HTTP/1.1");
-		std::cout << "PATH of path: " << path << std::endl;
-		if (!_redirection.empty()) // if the redirection is not empty
+	USE_DEBUGGER;
+	_response.set_protocol("HTTP/1.1");
+	if (!_redirection.empty()) // if the redirection is not empty
+	{
+		set_redirection_response();
+	}
+	else
+	{
+		_response.set_status_code(code);
+		_response.set_status_text(status);
+		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+		// This is where cgi is recognized
+		if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 		{
-			set_redirection_response();
+			_with_cgi = true;
+			_cgi = _config.getCgiPath();
+			_CGI = CGI(_request, _config, path, _cgi); // activates the cgi
+			_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
+			return ;
 		}
-		else
+		else // the request is not cgi or redirection, so we just return the content of the file at the location of path.
 		{
-			_response.set_status_code(code);
-			_response.set_status_text(status);
-			_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-			// This is where cgi is recognized
-			if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
-			{
-				_with_cgi = true;
-				_cgi = _config.getCgiPath();
-				_CGI = CGI(_request, _config, path, _cgi); // activates the cgi
-				_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
-				return ;
+			try {
+				_response.set_body(get_file_content_for_request(path));
+			} catch (int e) {
+				throw (404);
 			}
-			else // the request is not cgi or redirection, so we just return the content of the file at the location of path.
-			{
-				try {
-					_response.set_body(get_file_content_for_request(path));
-				} catch (int e) {
-					throw (404);
-				}
-			}
-			_response.set_content_length(to_str(_response.get_body().length()));
-			_response.set_content_type(_response.get_file_format());
 		}
-		_response.create_response();
+		_response.set_content_length(to_str(_response.get_body().length()));
+		_response.set_content_type(_response.get_file_format());
+	}
+	_response.create_response();
 }
 
 /**
