@@ -190,6 +190,7 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 {
 	std::string path_to_file;
 
+	std::cout << "statuscode: " << statuscode << std::endl;
 	path_to_file = "placeholder";
 
 	switch (statuscode)
@@ -198,19 +199,7 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 			if (getConfigurationKeysWithType(NOT_FOUND_ERROR_PAGE).size() != 0)
 				path_to_file = getConfigurationKeysWithType(NOT_FOUND_ERROR_PAGE).front().not_found_error_page_path;
 			break;
-		case 405:
-			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
-				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
-			break;
 		case 500:
-			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
-				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
-			break;
-		case 501:
-			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
-				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
-			break;
-		case 502:
 			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
 				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
 			break;
@@ -218,16 +207,7 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 			if (getConfigurationKeysWithType(NOT_AVAILABLE_PAGE).size() != 0)
 				path_to_file = getConfigurationKeysWithType(NOT_AVAILABLE_PAGE).front().not_available_page_path;
 		break;
-		case 504:
-			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
-				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
-			break;
-		default:
-			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
-				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
-			break;
 	}
-
 	if (is_file_accessible(path_to_file))
 		return path_to_file;
 	

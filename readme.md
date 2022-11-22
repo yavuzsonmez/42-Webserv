@@ -15,3 +15,5 @@ TODO:
 - It seems like we are not closing all the forks we open. We should look into this.
 - Seperate the client sockets from the server sockets. There is no reason putting them in the same vector
 - Make currently fails. (when you run `make` it will fail, but `make re` will work)
+- Currently get arguments are not working on index file of there is no index provided. How could we fix this?
+	Easy way: Always redirect user to index if no file is provided for a location. But also add the  given arguments.

@@ -46,7 +46,12 @@ str_flag			Request::getDomain() const		{ return _domain; }
 i_flag				Request::getPort() const		{ return _port; }
 str_flag			Request::getScript() const		{ return _script; }
 str_flag			Request::getPath() const		{ return _path; }
-str_flag			Request::getQuery() const		{ return _query; }
+
+/**
+ * @brief Returns the query string of the request
+ */
+str_flag			Request::getQuery() const { return _query; }
+
 str_flag			Request::getFragment() const	{ return _fragment; }
 str_flag			Request::getHttpversion() const	{ return _httpVersion; }
 headr_dirctiv		Request::getHeaders() const		{ return _headers; }
@@ -139,7 +144,6 @@ void Request::setDomain(std::string &url) {
 
 /**
  * @brief Check if a port is provided in the URL of the request,
- * if not use the default http port (80)
  */
 void Request::setPort(std::string &url) {
 	USE_DEBUGGER;
@@ -203,7 +207,6 @@ void Request::setScript(std::string &url) {
 	else
 		url.erase(pos);
 	// TODO check if URL containes something after script like /cgi/index.php/ or /cgi/index.php
-	// fix research based on last / for script
 }
 
 
