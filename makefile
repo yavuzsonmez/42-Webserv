@@ -74,7 +74,7 @@ ifeq ($(MAKECMDGOALS),rebug)
 else ifeq ($(MAKECMDGOALS),debug)
     FLAGS += -D DEBUGMODE=1 -g -fsanitize=address -D ENABLE_LOGGING=1 -fno-omit-frame-pointer
 else
-    FLAGS += -D DEBUGMODE=0 -D ENABLE_LOGGING=0 -O3 -flto
+    FLAGS += -D DEBUGMODE=0 -D ENABLE_LOGGING=0 -flto
 endif
 
 .cpp.o			:
