@@ -211,15 +211,8 @@ void	CGI::execute_cgi(void)
 		_query_parameters.insert(_query_parameters.begin(), split_once_on_delimiter(_path, '?')[0].c_str());
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
-		// print array 
-		debugger.error("ARGVP");
-		for (int i = 0; _argvp[i] != NULL; i++)
-		 	debugger.error(_argvp[i]);
-		debugger.error("ENVP");
 		execve(_cgi_path.c_str(), _argvp, _envp);
-		debugger.error("Failed to execve the CGI on path" + _cgi_path);
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
-		std::cerr << strerror(errno) << std::endl;
 		std::exit(errno); // exit the child
 	}
 	else // parent
