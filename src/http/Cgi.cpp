@@ -203,10 +203,10 @@ void	CGI::execute_cgi(void)
 			std::exit(errno); // exit the child
 		}
 		_envp = map_to_array(_env);
-		_argvp = vec_to_array(_query_parameters);
 		
 		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
+		_argvp = vec_to_array(_query_parameters);
 		execve(_cgi_path.c_str(), _argvp, _envp);
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
 		std::exit(errno); // exit the child
