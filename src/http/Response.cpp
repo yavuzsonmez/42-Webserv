@@ -52,6 +52,7 @@ void	Response::create_response(void)
 		_response += "content-type: " + _content_type + "\r\n";
 	if (!_content_length.empty())
 		_response += "content-length: " + _content_length + "\r\n";
+	_response += "webserver: PETROULETTE\r\n";
 	if (!_body.empty())
 		_response += "\r\n" + _body;
 }
