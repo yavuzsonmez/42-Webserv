@@ -190,7 +190,6 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 {
 	std::string path_to_file;
 
-	std::cout << "statuscode: " << statuscode << std::endl;
 	path_to_file = "placeholder";
 
 	switch (statuscode)

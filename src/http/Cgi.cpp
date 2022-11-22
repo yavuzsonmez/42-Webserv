@@ -34,8 +34,6 @@ void CGI::set_environment()
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
 	_env["REDIRECT_STATUS"] = "500";
-
-	std::cout << "ENVIRONMENT WAS SET"  << std::endl;
 }
 
 /**
@@ -50,7 +48,6 @@ void CGI::set_environment()
  */
 CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
-	std::cout << "CGI::CGI" << std::endl;
 	if (_request.getQuery().second)
 	{
 		std::string	query = _request.getQuery().first; //Get query string
@@ -165,7 +162,8 @@ void CGI::wait_for_child(pid_t worker_pid)
 			{
 				return ; // we're done
 			}
-			std::cerr << strerror(errno) << std::endl;
+			if (ENABLE_LOGGING)
+				std::cerr << strerror(errno) << std::endl;
 			debugger.error("Worker did not exit normally."); // this is being called if the worker timed out
 			//throw(502); // else we throw a 500 error
 			return ; 
