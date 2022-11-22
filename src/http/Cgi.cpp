@@ -53,8 +53,6 @@ CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_
 	{
 		std::string	query = _request.getQuery().first; //Get query string
 		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
-		//std::cout << "query: 1" << _query_parameters[0] << std::endl;
-		//std::cout << "query: 2 " << _query_parameters[1] << std::endl;
 	}
 
 	set_environment();
@@ -208,9 +206,16 @@ void	CGI::execute_cgi(void)
 			std::exit(errno); // exit the child
 		}
 		_envp = map_to_array(_env);
-		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
+		_query_parameters.insert(_query_parameters.begin(), split_once_on_delimiter(_path, '?')[0].c_str());
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
+		// print array 
+		debugger.error("ARGVP");
+		for (int i = 0; _argvp[i] != NULL; i++)
+		 	debugger.error(_argvp[i]);
+		debugger.error("ENVP");
+		for (int i = 0; _envp[i] != NULL; i++)
+		 	debugger.error(_envp[i]);
 		execve(_cgi_path.c_str(), _argvp, _envp);
 		debugger.error("Failed to execve the CGI on path" + _cgi_path);
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
