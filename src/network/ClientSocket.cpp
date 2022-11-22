@@ -188,9 +188,11 @@ void	ClientSocket::two(void)
 	USE_DEBUGGER;
 	try {
 		std::cout << "running cgi in two" << std::endl;
+		_process._CGI.set_environment();
 		_process._CGI.execute_cgi();
 	} catch (int error) {
 		debugger.verbose("Thrown cgi exception in ::two");
+		std::cerr << "Error in ::two " << error << std::endl;
 		_event = POLLERR;
 		_process.server_overloaded();
 		return ;

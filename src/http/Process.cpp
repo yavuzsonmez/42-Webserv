@@ -209,7 +209,6 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			{
 				_with_cgi = true;
 				_cgi = _config.getCgiPath();
-				std::cout << "CGI PATH IS " << _cgi << std::endl;
 				_CGI = CGI(_request, _config, path, _cgi); // activates the cgi
 				_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 				return ;

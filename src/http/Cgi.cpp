@@ -34,6 +34,8 @@ void CGI::set_environment()
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
 	_env["REDIRECT_STATUS"] = "500";
+
+	std::cout << "ENVIRONMENT WAS SET"  << std::endl;
 }
 
 /**
@@ -165,7 +167,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 			}
 			std::cerr << strerror(errno) << std::endl;
 			debugger.error("Worker did not exit normally."); // this is being called if the worker timed out
-			throw(502); // else we throw a 500 error
+			//throw(502); // else we throw a 500 error
 			return ; 
 		}
 		else
@@ -214,8 +216,6 @@ void	CGI::execute_cgi(void)
 		for (int i = 0; _argvp[i] != NULL; i++)
 		 	debugger.error(_argvp[i]);
 		debugger.error("ENVP");
-		for (int i = 0; _envp[i] != NULL; i++)
-		 	debugger.error(_envp[i]);
 		execve(_cgi_path.c_str(), _argvp, _envp);
 		debugger.error("Failed to execve the CGI on path" + _cgi_path);
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
