@@ -98,12 +98,12 @@ void	ClientSocket::send_response(void)
 {
 	USE_DEBUGGER;
 	if (_remove) {
-		debugger.error("Not supposed to happen!");
+		debugger.verbose("Client wants to be removed!");
 		return ;
 	};
 	if (!is_valid_fd(_fd))
 	{
-		debugger.error("Error 3 while sending response to client");
+		debugger.verbose("Error 3 while sending response to client");
 		_remove = true;
 		close(_fd);
 		return ;
@@ -113,7 +113,7 @@ void	ClientSocket::send_response(void)
 	if (_bytes == -1)
 	{
 		_remove = true;
-		debugger.error("Error while sending response to client");
+		debugger.verbose("Error while sending response to client");
 		return ;
 	}
 	_position += _bytes;
