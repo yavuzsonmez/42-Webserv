@@ -110,8 +110,10 @@ void	Process::handle_request(void)
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
 				if (find_vector(_methods, _request.getMethod().first) == -1) // the method is not allowed
+				{
 					debugger.error("Method not allowed!");
 					throw(405);
+				}
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
