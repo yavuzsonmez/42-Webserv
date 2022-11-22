@@ -26,6 +26,7 @@ class Process
 	void	build_cgi_response(void);
 	bool	check_location(void);
 	void	set_redirection_response(void);
+	bool	detectCgi(std::string path, std::string code, std::string status);
 	std::string	get_location(std::string location, ConfigurationKeyType type);
 	bool	get_location_dl(std::string path);
 	void	exception(int code);

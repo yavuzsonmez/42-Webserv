@@ -48,10 +48,13 @@ void CGI::set_environment()
  */
 CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
 {
+	std::cout << "CGI::CGI" << std::endl;
 	if (_request.getQuery().second)
 	{
 		std::string	query = _request.getQuery().first; //Get query string
 		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
+		//std::cout << "query: 1" << _query_parameters[0] << std::endl;
+		//std::cout << "query: 2 " << _query_parameters[1] << std::endl;
 	}
 
 	set_environment();
@@ -130,7 +133,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 	{
 		debugger.error("[TIMEOUT] fork failed in timeout pid");
 		kill(worker_pid, SIGKILL);
-		debugger.verbose("we could not fork successfully");
+		debugger.error("we could not fork successfully");
 		throw(503); // we throw an 503 / overloaded error
 	}
 	else if (timeout_pid == 0) // timeouted child
@@ -146,7 +149,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 		// wait for the forks to be ready
 		while ((pid = waitpid(worker_pid, &stat_loc, WNOHANG)) == 0 &&
 				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
-			usleep(150); // check every 50 microseconds
+			usleep(50); // check every 50 microseconds
 
 		if (pid == -1) // this is being called when fork failed and we are overloaded.
 		{
@@ -162,7 +165,9 @@ void CGI::wait_for_child(pid_t worker_pid)
 			{
 				return ; // we're done
 			}
-			throw(500); // else we throw a 500 error
+			std::cerr << strerror(errno) << std::endl;
+			debugger.error("Worker did not exit normally."); // this is being called if the worker timed out
+			throw(502); // else we throw a 500 error
 			return ; 
 		}
 		else
@@ -203,12 +208,13 @@ void	CGI::execute_cgi(void)
 			std::exit(errno); // exit the child
 		}
 		_envp = map_to_array(_env);
-		
 		_query_parameters.insert(_query_parameters.begin(), _path.c_str());
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
 		execve(_cgi_path.c_str(), _argvp, _envp);
+		debugger.error("Failed to execve the CGI on path" + _cgi_path);
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
+		std::cerr << strerror(errno) << std::endl;
 		std::exit(errno); // exit the child
 	}
 	else // parent

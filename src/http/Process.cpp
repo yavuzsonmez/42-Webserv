@@ -152,6 +152,40 @@ void Process::set_redirection_response()
 	_response.set_status_text("Moved Permanently");
 	_response.set_redirection(_redirection);
 }
+
+/**
+ * @brief Returns true if an CGI was detected
+ * 
+ * @param path 
+ * @param code 
+ * @param status 
+ * @return true 
+ * @return false 
+ */
+bool Process::detectCgi(std::string path, std::string code, std::string status)
+{
+	USE_DEBUGGER;
+	(void) status;
+	(void) code; 
+	// checks if the requested file is an file which has an cgi extension
+	// check if before the ? there is a .cgi ending
+	std::string::size_type pos = path.find("?");
+	// get the first part of the path
+	std::string first_part = path.substr(0, pos);
+
+	// check if the file ending is the cgi ending but there are arguments too
+	if (!first_part.substr(first_part.find_last_of(".") + 1).compare(_cgi_fileending)) {
+		debugger.verbose("DETECTED CGI!");
+		return true;
+	}
+	// check if the file ending is the cgi ending but there no arguments
+	if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending)) {
+		debugger.verbose("DETECTED CGI!");
+		return true;
+	}
+	return false;
+}
+
 /**
  * @brief sets the header and the body of the response.
  * - In case of a cgi it creates a cgi object and returns.
@@ -160,6 +194,7 @@ void Process::set_redirection_response()
 void	Process::build_response(std::string path, std::string code, std::string status)
 {
 		_response.set_protocol("HTTP/1.1");
+		std::cout << "PATH of path: " << path << std::endl;
 		if (!_redirection.empty()) // if the redirection is not empty
 		{
 			set_redirection_response();
@@ -169,9 +204,12 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 			_response.set_status_code(code);
 			_response.set_status_text(status);
 			_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
-			if (!path.substr(path.find_last_of(".") + 1).compare(_cgi_fileending)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
+			// This is where cgi is recognized
+			if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 			{
 				_with_cgi = true;
+				_cgi = _config.getCgiPath();
+				std::cout << "CGI PATH IS " << _cgi << std::endl;
 				_CGI = CGI(_request, _config, path, _cgi); // activates the cgi
 				_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 				return ;
