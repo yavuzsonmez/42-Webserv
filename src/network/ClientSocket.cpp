@@ -108,7 +108,6 @@ void	ClientSocket::send_response(void)
 		close(_fd);
 		return ;
 	}
-	std::cout << "fd to write in " << _fd << std::endl;
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length() - _position, 0);
 	if (_bytes == -1)
 	{
