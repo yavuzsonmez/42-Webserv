@@ -94,7 +94,6 @@ char **map_to_array(std::map<key, value> &map)
 	int	i = 0;
 	for (it = map.begin(); it != map.end(); ++it)
 	{
-		std::cerr << "key: " << it->first << " value: " << it->second << std::endl;
 		array[i] = strdup((to_str(it->first) + "=" + to_str(it->second)).c_str());
 		++i;
 	}
