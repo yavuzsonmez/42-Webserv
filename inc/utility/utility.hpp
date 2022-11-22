@@ -20,6 +20,7 @@
 # include <unistd.h>
 # include "../config_file/ConfigFileParsing.hpp"
 # include "../configuration_key/ServerBlock.hpp"
+# include "../debugger/DebuggerPrinter.hpp"
 
 void strip_from_str(std::string &file_content, const char start, const char end);
 void upper_str(std::string &str);
@@ -90,6 +91,7 @@ char **map_to_array(std::map<key, value> &map)
 	char **array = new char*[sizeof(char*) * (map.size() + 1)];
 	if (array == nullptr)
 		exit(1); // we have no memory or allocation just failed, so there is nothing we can do
+	std::cerr << "map size: " << map.size() << std::endl;
 	int	i = 0;
 	for (it = map.begin(); it != map.end(); ++it)
 	{
