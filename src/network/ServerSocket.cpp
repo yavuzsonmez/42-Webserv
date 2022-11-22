@@ -88,13 +88,15 @@ void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i
 {
 	if (pollfds[i].revents & ((POLLERR | POLLHUP)))
 	{
-		std::cout << "Connection broken. Error code: " << pollfds[i].revents << std::endl;
+		if (ENABLE_LOGGING)
+			std::cout << "Connection broken. Error code: " << pollfds[i].revents << std::endl;
 		disconnectClient(pollfds, i);
 		return ;
 	}
 	if (pollfds[i].revents & POLLNVAL)
 	{
-		std::cout << "Found an invalid connection. Taking care. " << pollfds[i].revents << std::endl;
+		if (ENABLE_LOGGING)
+			std::cout << "Found an invalid connection. Taking care. " << pollfds[i].revents << std::endl;
 		client_iter pos = get_CS_position(_clients, pollfds[i].fd);
 		pollfds.erase(pollfds.begin() + i);
 		if (pos != _clients.end())
@@ -120,7 +122,8 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 
 	int forward;
 	forward = accept(pollfds[i].fd, (struct sockaddr *)&clientSocket, &socketSize);
-	std::cout << "New connection accepted on fd " << forward << std::endl;
+	if (ENABLE_LOGGING)
+		std::cout << "New connection accepted on fd " << forward << std::endl;
 	if (forward == -1) return false;
 	tmp.fd = forward; // set the newly obtained file descriptor to the pollfd. Important to do this before the fcntl call!
 	int val = fcntl(forward, F_SETFL, fcntl(forward, F_GETFL, 0) | O_NONBLOCK);

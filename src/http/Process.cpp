@@ -199,7 +199,6 @@ bool Process::detectCgi(std::string path, std::string code, std::string status)
 	// we also need to check if there is no script given and if the index.php contains what we want.
 	if (_request.getScript().first.empty()) {
 		debugger.verbose("DETECTED EMPTY SCRIPT!");
-		std::cout << "This is the index " << _config.getConfigurationKeysWithType(INDEX).front().indexes.front() << std::endl;
 	}
 
 	// check if the file ending is the cgi ending but there no arguments
