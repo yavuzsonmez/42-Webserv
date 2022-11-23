@@ -141,10 +141,10 @@ void CGI::wait_for_child(pid_t worker_pid)
 		pid_t pid = 0;
 
 		// wait for the forks to be ready
+		signal(SIGCHLD, SIG_IGN);
 		while ((pid = waitpid(worker_pid, &stat_loc, WNOHANG)) == 0 &&
 				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
 			usleep(50); // check every 50 microseconds
-		signal(SIGCHLD, SIG_IGN);
 		if (pid == -1) // this is being called when fork failed and we are overloaded.
 		{
 			debugger.error("[TIMEOUT] fork failed");
