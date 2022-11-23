@@ -30,6 +30,7 @@ class Process
 	std::string	get_location(std::string location, ConfigurationKeyType type);
 	bool	get_location_dl(std::string path);
 	void	exception(int code);
+	bool	check_if_request_is_too_large();
 
 	// path builder
 	std::string build_path_with_index__or_script_file();

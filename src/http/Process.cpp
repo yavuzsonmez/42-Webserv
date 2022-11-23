@@ -77,11 +77,28 @@ std::string Process::build_path_with_index__or_script_file()
 }
 
 /**
- * @brief Handles request
- * TODO: Add method enum to handle all request in one place
- * 
- * TODO: Please improve readability, this is very confusing. It is not clear what does what.
- * Use at least 6 seperate functions for everything done in this function
+ * @brief Check if a request is too large for the server to handle
+ * @param request 
+ * @return false if request is too large, true if request is not too large
+ */
+bool Process::check_if_request_is_too_large()
+{
+	if (_config.getConfigurationKeysWithType(POST_MAX_SIZE).size() > 0) {
+		if ((long) _request.getBody().first.size() > (_config.getConfigurationKeysWithType(POST_MAX_SIZE).front().post_max_size * 1000))
+		{
+			std::cout << "Request too big" << std::endl;
+			exception(413);
+			return false;
+		}
+		return true;
+	}
+	return true;
+}
+
+/**
+ * @brief Handles the request.
+ * Checks if the request is too large, if the request is a cgi request and if the request is a normal request.
+ * Will throw an exception if something goes wrong.
  * 
  */
 void	Process::handle_request(void)
@@ -89,13 +106,10 @@ void	Process::handle_request(void)
 	USE_DEBUGGER;
 	std::string	path;
 
+	if (check_if_request_is_too_large() == false)
+		return exception(413);
+
 	// first we check if the request is too big
-	if ((long) _request.getBody().first.size() > (_config.getConfigurationKeysWithType(POST_MAX_SIZE).front().post_max_size * 1000))
-	{
-		std::cout << "Request too big" << std::endl;
-		exception(413);
-		return ;
-	}
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
 		path = build_path_with_index__or_script_file(); // we return the file looked for or the index file
