@@ -39,8 +39,10 @@ void	Process::process_request(void)
 	if (method == GET || method == POST || method == DELETE || method == PUT)
 	{
 		try {
-			handle_request();}
+			handle_request();
+		}
 		catch (int e) {
+			
 			exception(e);
 			return ;
 		}

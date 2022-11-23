@@ -107,7 +107,6 @@ void	CGI::write_in_std_in()
 	if (!is_valid_fd(_fd_out)) return ;
 	if (_fd_in < 0 || _tmpin == NULL || _request.getBody().first.empty())
 	{
-		debugger.verbose("Error in CGI::write_in_std_in()");
 		return ;
 	}
 	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());

@@ -29,7 +29,8 @@ ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config,
 
 ClientSocket::~ClientSocket()
 {
-
+	USE_DEBUGGER;
+	debugger.error("ClientSocket destructor called");
 }
 
 /**
@@ -56,6 +57,7 @@ void	ClientSocket::call_func_ptr(void)
  */
 void	ClientSocket::read_in_buffer(void)
 {
+	USE_DEBUGGER;
 	buffer.resize(buffer.size() + _count);
 	_bytes = read(_fd, (char*)buffer.c_str() + _position, _count);
 	_position += _bytes;
@@ -65,9 +67,12 @@ void	ClientSocket::read_in_buffer(void)
 		if (pos != std::string::npos)
 		{
 			std::string httpRequestHead = buffer.substr(0, pos + 3);
+			// if parsing the request failed, we tell the client it should remove the connection
 			try {
 				_clientRequest.parser(httpRequestHead);
-			} catch (...){
+			} catch (...) {
+				debugger.error("INVALID REQUEST. Will be removed!");
+				_remove = true;
 				return ;
 			}
 			buffer.erase(0, pos + 3);
@@ -86,7 +91,13 @@ void	ClientSocket::read_in_buffer(void)
 	{
 		if (_position >= _content_length)
 		{
-			_clientRequest.setBody(buffer);
+			try {
+				_clientRequest.setBody(buffer);
+			} catch (...){
+				debugger.error("INVALID REQUEST BODY. Will be removed!");
+				_remove = true;
+				return ;
+			}
 			set_up();
 			return ;
 		}
