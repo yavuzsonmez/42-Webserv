@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <string>
+#include <stdlib.h>
 
 /**
  * @brief Get the absolute path of a file WITHOUT any arguments if they were provided (e.g. index.php?arg1=1&arg2=2)
@@ -14,7 +15,7 @@ std::string	get_abs_path(const std::string & path)
 	if (pwd)
 	{
 		str = pwd;
-		delete pwd;
+		free(pwd);
 	}
 	str += path.substr(1);
 	// remvoe arguments from str
