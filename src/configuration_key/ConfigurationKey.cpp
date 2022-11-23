@@ -402,7 +402,7 @@ bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 		if (raw.second[raw.second.length() - 1] != '{') {
 			throwInvalidConfigurationFileExceptionWithMessage("Location block does not end with {!");
 		}
-		raw.second.pop_back();
+		str.erase(str.length() - 1); // delete the last character
 		raw.second = trim_whitespaces(raw.second);
 		return true;
 	}
