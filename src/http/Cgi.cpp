@@ -139,9 +139,9 @@ void CGI::wait_for_child(pid_t worker_pid)
 	{
 		int stat_loc = 0; 
 		pid_t pid = 0;
-
-		// wait for the forks to be ready
+		// child stuck we kill it to avoid zombie
 		signal(SIGCHLD, SIG_IGN);
+		// wait for the forks to be ready
 		while ((pid = waitpid(worker_pid, &stat_loc, WNOHANG)) == 0 &&
 				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
 			usleep(50); // check every 50 microseconds
