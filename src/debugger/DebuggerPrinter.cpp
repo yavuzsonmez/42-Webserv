@@ -5,10 +5,6 @@ DebuggerPrinter::DebuggerPrinter()
 {
 
 }
-DebuggerPrinter::DebuggerPrinter( const DebuggerPrinter &src )
-{
-	(void) src;
-}
 
 DebuggerPrinter::~DebuggerPrinter()
 {
@@ -26,6 +22,7 @@ DebuggerPrinter & DebuggerPrinter::operator = (const DebuggerPrinter &src) {
  * @param message
  */
 void DebuggerPrinter::printString( const std::string &message, LogLevel level ) {
+	if (ENABLE_LOGGING == 0) return ;
 	std::string prefix = "";
 	switch (level) {
 		case INFO:
@@ -36,6 +33,9 @@ void DebuggerPrinter::printString( const std::string &message, LogLevel level ) 
 			break;
 		case DEBUG:
 			prefix = "\033[0;36m[DEBUG]\033[0m";
+			break;
+		case VERBOSE:
+			prefix = "\033[0;36m[VERBOSE]\033[0m";
 			break;
 		case ERROR:
 			prefix = "\033[0;31m[ERROR]\033[0m";
@@ -75,6 +75,11 @@ void DebuggerPrinter::warning( const std::string &message ) {
 void DebuggerPrinter::debug( const std::string &message ) {
 	if (DEBUGMODE != 1) return ;
 	printString(message, DEBUG);
+}
+
+void DebuggerPrinter::verbose( const std::string &message ) {
+	if (DEBUGMODE != 1) return ;
+	printString(message, VERBOSE);
 }
 
 /**

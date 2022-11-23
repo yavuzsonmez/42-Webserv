@@ -1,15 +1,16 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
-#include "../utility/utility.hpp"
 # include "../utility/colors.hpp"
+# include "../utility/utility.hpp"
 # include "../http/status.hpp"
+# include "../http/headers.hpp"
 
 /**
  * @note Because we have to support multiple method we need enum
  * because they are easier to work with than strings
  */
-enum method { GET, POST, DELETE, UNKNOWN };
+
 
 /**
  * @note Every member attribute of the request class is stored as pair like that [value, flag]
@@ -29,7 +30,6 @@ typedef std::vector < std::pair < str_flag, str_flag > >	headr_dirctiv;
 /**
  * @brief Request class who get the request as raw string and
  * store separately every element of the request in order to process it.
- * Set _status if Method not allowed (405) or Bad Request (400)
  */
 class Request
 {
@@ -37,7 +37,6 @@ class Request
 	public:
 
 		Request();
-		Request( std::string &req ); // prefered constructor where the raw request is passed
 		Request( const Request &src );
 		~Request();
 
@@ -51,8 +50,10 @@ class Request
 		str_flag			getFragment(void) const;
 		str_flag			getHttpversion(void) const;
 		headr_dirctiv		getHeaders(void) const;
+		std::string			getMethodasString();
+		std::string	findHeader(std::string key) const;
 		str_flag			getBody(void) const;
-		std::string			getStatus(void) const;
+		//std::string			getStatus(void) const;
 
 		void				parser(std::string &req);
 			void				setMethod(std::string &req);
@@ -66,6 +67,7 @@ class Request
 				void				setFragment(std::string &url);
 			void				setHttpversion(std::string &req);
 			void				setHeaders(std::string &req);
+				void			checkHeader(str_flag &hdr, str_flag &direct);
 			void				setBody(std::string &req);
 
 	private:
@@ -81,8 +83,6 @@ class Request
 		str_flag			_httpVersion;
 		headr_dirctiv		_headers;
 		str_flag			_body;
-
-		std::string			_status;
 };
 
 /**

@@ -3,6 +3,7 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
 #include "../../inc/utility/colors.hpp"
+#include "../../inc/http/Request.hpp"
 #include <set>
 
 ConfigFileParsing::ConfigFileParsing()
@@ -65,6 +66,7 @@ bool ConfigFileParsing::validationDuplicationCheck() {
  * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
  * - runs validationDuplicationCheck(), checking for logic duplicates
  * - checks that there is a root available in each server block
+ * - checks that there is a server name available in each server block
  * - checks that for every location cgi there is a file ending available
  * @return true 
  * @return false 
@@ -75,8 +77,20 @@ bool ConfigFileParsing::validateConfiguration() {
 	if (validationDuplicationCheck()) {
 		debugger.debug("Configuration file has no detected duplicates in ports, server names, error pages or post_max_body_size.");
 	}
-	if (!keyExistsInEachServerBlock(serverBlocks, ROOT)) {
-		debugger.error("Configuration file has no root defined in one or more server blocks.");
+	if (keyExistsInEachServerBlock(serverBlocks, CGI_EXECUTABLE_PATH) != keyExistsInEachServerBlock(serverBlocks, CGI_FILEENDING)) {
+		debugger.error("Configuration file has a cgi executable or cgi fileendinged defined but not the other in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, LISTEN)) {
+		debugger.error("Configuration file has no ports defined in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, INDEX)) {
+		debugger.error("Configuration file has no index file defined in one or more server blocks.");
+		throw InvalidConfigurationFile();
+	}
+	if (!keyExistsInEachServerBlock(serverBlocks, SERVER_NAME)) {
+		debugger.error("Configuration file has no server name defined in one or more server blocks.");
 		throw InvalidConfigurationFile();
 	}
 	if (!checkIfCgiExecutableAndFileEndingAreSet(serverBlocks)) {
@@ -145,10 +159,11 @@ void ConfigFileParsing::addConfigurationKeyTypeToLocation(ConfigurationKeyType k
  * Super important function, without adding behavior for key it it will not appear in the location block!
  */
 void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, ConfigurationKey keyToAdd ) {
+	USE_DEBUGGER;
 	if (keyToAdd.configurationType == INDEX) {
 		key.indexes = keyToAdd.indexes;
 		addConfigurationKeyTypeToLocation(INDEX, key);
-	} 
+	}
 	else if (keyToAdd.configurationType == LOCATION) {
 		key.location = trim_whitespaces(keyToAdd.location);
 		addConfigurationKeyTypeToLocation(LOCATION, key);
@@ -159,6 +174,7 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	}
 	else if (keyToAdd.configurationType == METHODS) {
 		key.methods = keyToAdd.methods;
+		key.allowedMethods = keyToAdd.allowedMethods;
 		addConfigurationKeyTypeToLocation(METHODS, key);
 	}
 	else if (keyToAdd.configurationType == CGI_EXECUTABLE_PATH) {
@@ -168,6 +184,10 @@ void ConfigFileParsing::addConfigurationKeyToLocation( ConfigurationKey &key, Co
 	else if (keyToAdd.configurationType == CGI_FILEENDING) {
 		key.cgi_fileending = trim_whitespaces(keyToAdd.cgi_fileending);
 		addConfigurationKeyTypeToLocation(CGI_FILEENDING, key);
+	}
+	else if (keyToAdd.configurationType == DIRECTORY_LISTING) {
+		key.directory_listing = keyToAdd.directory_listing;
+		addConfigurationKeyTypeToLocation(DIRECTORY_LISTING, key);
 	}
 	else if (keyToAdd.configurationType == REDIRECTION) {
 		key.redirection = trim_whitespaces(keyToAdd.redirection);
@@ -215,7 +235,7 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 			debugger.error("Configuration file has no server block.");
 			throw InvalidConfigurationFile();
 		}
-		debugger.debug("Adding key to server block " + std::to_string(currentServerIndex));
+		debugger.debug("Adding key to server block " + to_string(currentServerIndex));
 		if (serverBlocks.size() == 0) {
 			debugger.error("No server block found or key is out of scope.");
 			throw InvalidConfigurationFile();
@@ -274,7 +294,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 	debugger.debug("Starting to parse configuration file");
 	for (std::string line; std::getline(iss, line); )
 	{
-		debugger.debug("Parsing line number " + std::to_string(lineNumber));
+		debugger.debug("Parsing line number " + to_string(lineNumber));
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
 		if (shouldSkipLineInConfigurationFile(line, firstNotWhiteSpacePosition)) {
 			lineNumber++;
@@ -284,14 +304,14 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
 		if (key_value_raw.size() != 2) {
-			debugger.error("Invalid configuration key detected. Line: " + std::to_string(lineNumber));
+			debugger.error("Invalid configuration key detected. Line: " + to_string(lineNumber));
 			debugger.error("There is no second pair for the key value pair.");
 			throw InvalidConfigurationFile();
 		}
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
 		ConfigurationKey key = ConfigurationKey(key_value_raw[0], trim_whitespaces(key_value_raw[1]), this->isCurrentlyInLocationBlock, lineNumber, trimmedString);
-		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
-		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
+		debugger.debug("Adding key to current server block with configuration key " + to_string(key.configurationType));
+		debugger.debug("LINE " + to_string(lineNumber) + ": " + key.key);
 		addConfigurationKeyToCurrentServerBlock(key);
 		lineNumber++;
 	}
