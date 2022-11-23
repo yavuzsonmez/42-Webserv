@@ -210,7 +210,7 @@ void ServerSocket::processConnections()
 					}
 					if ((*pos).second._remove) // If a client asks to be removed, remove it from the list
 					{
-						debugger.verbose("Client asked to be removed.");
+						debugger.error("Client asked to be removed. 1");
 						disconnectClient(pollfds, i);
 						continue;
 					}
@@ -226,6 +226,7 @@ void ServerSocket::processConnections()
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second._remove) // The client asks to be removed
 					{
+						debugger.verbose("Client asked to be removed. 2");
 						disconnectClient(pollfds, i);
 						continue;
 					}

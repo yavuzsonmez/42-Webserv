@@ -11,6 +11,20 @@
 
 enum	states {HEADER, BODY, RESPONSE, PIPE};
 
+// gives some information about the client and its state
+// PREPARING currently being prepared to send response or write in cgi.
+// WRITING_CGI currently writing in the cgi
+// READING_CGI currently reading from the cgi
+// SENDING_RESPONSE currently sending the response from the cgi
+// DONE client either failed or finished
+enum	SOCKET_STATE {
+	PREPARING,
+	WRITING_CGI, 
+	READING_CGI, 
+	SENDING_RESPONSE,
+	DONE
+};
+
 class ClientSocket
 {
 	public:
@@ -39,12 +53,14 @@ class ClientSocket
 
 		void	set_up();
 
+		
 		bool Timeout(void);
 		
 		short				_event;
 		int					_fd;
 		int					_client_fd;
 		bool				_remove;
+		SOCKET_STATE		_socket_state;
 
 	private:
 
