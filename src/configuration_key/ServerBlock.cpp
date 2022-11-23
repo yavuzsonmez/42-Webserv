@@ -94,7 +94,7 @@ std::vector<unsigned int> ServerBlock::getAllServerPorts() {
 
 	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
 		if ((*i).configurationType == LISTEN)
-			ports.insert(ports.end(), begin((*i).ports), end((*i).ports));;
+			ports.insert(ports.end(), (*i).ports.begin(), (*i).ports.end());;
 	}
 	return ports;
 }
@@ -113,7 +113,7 @@ std::vector<std::string> ServerBlock::getAllIndexes() {
 
 	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
 		if ((*i).configurationType == SERVER_NAME)
-			indexes.insert(indexes.end(), begin((*i).indexes), end((*i).indexes));;
+			indexes.insert(indexes.end(), (*i).indexes.begin(), (*i).indexes.end());;
 	}
 	return indexes;
 }
@@ -132,7 +132,7 @@ std::vector<std::string> ServerBlock::getAllServerNames() {
 
 	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
 		if ((*i).configurationType == SERVER_NAME)
-			server_names.insert(server_names.end(), begin((*i).server_names), end((*i).server_names));;
+			server_names.insert(server_names.end(), (*i).server_names.begin(), (*i).server_names.end());
 	}
 	return server_names;
 }
