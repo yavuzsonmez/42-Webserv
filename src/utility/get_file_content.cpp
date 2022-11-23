@@ -3,15 +3,16 @@
 
 std::string get_file_content(std::string path)
 {
-	std::ifstream f(path); //taking file as inputstream
-	std::string str;
-
-	if(f) {
-		std::ostringstream ss;
-		ss << f.rdbuf(); // reading data
-		str = ss.str();
-	}
-	return (str);
+	std::string content;
+	int fd = open(path.c_str(), O_RDONLY);
+	if (fd == -1)
+		return content;
+	char buffer[1024];
+	int ret = 0;
+	while ((ret = read(fd, buffer, 1024)) > 0)
+		content.append(buffer, ret);
+	close(fd);
+	return content;
 }
 
 /**
