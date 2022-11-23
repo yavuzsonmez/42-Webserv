@@ -147,6 +147,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 		if (pid == -1) // this is being called when fork failed because the process already finished.
 		{
 			debugger.error("[FINISHED] cgi execution");
+			kill_with_error(worker_pid);
 			kill_with_error(timeout_pid);
 			return ;
 		}
