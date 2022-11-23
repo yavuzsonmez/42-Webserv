@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 {
 	USE_DEBUGGER;
 	//if (!check_arguments_and_filename(argc, argv)) return (1);
-
+	(void) argv;
 	ConfigFileParsing static *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	if (argc == 1)
