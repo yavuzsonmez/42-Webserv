@@ -1,5 +1,6 @@
 #include "../../inc/http/Cgi.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
+#include <sys/wait.h>
 
 CGI::CGI()
 {
