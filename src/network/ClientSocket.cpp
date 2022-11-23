@@ -25,12 +25,12 @@ ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config,
 	_event = POLLIN;
 	_remove = false;
 	_timeout = std::time(NULL);
+	_socket_state = PREPARING; // set state of client to PREPARING
 }
 
 ClientSocket::~ClientSocket()
 {
 	USE_DEBUGGER;
-	debugger.error("ClientSocket destructor called");
 }
 
 /**
@@ -39,7 +39,12 @@ ClientSocket::~ClientSocket()
 bool ClientSocket::Timeout()
 {
 	if (std::time(NULL) - _timeout > 5000)
+	{
+		USE_DEBUGGER;
+		_socket_state = DONE; // set state of client to DONE because it is finished.
+		_remove = true;
 		return true;
+	}
 	return false;
 }
 
@@ -73,6 +78,7 @@ void	ClientSocket::read_in_buffer(void)
 			} catch (...) {
 				debugger.error("INVALID REQUEST. Will be removed!");
 				_remove = true;
+				_socket_state = DONE; // set state of client to DONE because it is finished.
 				return ;
 			}
 			buffer.erase(0, pos + 3);
@@ -95,6 +101,7 @@ void	ClientSocket::read_in_buffer(void)
 				_clientRequest.setBody(buffer);
 			} catch (...){
 				debugger.error("INVALID REQUEST BODY. Will be removed!");
+				_socket_state = DONE; // set state of client to DONE because it is finished.
 				_remove = true;
 				return ;
 			}
@@ -115,11 +122,13 @@ void	ClientSocket::send_response(void)
 	USE_DEBUGGER;
 	if (_remove) {
 		debugger.verbose("Client wants to be removed!");
+		_socket_state = DONE; // set state of client to DONE because it is finished.
 		return ;
 	};
 	if (!is_valid_fd(_fd))
 	{
 		debugger.verbose("Error 3 while sending response to client");
+		_socket_state = DONE; // set state of client to DONE because it is finished.
 		_remove = true;
 		close(_fd);
 		return ;
@@ -128,6 +137,7 @@ void	ClientSocket::send_response(void)
 	if (_bytes == -1)
 	{
 		_remove = true;
+		_socket_state = DONE; // set state of client to DONE because it is finished.
 		debugger.verbose("Error while sending response to client");
 		return ;
 	}
@@ -135,6 +145,7 @@ void	ClientSocket::send_response(void)
 	if (_position >= _process._response.get_response().length())
 	{
 		debugger.debug("Completed sending (chunked) response to client");
+		_socket_state = DONE; // set state of client to DONE because it is finished.
 		_remove = true;
 		return ;
 	}
@@ -155,6 +166,8 @@ void	ClientSocket::set_up(void)
 	catch (int e)
 	{
 		_process.exception(e);
+		_socket_state = DONE; // set state of client to DONE because it is finished.
+		_remove = true;
 		return ;
 	}
 	if (_process._with_cgi) // in the next step we will write in the cgi input
@@ -170,6 +183,7 @@ void	ClientSocket::set_up(void)
 		_bytes = 0;
 		_position = 0;
 		_func_ptr = &ClientSocket::send_response;
+		_socket_state = SENDING_RESPONSE; // set state of client to DONE because it is finished.
 		_event = POLLOUT;
 	}
 	return ;
