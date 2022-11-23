@@ -145,4 +145,17 @@ int	find_vector(std::vector<T1> &vector, T2 element)
 	return -1;
 }
 
+/**
+ * @brief To string replacement for the cpp11 function
+ * @tparam T 
+ * @param value 
+ * @return std::string 
+ */
+template<typename T>
+std::string to_string(const T & value) {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
+
 #endif

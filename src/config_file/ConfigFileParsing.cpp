@@ -235,7 +235,7 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 			debugger.error("Configuration file has no server block.");
 			throw InvalidConfigurationFile();
 		}
-		debugger.debug("Adding key to server block " + std::to_string(currentServerIndex));
+		debugger.debug("Adding key to server block " + to_string(currentServerIndex));
 		if (serverBlocks.size() == 0) {
 			debugger.error("No server block found or key is out of scope.");
 			throw InvalidConfigurationFile();
@@ -294,7 +294,7 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 	debugger.debug("Starting to parse configuration file");
 	for (std::string line; std::getline(iss, line); )
 	{
-		debugger.debug("Parsing line number " + std::to_string(lineNumber));
+		debugger.debug("Parsing line number " + to_string(lineNumber));
 		size_t firstNotWhiteSpacePosition = line.find_first_not_of("\n\r\t");
 		if (shouldSkipLineInConfigurationFile(line, firstNotWhiteSpacePosition)) {
 			lineNumber++;
@@ -304,14 +304,14 @@ void ConfigFileParsing::determineConfigurationKeys( std::string &file_content ) 
 		// now splitting string up
 		std::vector<std::string> key_value_raw = split_once_on_delimiter(trimmedString, ' ');
 		if (key_value_raw.size() != 2) {
-			debugger.error("Invalid configuration key detected. Line: " + std::to_string(lineNumber));
+			debugger.error("Invalid configuration key detected. Line: " + to_string(lineNumber));
 			debugger.error("There is no second pair for the key value pair.");
 			throw InvalidConfigurationFile();
 		}
 		debugger.debug("KEY TO USE \033[0;34m" + key_value_raw[0] + " \033[0m VALUE TO USE \033[0;34m" + key_value_raw[1] + "\033[0m");
 		ConfigurationKey key = ConfigurationKey(key_value_raw[0], trim_whitespaces(key_value_raw[1]), this->isCurrentlyInLocationBlock, lineNumber, trimmedString);
-		debugger.debug("Adding key to current server block with configuration key " + std::to_string(key.configurationType));
-		debugger.debug("LINE " + std::to_string(lineNumber) + ": " + key.key);
+		debugger.debug("Adding key to current server block with configuration key " + to_string(key.configurationType));
+		debugger.debug("LINE " + to_string(lineNumber) + ": " + key.key);
 		addConfigurationKeyToCurrentServerBlock(key);
 		lineNumber++;
 	}
