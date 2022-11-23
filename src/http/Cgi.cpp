@@ -137,7 +137,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 	}
 	else // parent
 	{
-		int stat_loc = 0; 
+		int stat_loc = 0;
 		pid_t pid = 0;
 		// child stuck we kill it to avoid zombie
 		signal(SIGCHLD, SIG_IGN);
@@ -147,7 +147,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 			usleep(50); // check every 50 microseconds
 		if (pid == -1) // this is being called when fork failed and we are overloaded.
 		{
-			debugger.error("[TIMEOUT] fork failed 1");
+			debugger.error("[FINISHED] cgi execution");
 			kill(worker_pid, SIGKILL);
 			kill(timeout_pid, SIGKILL);
 			return ;
