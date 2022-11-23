@@ -180,7 +180,9 @@ void ServerSocket::processConnections()
 	// Main routine. This will be called the whole time the server runs
 	while (1) {
 		if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) // Here we wait for poll information.
+		{
 			std::cout << "An error occured when polling.";
+		}
 		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire area of sockets
 		{
 			/**

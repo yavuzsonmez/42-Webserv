@@ -170,6 +170,9 @@ std::string ServerBlock::getFallbackErrorPageForCode(int statuscode)
 		case 503:
 			return "default_pages/503_default.html";
 			break;
+		case 413:
+			return "default_pages/413_default.html";
+			break;
 		default:
 			return "default_pages/500_default.html";
 			break;

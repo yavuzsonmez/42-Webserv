@@ -4,7 +4,7 @@
 
 CGI::CGI()
 {
-
+	
 }
 
 /**
@@ -156,6 +156,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 			kill_with_error(timeout_pid); // let's kill the timeout child, it's not needed anymore
 			if (!WIFSIGNALED(stat_loc) && WEXITSTATUS(stat_loc) == 0) // if the worker exited normally
 			{
+				debugger.error("[FINISHED] sometimes happens cgi execution");
 				return ; // we're done
 			}
 			if (ENABLE_LOGGING)
@@ -179,6 +180,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 void	CGI::execute_cgi(void)
 {
 	USE_DEBUGGER;
+	set_environment();
 	pid_t pid = fork();
 	if (pid < 0)
 	{
