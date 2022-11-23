@@ -1,6 +1,7 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
 #include "../../inc/utility/colors.hpp"
+#include "../../inc/utility/utility.hpp"
 
 
 /**
