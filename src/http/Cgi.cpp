@@ -30,6 +30,7 @@ void CGI::set_environment()
 	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only. 
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
+	_env["HOST"] = _request.findHeader("Host");					//The length of the said content as given by the client.
 	_env["REDIRECT_STATUS"] = "500";
 	_env["BODY"] = _request.getBody().first;
 }

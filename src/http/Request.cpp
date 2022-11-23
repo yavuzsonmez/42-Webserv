@@ -315,6 +315,15 @@ void Request::setHttpversion(std::string &req)
 // 	}
 // }
 
+/**
+ * @brief Get the host value from the headers
+ * 
+ */
+std::string Request::getHost(std::string) {
+	std::string host = findHeader("Host");
+	return host;
+}
+
 /*
  * @brief Store every single header in a vector of pair
  * vector -> <header: directive>
@@ -392,7 +401,7 @@ std::string	Request::findHeader(std::string key) const
 	headr_dirctiv::const_iterator	it;
 	for (it = _headers.begin(); it != _headers.end(); it++)
 	{
-		if ((*it).first.first == key)
+		if ( lower_str_ret((*it).first.first) == lower_str_ret(key) )
 			return (*it).second.first;
 	}
 	return null;

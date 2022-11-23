@@ -56,6 +56,14 @@ void lower_str(std::string &str)
 }
 
 
+//lowercase a string, then we can also accept more inputs
+std::string lower_str_ret(std::string str)
+{
+	std::transform(str.begin(), str.end(),str.begin(), tolower);
+	return str;
+}
+
+
 //uppercase a string
 void upper_str(std::string &str)
 {

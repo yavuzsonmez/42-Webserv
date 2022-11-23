@@ -61,6 +61,7 @@ int send_client_timeout(int forward, ServerBlock serverblock);
 std::string get_file_content_cached(std::string path);
 int stoi( std::string & s );
 int kill_with_error(int pid);
+std::string lower_str_ret(std::string str);
 
 /**
  * @brief converts any type into a string
