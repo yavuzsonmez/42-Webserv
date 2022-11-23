@@ -93,6 +93,19 @@ void Request::setMethod(std::string &req) {
 	req.erase(0, pos + 1);
 }
 
+/**
+ * @brief Returns the method as string
+ * This is important for headers in the environment.
+ */
+std::string Request::getMethodasString()
+{
+	if (_method.first == GET)			std::cout << "GET" << std::endl;
+	else if (_method.first == POST)		std::cout << "POST" << std::endl;
+	else if (_method.first == DELETE)	std::cout << "DELETE" << std::endl;
+	else if (_method.first == UNKNOWN)	std::cout << "UNKNOWN" << std::endl;
+	return ("");
+}
+
 // TODO check std::string::npos before substr qnd erase
 // TODO domain is case insensitive
 
