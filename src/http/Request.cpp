@@ -1,5 +1,6 @@
 
 #include "../../inc/http/Request.hpp"
+#include "../../inc/debugger/DebuggerPrinter.hpp"
 
 
 /**
@@ -16,28 +17,8 @@ Request::Request() :
 	_fragment("", false),
 	_httpVersion("HTTP/1.1", true),
 	_headers(),
-	_body("", false),
-	_status("")
+	_body("", false)
 	{}
-
-/**
- * @brief Prefered constructor, default values
- * @param req, raw request sent by the client
- */
-Request::Request(std::string &req) :
-	_method(UNKNOWN, false),
-	_protocol("http", true),
-	_domain("", true),
-	_port(80, true),
-	_script("", false),
-	_path("/", true),
-	_query("", false),
-	_fragment("", false),
-	_httpVersion("HTTP/1.1", true),
-	_headers(),
-	_body("", false),
-	_status("")
-	{ parser(req);}
 
 /**
  * @brief Copy constructor
@@ -65,12 +46,18 @@ str_flag			Request::getDomain() const		{ return _domain; }
 i_flag				Request::getPort() const		{ return _port; }
 str_flag			Request::getScript() const		{ return _script; }
 str_flag			Request::getPath() const		{ return _path; }
-str_flag			Request::getQuery() const		{ return _query; }
+
+/**
+ * @brief Returns the query string of the request
+ */
+str_flag			Request::getQuery() const { return _query; }
+
 str_flag			Request::getFragment() const	{ return _fragment; }
 str_flag			Request::getHttpversion() const	{ return _httpVersion; }
 headr_dirctiv		Request::getHeaders() const		{ return _headers; }
-str_flag			Request::getBody() const		{ return _body; }
-std::string			Request::getStatus() const		{ return _status; }
+str_flag			Request::getBody() const		{ 
+	return _body;
+}
 
 /**
  * @brief Main parsing function, each subfunction will
@@ -78,18 +65,20 @@ std::string			Request::getStatus() const		{ return _status; }
  * in the request string.
  */
 void Request::parser(std::string &req) {
+	USE_DEBUGGER;
 	if (req.empty())
-	{
-		_status = Bad_Request;
-		return ;
+		throw (Bad_Request);
+	try {
+		setMethod(req);
+		setUrl(req);
+		setHttpversion(req);
+		setHeaders(req);
+		setBody(req);
 	}
-	setMethod(req);
-	if (!_status.empty())
-		return ;
-	setUrl(req);
-	setHttpversion(req);
-	setHeaders(req);
-	setBody(req);
+	catch (std::string status) {
+		debugger.verbose(status);
+		throw (status);
+	}
 }
 
 /**
@@ -99,16 +88,26 @@ void Request::setMethod(std::string &req) {
 	std::string tmp;
 	size_t pos = req.find(" ");
 	if (pos == std::string::npos)
-	{
-		_status = Bad_Request;
-		return ;
-	}
+		throw(Bad_Request);
 	tmp = req.substr(0, pos);
 	if (!tmp.compare("GET"))			{ _method.first = GET; _method.second = true; }
 	else if (!tmp.compare("POST"))		{ _method.first = POST; _method.second = true; }
 	else if (!tmp.compare("DELETE"))	{ _method.first = DELETE; _method.second = true; }
-	else { _method.first = UNKNOWN; _method.second = false; _status =  Method_Not_Allowed; }
+	else { _method.first = UNKNOWN; _method.second = false; throw(Method_Not_Allowed); }
 	req.erase(0, pos + 1);
+}
+
+/**
+ * @brief Returns the method as string
+ * This is important for headers in the environment.
+ */
+std::string Request::getMethodasString()
+{
+	if (_method.first == GET) return "GET";
+	else if (_method.first == POST)		return "POST";
+	else if (_method.first == DELETE)	return "DELETE";
+	else if (_method.first == UNKNOWN)	return"UNKNOWN";
+	return ("");
 }
 
 // TODO check std::string::npos before substr qnd erase
@@ -120,10 +119,7 @@ void Request::setMethod(std::string &req) {
 void Request::setUrl(std::string &req) {
 	size_t pos = req.find(" ");
 	if (pos == std::string::npos)
-	{
-		_status = Bad_Request;
-		return ;
-	}
+		throw(Bad_Request);
 	std::string url = req.substr(0, pos);
 	req.erase(0, pos + 1);
 	setProtocol(url);
@@ -157,8 +153,7 @@ void Request::setDomain(std::string &url) {
 	{
 		_domain.first.clear();
 		_domain.second = false;
-		_status = Bad_Request;
-		return ;
+		throw(Bad_Request);
 	}
 	_domain.first = url.substr(0, pos);
 	url.erase(0, pos + 1);
@@ -166,39 +161,69 @@ void Request::setDomain(std::string &url) {
 
 /**
  * @brief Check if a port is provided in the URL of the request,
- * if not use the default http port (80)
  */
 void Request::setPort(std::string &url) {
+	USE_DEBUGGER;
+	debugger.debug(url);
 	size_t x = url.find(":");
 	size_t y = url.find("/");
-	if (x == std::string::npos || y == std::string::npos)
+	if (x == std::string::npos)
 		return;
+	if (y == std::string::npos)
+		y = url.length();
 	std::string port = url.substr(x + 1, y - x - 1);
 	std::stringstream ss(port);
 	ss >> _port.first;
 	if (_port.first < 0)
 	{
-		_status = Bad_Request;
 		_port.second = false;
+		throw(Bad_Request);
 	}
 	url.erase(x, y - x );
+	debugger.debug(url);
 }
+
+// /**
+//  * @brief check if client requests a CGI
+//  */
+// void Request::setScript(std::string &url) {
+// 	size_t pos = url.find_last_of("/");
+// 	if (pos == std::string::npos)
+// 		return ;
+// 	_script.first = url.substr(0, pos);
+// 	std::cout << "_script: " << _script.first << std::endl;
+// 	if (_script.first.substr(0, _script.first.find("/")).compare("cgi")) // check if cgi the client request the CGI in the cgi/ folder
+// 		_script.second = false;
+// 	else
+// 		_script.second = true;
+// 	url.erase(0, pos + 1);
+// 	// TODO check if URL containes something after script like /cgi/index.php/ or /cgi/index.php
+// 	// fix research based on last / for script
+// }
 
 /**
  * @brief check if client requests a CGI
  */
 void Request::setScript(std::string &url) {
-	size_t pos = url.find_last_of("/");
+	size_t pos = url.find_last_of(".");
 	if (pos == std::string::npos)
 		return ;
-	_script.first = url.substr(0, pos);
+	pos = url.find_last_of("/");
+	if (pos == std::string::npos)
+		_script.first = url.substr(0);
+	else
+		_script.first = url.substr(pos);
 	if (_script.first.substr(0, _script.first.find("/")).compare("cgi")) // check if cgi the client request the CGI in the cgi/ folder
 		_script.second = false;
 	else
 		_script.second = true;
-	url.erase(0, pos + 1);
+	setFragment(url);
+	setQuery(url);
+	if (pos == std::string::npos)
+		url.erase(0);
+	else
+		url.erase(pos);
 	// TODO check if URL containes something after script like /cgi/index.php/ or /cgi/index.php
-	// fix research based on last / for script
 }
 
 
@@ -207,13 +232,24 @@ void Request::setScript(std::string &url) {
  */
 void Request::setPath(std::string &url)
 {
-	setFragment(url);
-	setQuery(url);
-
 	if (url.length())
 		_path.first = url.substr(0, url.length());
 	url.erase(0, url.length());
 }
+
+// /**
+//  * @brief
+//  */
+// void Request::setPath(std::string &url)
+// {
+// 	setFragment(url);
+// 	setQuery(url);
+
+// 	if (url.length())
+// 		_path.first = url.substr(0, url.length());
+// 	url.erase(0, url.length());
+// }
+
 
 /**
  * @brief
@@ -263,31 +299,103 @@ void Request::setHttpversion(std::string &req)
  * 			header -> <header, flag>
  *			directive -> <directive, flag>
  */
+// void Request::setHeaders(std::string &req)
+// {
+// 	str_flag hdr, direct;
+// 	size_t pos = req.find(":");
+// 	while (pos != std::string::npos)
+// 	{
+// 		hdr = std::make_pair(req.substr(0, pos), true);
+// 		req.erase(0, pos + 1);
+// 		pos = req.find("\n");
+// 		direct = std::make_pair(req.substr(0, pos), true);
+// 		_headers.push_back(std::make_pair(hdr, direct));
+// 		req.erase(0, pos + 1);
+// 		pos = req.find(":");
+// 	}
+// }
+
+/*
+ * @brief Store every single header in a vector of pair
+ * vector -> <header: directive>
+ * 			header -> <header, flag>
+ *			directive -> <directive, flag>
+ */
 void Request::setHeaders(std::string &req)
 {
+	// std::cout << "req_header: " << req << std::endl;
 	str_flag hdr, direct;
+	size_t end = req.find("\r\n\r\n");
+	// std::cout << "end: " << end << std::endl;
 	size_t pos = req.find(":");
-	while (pos != std::string::npos)
+	while (pos != std::string::npos && pos < end)
 	{
 		hdr = std::make_pair(req.substr(0, pos), true);
 		req.erase(0, pos + 1);
 		pos = req.find("\n");
 		direct = std::make_pair(req.substr(0, pos), true);
+		checkHeader(hdr, direct);
 		_headers.push_back(std::make_pair(hdr, direct));
 		req.erase(0, pos + 1);
 		pos = req.find(":");
+		end = req.find("\r\n");
 	}
 }
 
+void Request::checkHeader(str_flag &hdr, str_flag &direct)
+{
+	if (hdr.first == Host)
+	{
+		std::string host_header = direct.first;
+		setPort(host_header);
+	}
+	if (hdr.first == Content_Length)
+	{
+		if (_method.first != DELETE && _method.first != POST)
+		{
+			_method.second = false;
+			return ;
+		}
+		//check max content length from the parsed config file
+	}
+	//if (hdr.first == Content_Type)
+}
+
 /**
- * @brief Store the eventual body (POST request) of the request
+ * @brief Sets the body of the request. Will throw an Forbidden for a GET request when a body is present.
+ * @param req 
  */
 void Request::setBody(std::string &req)
 {
 	size_t pos = req.find("\n");
-	_body = std::make_pair(req.substr(pos + 1), true);
-	if (req.length())
-		req.erase(pos);
+	if (pos != std::string::npos && _method.first == GET) // you cannot provide a body when using GET!
+	{
+		_method.second = false;
+		throw (Forbidden);
+	}
+	if (pos != std::string::npos)
+	{
+		_body.first = req.substr(pos + 1, req.length());
+		_body.second = true;
+	} else 
+		_body.second = false;
+	//if (req.length())
+	//	req.erase(pos);
+}
+
+/**
+ * @brief returns the value of the in header defined header
+ */
+std::string	Request::findHeader(std::string key) const
+{
+	std::string null;
+	headr_dirctiv::const_iterator	it;
+	for (it = _headers.begin(); it != _headers.end(); it++)
+	{
+		if ((*it).first.first == key)
+			return (*it).second.first;
+	}
+	return null;
 }
 
 /**
@@ -343,7 +451,7 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	}
 	o << P << "/* ************************************************************************** */" <<  std::endl << "/* "
 	<< R << "body:\t" << B << body.first << Reset << "\t\t\t\t" << body.second << std::endl
-	<< P << "/* ************************************************************************** */" <<  std::endl
-	<< G << i.getStatus() << Reset << std::endl;
+	<< P << "/* ************************************************************************** */" <<  std::endl;
+	//<< G << i.getStatus() << Reset << std::endl;
 	return o;
 }

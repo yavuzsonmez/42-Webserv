@@ -3,6 +3,7 @@
 
 #include "ConfigurationKey.hpp"
 
+
 /**
  * SERVERBLOCK
  *
@@ -28,6 +29,8 @@ class ServerBlock
         std::string getCgiFileEnding();
         void addConfigurationKey(ConfigurationKey &configurationKey);
 		std::vector<ConfigurationKey> getConfigurationKeysWithType(ConfigurationKeyType type);
+        std::string getErrorPagePathForCode(int statuscode);
+        std::string getFallbackErrorPageForCode(int statuscode);
 };
 
  #endif

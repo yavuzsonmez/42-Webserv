@@ -1,49 +1,78 @@
 <?php
-$target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+// The code is inspired by the following discussions and post:
+// http://stackoverflow.com/questions/5483851/manually-parse-raw-http-data-with-php/5488449#5488449
+// http://www.chlab.ch/blog/archives/webdevelopment/manually-parse-raw-http-data-php
 
-// Check if image file is a actual image or fake image
-if(isset($_POST["submit"])) {
-  $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-  if($check !== false) {
-    echo "File is an image - " . $check["mime"] . ".";
-    $uploadOk = 1;
-  } else {
-    echo "File is not an image.";
-    $uploadOk = 0;
-  }
-}
+/**
+ * Parse raw HTTP request data
+ *
+ * Pass in $a_data as an array. This is done by reference to avoid copying
+ * the data around too much.
+ *
+ * Any files found in the request will be added by their field name to the
+ * $data['files'] array.
+ *
+ * @param   array  Empty array to fill with data
+ * @return  array  Associative array of request data
+ */
 
-// Check if file already exists
-if (file_exists($target_file)) {
-  echo "Sorry, file already exists.";
-  $uploadOk = 0;
-}
+ function parse_raw_http_request(array &$a_data)
+ {
+   // read incoming data
+   $input = file_get_contents('php://input');
+  
+   // grab multipart boundary from content type header
+   preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
+    
+   // content type is probably regular form-encoded
+   if (!count($matches))
+   {
+     // we expect regular puts to containt a query string containing data
+     parse_str(urldecode($input), $a_data);
+     return $a_data;
+   }
+    
+   $boundary = $matches[1];
+  
+   // split content by boundary and get rid of last -- element
+   $a_blocks = preg_split("/-+$boundary/", $input);
+   array_pop($a_blocks);
+        
+   // loop data blocks
+   foreach ($a_blocks as $id => $block)
+   {
+     if (empty($block))
+       continue;
+     // parse uploaded files
+     if (strpos($block, 'image/png') !== FALSE)
+     {
+        echo ("FOUND IMAGE PNG!");
+        // find image/png and jump to the magic byte. it is 13 bytes behind the end of the string "image/png", so we do a + 13.
+        $block = substr($block, strpos($block, 'image/png') + 13);
+        $a_data['files']['testfile'] = $block; // we set the block 
+     }
+   }
+ }
 
-// Check file size
-if ($_FILES["fileToUpload"]["size"] > 500000) {
-  echo "Sorry, your file is too large.";
-  $uploadOk = 0;
-}
+// here's the data
+$a_data = array();
+parse_raw_http_request($a_data);
 
-// Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-  echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-  $uploadOk = 0;
-}
-
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-  echo "Sorry, your file was not uploaded.";
-// if everything is ok, try to upload file
+// now we can access our data
+echo $a_data['files']['testfile'];
+// create file from data array
+if ($a_data['files']['testfile']) {
+  $file = fopen('test.png', 'w');
+  fwrite($file, $a_data['files']['testfile']);
+  fclose($file);
+  echo "File created as test.png in cgi-bin!";
 } else {
-  if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
-  } else {
-    echo "Sorry, there was an error uploading your file.";
-  }
+  echo "Sorry, we only accept .png files at the moment!";
+}
+
+// check size of a_data
+if (count($a_data) > 0)
+{
+    echo "Data received";
 }
 ?>

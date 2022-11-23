@@ -19,12 +19,16 @@
 # include <set>
 # include <unistd.h>
 # include "../config_file/ConfigFileParsing.hpp"
+# include "../configuration_key/ServerBlock.hpp"
+# include "../debugger/DebuggerPrinter.hpp"
 
 void strip_from_str(std::string &file_content, const char start, const char end);
 void upper_str(std::string &str);
 void lower_str(std::string &str);
 bool is_file_accessible(std::string const &path);
+std::string	get_abs_path(const std::string & path);
 std::string get_file_content(std::string path);
+std::string get_file_content_for_request(std::string path);
 bool check_config_file(std::string const &path);
 bool isalphastring(std::string str);
 std::string get_file_name(std::string const &path);
@@ -51,6 +55,12 @@ bool	validate_url(std::string url);
 bool keyExistsInEachLocationBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType);
 bool checkIfCgiExecutableAndFileEndingAreSet(std::vector<ServerBlock> &serverBlocks);
 std::string remove_dot_if_first_character_is_dot(std::string to_edit);
+int is_valid_fd(int fd);
+int send_server_unavailable(int forward, ServerBlock serverblock);
+int send_client_timeout(int forward, ServerBlock serverblock);
+std::string get_file_content_cached(std::string path);
+int stoi( std::string & s );
+int kill_with_error(int pid);
 
 /**
  * @brief converts any type into a string
@@ -81,7 +91,8 @@ char **map_to_array(std::map<key, value> &map)
 	typename std::map<key, value>::iterator	it;
 	
 	char **array = new char*[sizeof(char*) * (map.size() + 1)];
-	//char	*array[map.size() + 1];
+	if (array == NULL)
+		exit(1); // we have no memory or allocation just failed, so there is nothing we can do
 	int	i = 0;
 	for (it = map.begin(); it != map.end(); ++it)
 	{
@@ -105,7 +116,8 @@ char **vec_to_array(std::vector<T> &vector)
 	typename std::vector<T>::iterator	it;
 	
 	char **array = new char*[sizeof(char*) * (vector.size() + 1)];
-	//char	*array[vector.size() + 1];
+	if (array == NULL)
+		exit(1); // we have no memory or allocation just failed, so there is nothing we can do
 	int	i = 0;
 	for (it = vector.begin(); it != vector.end(); ++it)
 	{
@@ -116,12 +128,36 @@ char **vec_to_array(std::vector<T> &vector)
 	return array;
 }
 
-
 template<typename X>
 bool vector_has_duplicate_element(std::vector<X> v)
 {
 	std::set<X> s(v.begin(), v.end());
 	return s.size() != v.size();
-
 }
+
+template<typename T1, typename T2>
+int	find_vector(std::vector<T1> &vector, T2 element)
+{
+	typename std::vector<T1>::iterator	it;
+	for (it = vector.begin(); it != vector.end(); it++)
+	{
+		if (*it == element)
+			return it - vector.begin();
+	}
+	return -1;
+}
+
+/**
+ * @brief To string replacement for the cpp11 function
+ * @tparam T 
+ * @param value 
+ * @return std::string 
+ */
+template<typename T>
+std::string to_string(const T & value) {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
+
 #endif

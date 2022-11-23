@@ -1,6 +1,7 @@
 #include "../../inc/configuration_key/ConfigurationKey.hpp"
 #include "../../inc/debugger/DebuggerPrinter.hpp"
 #include "../../inc/utility/colors.hpp"
+#include "../../inc/utility/utility.hpp"
 
 
 /**
@@ -27,6 +28,7 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->location = src.location;
 	this->indexes = src.indexes;
 	this->methods = src.methods;
+	this->allowedMethods = src.allowedMethods;
 	this->isCurrentlyParsingLocationBlock = src.isCurrentlyParsingLocationBlock;
 	this->current_line = src.current_line;
 	this->raw_input = src.raw_input;
@@ -35,6 +37,10 @@ ConfigurationKey::ConfigurationKey( const ConfigurationKey &src ) {
 	this->redirection = src.redirection;
 	this->post_max_size = src.post_max_size;
 	this->nestedConfigurationKeyTypesinLocationBlock = src.nestedConfigurationKeyTypesinLocationBlock;
+	this->directory_listing = src.directory_listing;
+	this->not_found_error_page_path = src.not_found_error_page_path;
+	this->general_error_page_path = src.general_error_page_path;
+	this->not_available_page_path = src.not_available_page_path;
 }
 
 ConfigurationKey::~ConfigurationKey() {
@@ -60,6 +66,7 @@ ConfigurationKey & ConfigurationKey::operator = (const ConfigurationKey &src) {
 ConfigurationKey::ConfigurationKey(std::string key, std::string value, bool location_block, int current_line, std::string raw_input) {
 	this->isCurrentlyParsingLocationBlock = location_block;
 	this->current_line = current_line;
+	this->directory_listing = false;
 	this->raw_input = raw_input;
 	DebuggerPrinter debugger = debugger.getInstance();
 	if (key.empty () || value.empty()) {
@@ -116,7 +123,35 @@ ConfigurationKeyType ConfigurationKey::detectLocationKeyConfiguration(internal_k
 		debugger.info("Detected REDIRECTION key type.");
 		return REDIRECTION;
 	}
+	if (this->isDirectoryListingConfigurationKeyType(raw))
+	{
+		debugger.info("Detected DIRECTORY LISTING key type.");
+		return DIRECTORY_LISTING;
+	}
 	return INVALID;
+}
+
+/**
+ * @brief Checks if key is directory listing key type
+ * @param type 
+ * @return true or false
+ */
+bool ConfigurationKey::isDirectoryListingConfigurationKeyType(internal_keyvalue raw)
+{
+	USE_DEBUGGER;
+	if (raw.first == "directory_listing") {
+		if (trim_whitespaces(raw.second) == "on") {
+			this->directory_listing = true;
+			return true;
+		}
+		if (trim_whitespaces(raw.second) == "off") {
+			this->directory_listing = false;
+			return true;
+		}
+		throwInvalidConfigurationFileExceptionWithMessage("Invalid value for directory listing key. Only 'on' or 'off' is allowed.");
+	}
+	this->directory_listing = false;
+	return false;
 }
 
 /**
@@ -174,7 +209,6 @@ bool ConfigurationKey::isRedirectionKeyType(internal_keyvalue raw)
 		this->redirection = raw.second;
 		return true;
 	}
-	debugger.error("Redirection value incorrect or empty.");
 	return false;
 }
 
@@ -255,7 +289,8 @@ bool ConfigurationKey::isPostMaxSizeType(internal_keyvalue raw)
 			debugger.error("Invalid post max size.");
 			return false;
 		}
-		this->post_max_size = std::stoi(raw.second.substr(0, raw.second.length() - 1));
+		std::string value = raw.second.substr(0, raw.second.length() - 1);
+		this->post_max_size = stoi(value);
 		return true;
 	}
 	return false;
@@ -333,6 +368,11 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
 		debugger.info("Detected not found error page path type in server block.");
 		return NOT_FOUND_ERROR_PAGE;
 	}
+	if (this->isNotAvailableErrorPagePathType(raw))
+	{
+		debugger.info("Detected method not  available error page path type in server block.");
+		return NOT_AVAILABLE_PAGE;
+	}
 	if (this->isPostMaxSizeType(raw))
 	{
 		debugger.info("Detected post max size type in server block.");
@@ -363,7 +403,7 @@ bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 		if (raw.second[raw.second.length() - 1] != '{') {
 			throwInvalidConfigurationFileExceptionWithMessage("Location block does not end with {!");
 		}
-		raw.second.pop_back();
+		raw.second.erase(raw.second.length() - 1); // delete the last character
 		raw.second = trim_whitespaces(raw.second);
 		return true;
 	}
@@ -455,6 +495,27 @@ bool ConfigurationKey::isValidMethod(std::string method) {
 }
 
 /**
+ * @brief Adds the method to the allowed methods. (as enum)
+ * 
+ * @param string methodToAdd
+ * @return true 
+ * @return false 
+ */
+void ConfigurationKey::addMethodToMethodEnum(std::string methodToAdd)
+{
+	USE_DEBUGGER;
+	debugger.debug("ADDING " + methodToAdd + " to enum array");
+	if (methodToAdd == "GET")
+		this->allowedMethods.push_back(GET);
+	else if (methodToAdd == "POST")
+		this->allowedMethods.push_back(POST);
+	else if (methodToAdd == "PUT")
+		this->allowedMethods.push_back(PUT);
+	else if (methodToAdd == "DELETE")
+		this->allowedMethods.push_back(DELETE);
+}
+
+/**
  * @brief Check if the key is a methods key type.
  * - also sets the methods
  * TODO: Validate methods values
@@ -473,7 +534,10 @@ bool ConfigurationKey::isMethodsKeyType(internal_keyvalue raw) {
 			throwInvalidConfigurationFileExceptionWithMessage("Invalid method: " + substr);
 		}
 		if (!substr.empty())
+		{
 			this->methods.push_back( substr );
+			this->addMethodToMethodEnum(substr);
+		}
 		else
 			return false;
 	}
@@ -565,6 +629,25 @@ bool ConfigurationKey::isGeneralErrorPagePathType(internal_keyvalue raw) {
 			this->general_error_page_path = raw.second;
 		else
 			throwInvalidConfigurationFileExceptionWithMessage("Multiple not general error page paths!");
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Checks if the given key is a path to the not available error page key or not
+ * 
+ * @param raw 
+ * @return true is not available page path
+ * @return false is not available path path
+ */
+bool ConfigurationKey::isNotAvailableErrorPagePathType(internal_keyvalue raw) {
+	if (raw.first == KEY_NOT_AVAILABLE_PAGE && !raw.second.empty())
+	{
+		if (this->not_available_page_path.empty())
+			this->not_available_page_path = raw.second;
+		else
+			throwInvalidConfigurationFileExceptionWithMessage("Multiple not available error page paths!");
 		return true;
 	}
 	return false;

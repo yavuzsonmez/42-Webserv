@@ -22,7 +22,7 @@ ServerBlock::~ServerBlock()
 }
 
 ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
-	(void) src;
+	configurationKeys = src.configurationKeys;
 	return (*this);
 }
 
@@ -94,7 +94,7 @@ std::vector<unsigned int> ServerBlock::getAllServerPorts() {
 
 	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
 		if ((*i).configurationType == LISTEN)
-			ports.insert(ports.end(), begin((*i).ports), end((*i).ports));;
+			ports.insert(ports.end(), (*i).ports.begin(), (*i).ports.end());;
 	}
 	return ports;
 }
@@ -113,7 +113,7 @@ std::vector<std::string> ServerBlock::getAllIndexes() {
 
 	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
 		if ((*i).configurationType == SERVER_NAME)
-			indexes.insert(indexes.end(), begin((*i).indexes), end((*i).indexes));;
+			indexes.insert(indexes.end(), (*i).indexes.begin(), (*i).indexes.end());;
 	}
 	return indexes;
 }
@@ -132,7 +132,86 @@ std::vector<std::string> ServerBlock::getAllServerNames() {
 
 	for (this->configurationKeys.begin(), this->configurationKeys.end(); i != this->configurationKeys.end(); ++i) {
 		if ((*i).configurationType == SERVER_NAME)
-			server_names.insert(server_names.end(), begin((*i).server_names), end((*i).server_names));;
+			server_names.insert(server_names.end(), (*i).server_names.begin(), (*i).server_names.end());
 	}
 	return server_names;
+}
+
+
+/**
+ * @brief Fallback error pages if the given error page does not exist.
+ * 
+ * @param statuscode 
+ * @param serverBlock
+ * @return std::string 
+ */
+std::string ServerBlock::getFallbackErrorPageForCode(int statuscode)
+{
+	switch (statuscode)
+	{
+		case 404:
+			return "default_pages/404_default.html";
+			break;
+		case 405:
+			return "default_pages/405_default.html";
+			break;
+		case 500:
+			return "default_pages/500_default.html";
+			break;
+		case 501:
+			return "default_pages/501_default.html";
+			break;
+		case 502:
+			return "default_pages/502_default.html";
+			break;
+		case 504:
+			return "default_pages/504_default.html";
+			break;
+		case 503:
+			return "default_pages/503_default.html";
+			break;
+		case 413:
+			return "default_pages/413_default.html";
+			break;
+		default:
+			return "default_pages/500_default.html";
+			break;
+	}
+}
+/**
+ * @brief Returns the error page path to the given error code
+ * - Handles costum error pages and returns only valid paths that are available
+ * 
+ * TODO: add a caching for this so we do not access the file all the time during server runtime
+ * @param statuscode http error code
+ * @param serverBlock to check in
+ * @return std::string path to error code
+ * 
+ * TODO: Replace GENERAL_ERROR_PAGE with the pages which are not customizable by the user
+ */
+std::string ServerBlock::getErrorPagePathForCode(int statuscode)
+{
+	std::string path_to_file;
+
+	path_to_file = "placeholder";
+
+	switch (statuscode)
+	{
+		case 404:
+			if (getConfigurationKeysWithType(NOT_FOUND_ERROR_PAGE).size() != 0)
+				path_to_file = getConfigurationKeysWithType(NOT_FOUND_ERROR_PAGE).front().not_found_error_page_path;
+			break;
+		case 500:
+			if (getConfigurationKeysWithType(GENERAL_ERROR_PAGE).size() != 0)
+				path_to_file = getConfigurationKeysWithType(GENERAL_ERROR_PAGE).front().general_error_page_path;
+			break;
+		case 503:
+			if (getConfigurationKeysWithType(NOT_AVAILABLE_PAGE).size() != 0)
+				path_to_file = getConfigurationKeysWithType(NOT_AVAILABLE_PAGE).front().not_available_page_path;
+		break;
+	}
+	if (is_file_accessible(path_to_file))
+		return path_to_file;
+	
+	return getFallbackErrorPageForCode(statuscode);
 }

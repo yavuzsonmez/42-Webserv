@@ -51,7 +51,6 @@ std::vector<std::string> getAllServerNamesFromAllServerBlocks(std::vector<Server
 	return server_names;
 }
 
-
 /**
  * @brief Iterate over all server blocks and makes sure each of them has the given keyType jsut once.
  * 
@@ -89,10 +88,14 @@ bool checkIfCgiExecutableAndFileEndingAreSet(std::vector<ServerBlock> &serverBlo
 		std::vector<ConfigurationKey>::iterator j = locationBlocksInServerBlock.begin();
 		for (locationBlocksInServerBlock.begin(), locationBlocksInServerBlock.end(); j != locationBlocksInServerBlock.end(); ++j) {
 			ConfigurationKey locationBlock = *j;
-			// if the fileending and cgi are either both NOT empty or one contains something and the other not.
-			if (!(locationBlock.cgi_fileending.empty() && locationBlock.cgi_path.empty()) || ((!locationBlock.cgi_fileending.empty() && !locationBlock.cgi_path.empty()))) {
+			// either cgi_path and cgi_fileending are set or none of them are set
+			if (locationBlock.cgi_path.empty() && !locationBlock.cgi_fileending.empty()) {
 				return false;
 			}
+			if (!locationBlock.cgi_path.empty() && locationBlock.cgi_fileending.empty()) {
+				return false;
+			}
+			return true;
 		}
 	}
 	return true;
