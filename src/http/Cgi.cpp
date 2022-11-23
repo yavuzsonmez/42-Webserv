@@ -147,7 +147,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 			usleep(50); // check every 50 microseconds
 		if (pid == -1) // this is being called when fork failed and we are overloaded.
 		{
-			debugger.error("[TIMEOUT] fork failed");
+			debugger.error("[TIMEOUT] fork failed 1");
 			kill(worker_pid, SIGKILL);
 			kill(timeout_pid, SIGKILL);
 			return ;
@@ -191,17 +191,14 @@ void	CGI::execute_cgi(void)
 		// we check if the file descriptors are valid, if not, we close them to not leak them.
 		if (!is_valid_fd(_fd_in) || !is_valid_fd(_fd_out))
 		{
-			debugger.verbose("Closing connection 4");
-			//close(_fd_in);
+			debugger.error("Closing connection 4");
 			close(_fd_out);
 			std::exit(EXIT_FAILURE);
 		}
 		if (dup2(fileno(_tmpin), STDIN_FILENO) < 0 ||
 			dup2(fileno(_tmpout), STDOUT_FILENO) < 0)
 		{
-			debugger.verbose("Failed to dup2 the CGI.");
-			//close(_fd_in);
-			//close(_fd_out);
+			debugger.error("Failed to dup2 the CGI.");
 			std::exit(errno); // exit the child
 		}
 		_envp = map_to_array(_env);
@@ -245,11 +242,12 @@ void	CGI::read_in_buff(void)
 		throw (501);
 		return ;
 	}
-	rewind(_tmpout);											//move the courser back to the beginning
-	_buf.resize(_tmp_size);									//inrease the underlying char array in _buf by the value of _tmp_size
+	rewind(_tmpout);	// move the courser back to the beginning
+	_buf.resize(_tmp_size);		//inrease the underlying char array in _buf by the value of _tmp_size
 	read(_fd_out, (char*)(_buf.data()), _tmp_size);
-	debugger.verbose("Closing connection 5");
+	debugger.error("Closing connection 5");
 	close(_fd_out);
+	close(_fd_in);
 	return ;
 }
 
