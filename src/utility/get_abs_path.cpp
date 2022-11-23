@@ -14,7 +14,7 @@ std::string	get_abs_path(const std::string & path)
 	if (pwd)
 	{
 		str = pwd;
-		free(pwd);
+		delete pwd;
 	}
 	str += path.substr(1);
 	// remvoe arguments from str
