@@ -57,17 +57,6 @@
        preg_match("/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s", $block, $matches);
        $a_data['files']['testfile'] = $block;
      }
-     // parse all other fields
-     else
-     {
-       // skip content type
-      $block = substr($block, strpos($block, "\r\n\r") + 4);
-      echo ("AFTER\n");
-      echo ($block);
-      // match "name" and optional value in between newline sequences
-      preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
-      $a_data['notafile'] = $matches[2];
-     }
    }
  }
 
@@ -78,10 +67,14 @@ parse_raw_http_request($a_data);
 // now we can access our data
 echo $a_data['files']['testfile'];
 // create file from data array
-$file = fopen('test.png', 'w');
-fwrite($file, $a_data['files']['testfile']);
-fclose($file);
-print_r($a_data);
+if ($a_data['files']['testfile']) {
+  $file = fopen('test.png', 'w');
+  fwrite($file, $a_data['files']['testfile']);
+  fclose($file);
+  echo "File created as test.png in cgi-bin!";
+} else {
+  echo "Sorry, we only accept .png files at the moment!";
+}
 
 // check size of a_data
 if (count($a_data) > 0)
