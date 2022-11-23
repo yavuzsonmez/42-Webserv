@@ -9,10 +9,6 @@ CGI::CGI()
 /**
  * @brief Sets all the environment variables for the CGI script.
  * 
- * @param request The request to handle 
- * @param config The server block configuration of the request
- * @param path the path 
- * @param cgi_path the cgi path
  */
 void CGI::set_environment()
 {
@@ -194,8 +190,8 @@ void	CGI::execute_cgi(void)
 		// we check if the file descriptors are valid, if not, we close them to not leak them.
 		if (!is_valid_fd(_fd_in) || !is_valid_fd(_fd_out))
 		{
-			close(_fd_in);
 			debugger.verbose("Closing connection 4");
+			//close(_fd_in);
 			close(_fd_out);
 			std::exit(EXIT_FAILURE);
 		}
@@ -203,6 +199,8 @@ void	CGI::execute_cgi(void)
 			dup2(fileno(_tmpout), STDOUT_FILENO) < 0)
 		{
 			debugger.verbose("Failed to dup2 the CGI.");
+			//close(_fd_in);
+			//close(_fd_out);
 			std::exit(errno); // exit the child
 		}
 		_envp = map_to_array(_env);

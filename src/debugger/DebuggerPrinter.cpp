@@ -5,10 +5,6 @@ DebuggerPrinter::DebuggerPrinter()
 {
 
 }
-DebuggerPrinter::DebuggerPrinter( const DebuggerPrinter &src )
-{
-	(void) src;
-}
 
 DebuggerPrinter::~DebuggerPrinter()
 {
