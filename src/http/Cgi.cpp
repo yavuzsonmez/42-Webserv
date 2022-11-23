@@ -245,7 +245,7 @@ void	CGI::read_in_buff(void)
 	rewind(_tmpout);	// move the courser back to the beginning
 	_buf.resize(_tmp_size);		//inrease the underlying char array in _buf by the value of _tmp_size
 	read(_fd_out, (char*)(_buf.data()), _tmp_size);
-	debugger.error("Closing connection 5");
+	debugger.verbose("Closing connection 5");
 	close(_fd_out);
 	close(_fd_in);
 	return ;
