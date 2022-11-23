@@ -10,17 +10,16 @@
  */
 std::string get_file_content_for_request(std::string path)
 {
-	std::ifstream f(path); //taking file as inputstream
-	if (!f)
-		throw (404);
-	std::string str;
-
-	if(f) {
-		std::ostringstream ss;
-		ss << f.rdbuf(); // reading data
-		str = ss.str();
-	}
-	return (str);
+	std::string content;
+	int fd = open(path.c_str(), O_RDONLY);
+	if (fd == -1)
+		throw 404;
+	char buffer[1024];
+	int ret = 0;
+	while ((ret = read(fd, buffer, 1024)) > 0)
+		content.append(buffer, ret);
+	close(fd);
+	return content;
 }
 
 // int	main(int argc, char**argv)
