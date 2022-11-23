@@ -51,7 +51,8 @@ class Request
 		str_flag			getHttpversion(void) const;
 		headr_dirctiv		getHeaders(void) const;
 		std::string			getMethodasString();
-		std::string	findHeader(std::string key) const;
+		std::string			getHost(std::string);
+		std::string			findHeader(std::string key) const;
 		str_flag			getBody(void) const;
 		//std::string			getStatus(void) const;
 
