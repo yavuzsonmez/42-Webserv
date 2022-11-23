@@ -32,6 +32,7 @@ void CGI::set_environment()
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
 	_env["REDIRECT_STATUS"] = "500";
+	_env["BODY"] = _request.getBody().first;
 }
 
 /**

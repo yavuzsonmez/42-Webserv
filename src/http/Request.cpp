@@ -55,7 +55,9 @@ str_flag			Request::getQuery() const { return _query; }
 str_flag			Request::getFragment() const	{ return _fragment; }
 str_flag			Request::getHttpversion() const	{ return _httpVersion; }
 headr_dirctiv		Request::getHeaders() const		{ return _headers; }
-str_flag			Request::getBody() const		{ return _body; }
+str_flag			Request::getBody() const		{ 
+	return _body;
+}
 
 /**
  * @brief Main parsing function, each subfunction will
@@ -66,8 +68,6 @@ void Request::parser(std::string &req) {
 	USE_DEBUGGER;
 	if (req.empty())
 		throw (Bad_Request);
-	debugger.debug("Request::parser() called");
-	debugger.debug(req);
 	try {
 		setMethod(req);
 		setUrl(req);
@@ -103,10 +103,10 @@ void Request::setMethod(std::string &req) {
  */
 std::string Request::getMethodasString()
 {
-	if (_method.first == GET)			std::cout << "GET" << std::endl;
-	else if (_method.first == POST)		std::cout << "POST" << std::endl;
-	else if (_method.first == DELETE)	std::cout << "DELETE" << std::endl;
-	else if (_method.first == UNKNOWN)	std::cout << "UNKNOWN" << std::endl;
+	if (_method.first == GET) return "GET";
+	else if (_method.first == POST)		return "POST";
+	else if (_method.first == DELETE)	return "DELETE";
+	else if (_method.first == UNKNOWN)	return"UNKNOWN";
 	return ("");
 }
 
@@ -361,17 +361,10 @@ void Request::checkHeader(str_flag &hdr, str_flag &direct)
 	//if (hdr.first == Content_Type)
 }
 
-// /**
-//  * @brief Store the eventual body (POST request) of the request
-//  */
-// void Request::setBody(std::string &req)
-// {
-// 	size_t pos = req.find("\n");
-// 	_body = std::make_pair(req.substr(pos + 1), true);
-// 	if (req.length())
-// 		req.erase(pos);
-// }
-
+/**
+ * @brief Sets the body of the request. Will throw an Forbidden for a GET request when a body is present.
+ * @param req 
+ */
 void Request::setBody(std::string &req)
 {
 	size_t pos = req.find("\n");
@@ -380,11 +373,14 @@ void Request::setBody(std::string &req)
 		_method.second = false;
 		throw (Forbidden);
 	}
-	std::cout << "req: " << req << std::endl;
-	std::string	str;
-	_body = std::make_pair(req.substr(pos + 1), true);
-	/*if (req.length())
-		req.erase(pos);*/
+	if (pos != std::string::npos)
+	{
+		_body.first = req.substr(pos + 1, req.length());
+		_body.second = true;
+	} else 
+		_body.second = false;
+	//if (req.length())
+	//	req.erase(pos);
 }
 
 /**
