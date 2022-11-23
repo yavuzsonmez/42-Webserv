@@ -28,17 +28,14 @@ bool check_arguments_and_filename(int argc, char**argv)
 int main(int argc, char **argv)
 {
 	USE_DEBUGGER;
-	(void) argv;
-	//if (!check_arguments_and_filename(argc, argv)) return (1);
+	if (!check_arguments_and_filename(argc, argv)) return (1);
 
 	ConfigFileParsing static *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	if (argc == 1)
-	{
 		file_content = get_file_content("./conf/webserv.conf");
-	}
 	else
-		file_content = get_file_content("./conf/webserv.conf");
+		file_content = get_file_content(argv[1]);
 
 	try {
 		configurationFileParsing->parseConfigFile(file_content);
