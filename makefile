@@ -59,6 +59,7 @@ UTILS			=		./src/utility/get_file_content.cpp \
 						./src/utility/is_valid_fd.cpp \
 						./src/utility/send_server_unavailable.cpp \
 						./src/utility/stoi.cpp \
+						./src/utility/kill_with_error.cpp \
 
 SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 

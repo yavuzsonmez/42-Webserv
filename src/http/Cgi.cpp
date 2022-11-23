@@ -50,13 +50,12 @@ CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_
 		std::string	query = _request.getQuery().first; //Get query string
 		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
 	}
-
-	set_environment();
 }
 
 CGI::~CGI()
 {
-
+	USE_DEBUGGER;
+	debugger.info("CGI destructor called");
 }
 
 CGI & CGI::operator=(const CGI &src)
@@ -126,7 +125,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 	if (timeout_pid < 0) // did not fork properly
 	{
 		debugger.error("[TIMEOUT] fork failed in timeout pid");
-		kill(worker_pid, SIGKILL);
+		kill_with_error(worker_pid);
 		debugger.error("we could not fork successfully");
 		throw(503); // we throw an 503 / overloaded error
 	}
@@ -145,16 +144,15 @@ void CGI::wait_for_child(pid_t worker_pid)
 		while ((pid = waitpid(worker_pid, &stat_loc, WNOHANG)) == 0 &&
 				(pid = waitpid(timeout_pid, &stat_loc, WNOHANG)) == 0)
 			usleep(50); // check every 50 microseconds
-		if (pid == -1) // this is being called when fork failed and we are overloaded.
+		if (pid == -1) // this is being called when fork failed because the process already finished.
 		{
 			debugger.error("[FINISHED] cgi execution");
-			kill(worker_pid, SIGKILL);
-			kill(timeout_pid, SIGKILL);
+			kill_with_error(timeout_pid);
 			return ;
 		}
 		else if (pid == worker_pid) // this is being called if the worker finishes on time
 		{
-			kill(timeout_pid, SIGKILL); // let's kill the timeout child, it's not needed anymore
+			kill_with_error(timeout_pid); // let's kill the timeout child, it's not needed anymore
 			if (!WIFSIGNALED(stat_loc) && WEXITSTATUS(stat_loc) == 0) // if the worker exited normally
 			{
 				return ; // we're done
@@ -168,7 +166,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 		else
 		{
 			debugger.error("[TIMEOUT] cgi gateway error in wait_for_child"); // this is being called if the worker timed out
-			kill(worker_pid, SIGKILL); // let's kill the worker
+			kill_with_error(worker_pid); // let's kill the worker
 			throw(504); // that is a gateway timeout
 		}
 	}
