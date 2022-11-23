@@ -288,7 +288,7 @@ bool ConfigurationKey::isPostMaxSizeType(internal_keyvalue raw)
 			debugger.error("Invalid post max size.");
 			return false;
 		}
-		this->post_max_size = std::stoi(raw.second.substr(0, raw.second.length() - 1));
+		this->post_max_size = stoi(raw.second.substr(0, raw.second.length() - 1));
 		return true;
 	}
 	return false;

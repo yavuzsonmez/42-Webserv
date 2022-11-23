@@ -27,7 +27,7 @@ bool	validate_url(std::string url)
 			debugger.error("Ip address parts are too long!");
 			return false;
 		}
-		if (std::stoi(ip_parts[i]) > 255)
+		if (stoi(ip_parts[i]) > 255)
 		{
 			debugger.error("ip address part is greater than 255");
 			return false;
