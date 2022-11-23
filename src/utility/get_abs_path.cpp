@@ -12,6 +12,8 @@ std::string	get_abs_path(const std::string & path)
 {
 	std::string str;
 	char * pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+		return (str);
 	if (pwd)
 	{
 		str = pwd;

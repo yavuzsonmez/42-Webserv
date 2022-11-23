@@ -49,7 +49,6 @@ class ClientSocket
 		std::string	get_location(std::string location, ConfigurationKeyType type);
 		bool	get_location_dl(std::string location);
 		void	exception(int e);
-		int		get_fd_cgi(void);
 
 		void	set_up();
 

@@ -88,6 +88,14 @@ void	Process::handle_request(void)
 {
 	USE_DEBUGGER;
 	std::string	path;
+
+	// first we check if the request is too big
+	if ((long) _request.getBody().first.size() > (_config.getConfigurationKeysWithType(POST_MAX_SIZE).front().post_max_size * 1000))
+	{
+		std::cout << "Request too big" << std::endl;
+		exception(413);
+		return ;
+	}
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
 		path = build_path_with_index__or_script_file(); // we return the file looked for or the index file
@@ -394,6 +402,14 @@ void	Process::exception(int e)
 		case 501:
 			try {
 				build_response(_config.getErrorPagePathForCode(501), "501", "Not implemented");
+			}
+			catch (int e) {
+				throw (e);
+			}
+			break;
+		case 413:
+			try {
+				build_response(_config.getErrorPagePathForCode(413), "413", "Request too big");
 			}
 			catch (int e) {
 				throw (e);
