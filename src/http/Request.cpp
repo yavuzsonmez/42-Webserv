@@ -63,8 +63,11 @@ str_flag			Request::getBody() const		{ return _body; }
  * in the request string.
  */
 void Request::parser(std::string &req) {
+	USE_DEBUGGER;
 	if (req.empty())
 		throw (Bad_Request);
+	debugger.debug("Request::parser() called");
+	debugger.debug(req);
 	try {
 		setMethod(req);
 		setUrl(req);
@@ -73,6 +76,7 @@ void Request::parser(std::string &req) {
 		setBody(req);
 	}
 	catch (std::string status) {
+		debugger.verbose(status);
 		throw (status);
 	}
 }
@@ -371,11 +375,12 @@ void Request::checkHeader(str_flag &hdr, str_flag &direct)
 void Request::setBody(std::string &req)
 {
 	size_t pos = req.find("\n");
-	if (pos != std::string::npos && _method.first == GET)
+	if (pos != std::string::npos && _method.first == GET) // you cannot provide a body when using GET!
 	{
 		_method.second = false;
 		throw (Forbidden);
 	}
+	std::cout << "req: " << req << std::endl;
 	std::string	str;
 	_body = std::make_pair(req.substr(pos + 1), true);
 	/*if (req.length())

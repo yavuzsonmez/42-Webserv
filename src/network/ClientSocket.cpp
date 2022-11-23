@@ -67,7 +67,7 @@ void	ClientSocket::read_in_buffer(void)
 			std::string httpRequestHead = buffer.substr(0, pos + 3);
 			try {
 				_clientRequest.parser(httpRequestHead);
-			} catch (...) {
+			} catch (...){
 				return ;
 			}
 			buffer.erase(0, pos + 3);
@@ -81,7 +81,8 @@ void	ClientSocket::read_in_buffer(void)
 			}
 		}
 	}
-	else if (_state == BODY)
+	// after we read the header we read the body
+	if (_state == BODY)
 	{
 		if (_position >= _content_length)
 		{
