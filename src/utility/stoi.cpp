@@ -6,7 +6,8 @@
  * @param s 
  * @return int 
  */
-int stoi( std::string & s ) {
+int stoi( std::string & s )
+{
     int i;
     std::istringstream(s) >> i;
     return i;
