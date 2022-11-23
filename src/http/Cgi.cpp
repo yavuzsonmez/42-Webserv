@@ -210,6 +210,8 @@ void	CGI::execute_cgi(void)
 		_argvp = vec_to_array(_query_parameters);
 		execve(_cgi_path.c_str(), _argvp, _envp);
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
+		close(_fd_in);
+		close(_fd_out);
 		std::exit(errno); // exit the child
 	}
 	else // parent
