@@ -65,7 +65,11 @@ void	ClientSocket::read_in_buffer(void)
 		if (pos != std::string::npos)
 		{
 			std::string httpRequestHead = buffer.substr(0, pos + 3);
-			_clientRequest.parser(httpRequestHead);
+			try {
+				_clientRequest.parser(httpRequestHead);
+			} catch (...) {
+				return ;
+			}
 			buffer.erase(0, pos + 3);
 			_position -= pos + 3;
 			_state = BODY;
