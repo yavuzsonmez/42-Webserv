@@ -80,8 +80,20 @@ std::string Process::build_path_with_index__or_script_file()
 				return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
 			}
 		} else { // we do not provide the index files for a nested path
+			// here we build the nested path for the location. this needs to be put in a seperate function later for sure...
 			debugger.debug("THIS IS A NESTED PATH!");
-			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getPath().first + "/" + _request.getScript().first;
+			// we use get_location to get the correct root path
+			std::string primaryLocation = get_first_location_in_path(_request.getPath().first); // where the nested folder is
+			 // we need to add a slash to the location to get the correct root path and a slash after to match the location of the configuration file
+			 // TODO Generate the full path for the nested path
+			std::string root = get_location(primaryLocation.insert(0, "/") + "/", ROOT);
+			// now append the rest of the path to the newly gained root path
+			std::string path = root +  "/" + _request.getPath().first.substr(primaryLocation.length());
+			if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
+				return path + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+			} else { // there is a script file available like /echo.php
+				return path + "/" + _request.getScript().first;
+			}
 		}
 	}
 }
@@ -192,11 +204,10 @@ void	Process::handle_request(void)
 	{
 		// nested directory
 		path = build_path_with_index__or_script_file();
-		std::cout << "PATH generated: " << path << std::endl;
-
-		if (find_vector(_methods, _request.getMethod().first) == -1)
-			throw (405);
-		
+		removeDoubleSlashesInUrl(path);
+		//if (find_vector(_methods, _request.getMethod().first) == -1)
+		//	throw (405);
+		std::cout << "PATH: " << path << std::endl;
 		try {
 			build_response(path, "200", "OK");}
 		catch (int e){

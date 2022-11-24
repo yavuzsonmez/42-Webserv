@@ -64,6 +64,7 @@ int kill_with_error(int pid);
 std::string lower_str_ret(std::string str);
 void removeDoubleSlashesInUrl(std::string &url);
 bool keyExistsOrAlternativeInEachLocationBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType, ConfigurationKeyType alternativeKeyType);
+std::string get_first_location_in_path(const std::string path);
 
 /**
  * @brief converts any type into a string
