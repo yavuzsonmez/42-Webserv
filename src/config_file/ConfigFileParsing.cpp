@@ -68,6 +68,7 @@ bool ConfigFileParsing::validationDuplicationCheck() {
  * - checks that there is a root available in each server block
  * - checks that there is a server name available in each server block
  * - checks that for every location cgi there is a file ending available
+ * - checks that no locations are double defined in a server block
  * @return true 
  * @return false 
  */
@@ -97,8 +98,8 @@ bool ConfigFileParsing::validateConfiguration() {
 		debugger.error("Configuration file has no cgi_fileending defined in one or more location blocks.");
 		throw InvalidConfigurationFile();
 	}
-	if (!keyExistsInEachLocationBlock(serverBlocks, ROOT)) {
-		debugger.error("At least one location block does not contain a ROOT option. This is required.");
+	if (!keyExistsOrAlternativeInEachLocationBlock(serverBlocks, ROOT, REDIRECTION)) {
+		debugger.error("At least one location block does not contain a ROOT or alternative REDIRECTION option. This is required.");
 		throw InvalidConfigurationFile();
 	}
 

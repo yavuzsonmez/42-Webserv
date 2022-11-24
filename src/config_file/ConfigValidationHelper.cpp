@@ -124,6 +124,44 @@ bool keyExistsInEachServerBlock(std::vector<ServerBlock> &serverBlocks, Configur
 	return true;
 }
 
+
+/**
+ * @brief Iterate over all server blocks and all their location blocks and makes sure each of them has the given keyType at least once. If the requested keytype does not exist, there has to the alternative keytype.
+ * 
+ * @param serverBlocks
+ * @param keyType
+ * @param alternativeKeyType
+ * @return true if at least one is there, false if not
+ */ 
+bool keyExistsOrAlternativeInEachLocationBlock(std::vector<ServerBlock> &serverBlocks, ConfigurationKeyType keyType, ConfigurationKeyType alternativeKeyType)
+{
+	USE_DEBUGGER;
+	std::vector<ServerBlock>::iterator i = serverBlocks.begin();
+	std::vector<std::string> server_names;
+
+	for (serverBlocks.begin(), serverBlocks.end(); i != serverBlocks.end(); ++i) {
+		std::vector<ConfigurationKey> locationBlocksInServerBlock = (*i).getConfigurationKeysWithType(LOCATION); // go through all locations available
+		std::vector<ConfigurationKey>::iterator j = locationBlocksInServerBlock.begin();
+		for (locationBlocksInServerBlock.begin(), locationBlocksInServerBlock.end(); j != locationBlocksInServerBlock.end(); ++j) {
+			ConfigurationKey locationBlock = *j;
+			std::vector<ConfigurationKeyType>::iterator k = locationBlock.nestedConfigurationKeyTypesinLocationBlock.begin();
+			bool requestedConfigurationTypeIsAvailable = false;
+			for (locationBlock.nestedConfigurationKeyTypesinLocationBlock.begin(), locationBlock.nestedConfigurationKeyTypesinLocationBlock.end(); k != locationBlock.nestedConfigurationKeyTypesinLocationBlock.end(); ++k) {
+				if (*k == keyType) {
+					requestedConfigurationTypeIsAvailable = true;
+				} else if (*k == alternativeKeyType) {
+					requestedConfigurationTypeIsAvailable = true;
+				}
+			}
+			if (!requestedConfigurationTypeIsAvailable) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+
 /**
  * @brief Iterate over all server blocks and all their location blocks and makes sure each of them has the given keyType at least once.
  * 
