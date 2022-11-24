@@ -18,3 +18,4 @@ TODO:
 - Currently get arguments are not working on index file of there is no index provided. How could we fix this?
 	Easy way: Always redirect user to index if no file is provided for a location. But also add the  given arguments.
 - We should accept request only for specific server_names. Request for the servername test1.de should only be accepted by the server block with test1.de. If there is no server block with the given servername, we should return a 404.
+- If a location has a slash it is treated differently than without. For the server, it should be basically the same. 

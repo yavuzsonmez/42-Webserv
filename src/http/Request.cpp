@@ -122,6 +122,10 @@ void Request::setUrl(std::string &req) {
 		throw(Bad_Request);
 	std::string url = req.substr(0, pos);
 	req.erase(0, pos + 1);
+	removeDoubleSlashesInUrl(url);
+	// if path does not end with file ending, add a slash if there is not a path already
+	if (url.find('.') == std::string::npos && url.find('/') == std::string::npos)
+		url += "/";
 	setProtocol(url);
 	setDomain(url);
 	setScript(url);
@@ -160,10 +164,29 @@ void Request::setDomain(std::string &url) {
 }
 
 /**
+ * @brief Removes everything after double slashes because we really don't need that
+ * confusion in the parser.
+ * 
+ * Will redirect the user to the root of the domain
+ * @param url 
+ */
+void Request::removeDoubleSlashesInUrl(std::string &url)
+{
+	// remove all slashes which are more than one after each other
+	size_t pos = url.find("//");
+	while (pos != std::string::npos)
+	{
+		url.erase(pos, 1);
+		pos = url.find("//");
+	}
+}
+
+/**
  * @brief Check if a port is provided in the URL of the request,
  */
 void Request::setPort(std::string &url) {
 	USE_DEBUGGER;
+	removeDoubleSlashesInUrl(url);
 	debugger.debug(url);
 	size_t x = url.find(":");
 	size_t y = url.find("/");
@@ -232,6 +255,10 @@ void Request::setScript(std::string &url) {
  */
 void Request::setPath(std::string &url)
 {
+	// remove everything after double slashes
+	size_t pos = url.find("//");
+	if (pos != std::string::npos)
+		url.erase(pos);
 	if (url.length())
 		_path.first = url.substr(0, url.length());
 	url.erase(0, url.length());
@@ -356,6 +383,7 @@ void Request::checkHeader(str_flag &hdr, str_flag &direct)
 	if (hdr.first == Host)
 	{
 		std::string host_header = direct.first;
+		removeDoubleSlashesInUrl(host_header);
 		setPort(host_header);
 	}
 	if (hdr.first == Content_Length)
@@ -433,8 +461,8 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	str_flag		fragment = i.getFragment();
 	str_flag		httpVersion = i.getHttpversion();
 	headr_dirctiv	headers = i.getHeaders();
-		headr_dirctiv::const_iterator it = headers.begin();
-		headr_dirctiv::const_iterator ite = headers.end();
+	headr_dirctiv::const_iterator it = headers.begin();
+	headr_dirctiv::const_iterator ite = headers.end();
 	str_flag	body = i.getBody();
 
 	o << P << "/* ************************************************************************** */" << std::endl << "/* "

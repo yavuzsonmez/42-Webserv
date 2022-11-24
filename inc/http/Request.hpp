@@ -54,6 +54,7 @@ class Request
 		std::string			getHost(std::string);
 		std::string			findHeader(std::string key) const;
 		str_flag			getBody(void) const;
+		void removeDoubleSlashesInUrl(std::string &url);
 		//std::string			getStatus(void) const;
 
 		void				parser(std::string &req);
