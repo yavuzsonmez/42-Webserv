@@ -16,6 +16,7 @@
 # include <vector>
 # include <map>
 # include <utility>
+#include <pthread.h>
 # include <set>
 # include <unistd.h>
 # include "../config_file/ConfigFileParsing.hpp"

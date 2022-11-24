@@ -62,7 +62,6 @@ void	Process::process_request(void)
 std::string Process::getPathForNestedLocation()
 {
 	USE_DEBUGGER;
-	std::cout << _request.hasNestedRequestPath 	<< std::endl;
 	if (!_request.hasNestedRequestPath) { // if the path is not nested
 		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
 			return _config.getConfigurationKeysWithType(ROOT).front().root  + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
@@ -159,7 +158,6 @@ void	Process::handle_request(void)
 	{
 		if (_request.getScript().first.empty()) // if no script is given
 		{
-			std::cout << "LOCATION DL" << std::endl;
 			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
 			{
 				if (find_vector(_methods, _request.getMethod().first) == -1)
@@ -175,7 +173,6 @@ void	Process::handle_request(void)
 			else // if not, we try to return the index file
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
-				std::cout << "PATH: " << path << std::endl;
 				if (find_vector(_methods, _request.getMethod().first) == -1)
 					throw (405);
 				try {
@@ -190,7 +187,6 @@ void	Process::handle_request(void)
 		else
 		{
 			path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
-			std::cout << "PATH: " << path << std::endl;
 			if (find_vector(_methods, _request.getMethod().first) == -1)
 				throw (405);
 			if (is_file_accessible(path))
@@ -216,7 +212,6 @@ void	Process::handle_request(void)
 		removeDoubleSlashesInUrl(path);
 		//if (find_vector(_methods, _request.getMethod().first) == -1)
 		//	throw (405);
-		std::cout << "PATH: " << path << std::endl;
 		try {
 			build_response(path, "200", "OK");}
 		catch (int e){
@@ -308,8 +303,9 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		}
 		else // the request is not cgi or redirection, so we just return the content of the file at the location of path.
 		{
+			// the request is a static file
 			try {
-				_response.set_body(get_file_content_for_request(path));
+				_response.set_body(get_file_content_cached(path));
 			} catch (int e) {
 				throw (404);
 			}
