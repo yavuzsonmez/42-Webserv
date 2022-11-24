@@ -245,7 +245,7 @@ bool ConfigurationKey::validateCgiFileEnding(std::string to_validate)
  * @brief Validates Post Max Size.
  * - has to have an M at the end
  * - otherwise only can contain numbers
- * 
+ * - only accepts values between 1 and 1000, otherwise it is too big or too small and will be rejected
  * @param raw 
  * @return true 
  * @return false 
@@ -266,6 +266,16 @@ bool ConfigurationKey::validatePostMaxSize(std::string to_validate)
 	if (!isnumberstring(to_validate.substr(0, to_validate.length() - 1)))
 	{
 		throwInvalidConfigurationFileExceptionWithMessage("Invalid post max size. Only numbers allowed.");
+		return false;
+	}
+	if (stoi(to_validate.substr(0, to_validate.length() - 1)) <= 0)
+	{
+		throwInvalidConfigurationFileExceptionWithMessage("Number needs to be bigger than 0.");
+		return false;
+	}
+	if (stoi(to_validate.substr(0, to_validate.length() - 1)) > 1000)
+	{
+		throwInvalidConfigurationFileExceptionWithMessage("Number needs to be smaller than 1000M.");
 		return false;
 	}
 	return true;
