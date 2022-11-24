@@ -46,7 +46,6 @@
      // parse uploaded files
      if (strpos($block, 'image/png') !== FALSE)
      {
-        echo ("FOUND IMAGE PNG!");
         // find image/png and jump to the magic byte. it is 13 bytes behind the end of the string "image/png", so we do a + 13.
         $block = substr($block, strpos($block, 'image/png') + 13);
         $a_data['files']['testfile'] = $block; // we set the block 
@@ -59,7 +58,6 @@ $a_data = array();
 parse_raw_http_request($a_data);
 
 // now we can access our data
-echo $a_data['files']['testfile'];
 // create file from data array
 if ($a_data['files']['testfile']) {
   $file = fopen('test.png', 'w');
