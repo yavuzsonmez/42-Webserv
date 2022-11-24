@@ -144,7 +144,6 @@ void	Process::handle_request(void)
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
 		path = build_path_with_index__or_script_file(); // we return the file looked for or the index file
-		std::cout << "LOCATION /" << std::endl;
 		try {
 			build_response(path, "200", "OK");}
 		catch (int e){
