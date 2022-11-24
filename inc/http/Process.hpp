@@ -34,6 +34,7 @@ class Process
 
 	// path builder
 	std::string build_path_with_index__or_script_file();
+	std::string getPathForNestedLocation();
 
 	Response	_response;
 	CGI			_CGI;
