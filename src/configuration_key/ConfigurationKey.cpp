@@ -424,6 +424,8 @@ bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 		if (raw.second.find_first_of(" ") != std::string::npos) {
 			throwInvalidConfigurationFileExceptionWithMessage("Location path cannot contain spaces!");
 		}
+		// remove any double slashes in the location path
+		removeDoubleSlashesInUrl(raw.second);
 		return true;
 	}
 	return false;

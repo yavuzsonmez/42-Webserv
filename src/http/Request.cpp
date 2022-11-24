@@ -164,24 +164,6 @@ void Request::setDomain(std::string &url) {
 }
 
 /**
- * @brief Removes everything after double slashes because we really don't need that
- * confusion in the parser.
- * 
- * Will redirect the user to the root of the domain
- * @param url 
- */
-void Request::removeDoubleSlashesInUrl(std::string &url)
-{
-	// remove all slashes which are more than one after each other
-	size_t pos = url.find("//");
-	while (pos != std::string::npos)
-	{
-		url.erase(pos, 1);
-		pos = url.find("//");
-	}
-}
-
-/**
  * @brief Check if a port is provided in the URL of the request,
  */
 void Request::setPort(std::string &url) {

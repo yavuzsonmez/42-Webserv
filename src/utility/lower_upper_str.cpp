@@ -70,6 +70,23 @@ void upper_str(std::string &str)
 	std::transform(str.begin(), str.end(),str.begin(), toupper);
 }
 
+
+/**
+ * @brief Removes any double slashes from a string and replaces it with one slash
+ * 
+ * @param url 
+ */
+void removeDoubleSlashesInUrl(std::string &url)
+{
+	// remove all slashes which are more than one after each other
+	size_t pos = url.find("//");
+	while (pos != std::string::npos)
+	{
+		url.erase(pos, 1);
+		pos = url.find("//");
+	}
+}
+
 // int	main(int argc, char**argv)
 // {
 // 	std::string str = "webSerV.conF"; //input with uppercase characters
