@@ -233,16 +233,19 @@ void Request::setScript(std::string &url) {
 
 
 /**
- * @brief
+ * @brief sets the path.
+ * Also modifies the string heavily. We do this to avoid that a missing slash in the url is interpreted incorrectly.
+ * that is why we add a new slash if no slash is available to match the locations in the config file (which will ALWAYS end with a slash)
+ * But we do not add a slash if there are query paramters in the url (the question mark) because that we complicate things. Also we do not
+ * add a slash if we find a dot. Means, directories with dots may be handled not 100% correctly.
  */
 void Request::setPath(std::string &url)
 {
 	// remove everything after double slashes
 	removeDoubleSlashesInUrl(url);
-	// if the url does not end with an fileending, add a slash, but do it before get query parameters
-	if (url.find('.') == std::string::npos)
+	// if the url does not end with an fileending and the url does not end with a slash, add a slash. Also if it contains a question mark do not modify the string
+	if (url.find('.') == std::string::npos && url.find('/') == std::string::npos && url.find('?') == std::string::npos)
 		url += "/";
-	// remove everything after the query parameters
 	if (url.length())
 		_path.first = url.substr(0, url.length());
 	url.erase(0, url.length());
