@@ -351,7 +351,11 @@ void	Process::build_dl_response(void)
 	getcwd(tmp, 1000);
 	std::string abs(tmp);
 	directory = abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
-	_request.setBody(directory);
+	try {
+		_request.setBody(directory);
+	} catch (int e) {
+		throw (404);
+	}
 	_response.set_protocol("HTTP/1.1");
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
