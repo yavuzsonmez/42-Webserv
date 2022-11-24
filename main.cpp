@@ -50,7 +50,6 @@ int main(int argc, char **argv)
 		{
 			ServerSocket server(configurationFileParsing->serverBlocks[i], INADDR_ANY);
 		}
-
 		ServerSocket server(configurationFileParsing->serverBlocks[0], INADDR_ANY);
 	} catch (int e) {
 		// print exception information
