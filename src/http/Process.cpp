@@ -360,7 +360,7 @@ void	Process::build_dl_response(void)
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 	_with_cgi = true;
-	_CGI = CGI(_request, _config, "./directory_listing/directory_listing.php", "php-cgi");
+	_CGI = CGI(_request, _config, "./resources/directory_listing/directory_listing.php", "php-cgi");
 	_CGI.set_tmps();
 }
 
