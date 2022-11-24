@@ -238,9 +238,11 @@ void Request::setScript(std::string &url) {
 void Request::setPath(std::string &url)
 {
 	// remove everything after double slashes
-	size_t pos = url.find("//");
-	if (pos != std::string::npos)
-		url.erase(pos);
+	removeDoubleSlashesInUrl(url);
+	// if the url does not end with an fileending, add a slash, but do it before get query parameters
+	if (url.find('.') == std::string::npos)
+		url += "/";
+	// remove everything after the query parameters
 	if (url.length())
 		_path.first = url.substr(0, url.length());
 	url.erase(0, url.length());
