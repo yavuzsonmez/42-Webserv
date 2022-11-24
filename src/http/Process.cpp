@@ -106,15 +106,10 @@ void	Process::handle_request(void)
 	USE_DEBUGGER;
 	std::string	path;
 
+	// check if request is too large
 	if (check_if_request_is_too_large() == false)
 		return exception(413);
-
-	// check if the method is allowed
-	if (find_vector(_methods, _request.getMethod().first) == -1) // the method is not allowed
-	{
-		debugger.error("Method not allowed!");
-		throw(405);
-	}
+	
 	// first we check if the request is too big
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
@@ -134,6 +129,8 @@ void	Process::handle_request(void)
 		{
 			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
 			{
+				if (find_vector(_methods, _request.getMethod().first) == -1)
+					throw (405);
 				try {
 					build_dl_response();}
 				catch (int e){
@@ -145,6 +142,8 @@ void	Process::handle_request(void)
 			else // if not, we try to return the index file
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
+				if (find_vector(_methods, _request.getMethod().first) == -1)
+					throw (405);
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
@@ -158,7 +157,7 @@ void	Process::handle_request(void)
 		{
 			path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
 			if (find_vector(_methods, _request.getMethod().first) == -1)
-				throw (404);
+				throw (405);
 			if (is_file_accessible(path))
 			{
 				try {
