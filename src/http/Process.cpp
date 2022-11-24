@@ -56,7 +56,8 @@ void	Process::process_request(void)
 }
 
 /**
- * @brief Gets the path for a nested script or index file
+ * @brief Gets the path for a nested script or index file, but also gets called when there is no nested location.
+ * Needs to be refactored heavily. Absolute disaster
  * @return std::string 
  */
 std::string Process::getPathForNestedLocation()
@@ -64,7 +65,6 @@ std::string Process::getPathForNestedLocation()
 	USE_DEBUGGER;
 	std::cout << _request.hasNestedRequestPath 	<< std::endl;
 	if (!_request.hasNestedRequestPath) { // if the path is not nested
-		std::cout << "path is not nested: " << _request.getPath().first << std::endl;
 		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
 			return _config.getConfigurationKeysWithType(ROOT).front().root  + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
 		} else { // there is a script file available like /echo.php
@@ -72,7 +72,6 @@ std::string Process::getPathForNestedLocation()
 		}
 	} else { // we do not provide the index files for a nested path
 		// here we build the nested path for the location. this needs to be put in a seperate function later for sure...
-		debugger.debug("THIS IS A NESTED PATH!");
 		// we use get_location to get the correct root path
 		std::string primaryLocation = get_first_location_in_path(_request.getPath().first); // where the nested folder is
 			// we need to add a slash to the location to get the correct root path and a slash after to match the location of the configuration file
