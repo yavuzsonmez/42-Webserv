@@ -31,7 +31,7 @@ void CGI::set_environment()
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
 	_env["HOST"] = _request.findHeader("Host");					//The length of the said content as given by the client.
-	_env["REDIRECT_STATUS"] = "500";
+	_env["REDIRECT_STATUS"] = "500";							//If the server supports redirection, this variable should be set to the status code of the redirection.
 	_env["BODY"] = _request.getBody().first;
 	_env["REQUEST_URI"] = _request.getPath().first;
 }
@@ -68,6 +68,8 @@ CGI & CGI::operator=(const CGI &src)
 	_config = src._config;
 	_path = src._path;
 	_cgi_path = src._cgi_path;
+	_env = src._env;
+	_query_parameters = src._query_parameters;
 	return *this;
 }
 
