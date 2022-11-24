@@ -56,8 +56,7 @@ void	Process::process_request(void)
 }
 
 /**
- * @brief Gets the path for a nested script or index file, but also gets called when there is no nested location.
- * Needs to be refactored heavily. Absolute disaster
+ * @brief Gets the path for a script or index file in a directory, but also checks if the request is a directory and handles it accordingly.
  * @return std::string 
  */
 std::string Process::getPathForNestedLocation()
