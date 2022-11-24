@@ -61,7 +61,7 @@ bool ConfigFileParsing::validationDuplicationCheck() {
 }
 
 /**
- * GENERAL VALIDATION FUNCITON
+ * GENERAL VALIDATION FUNCTION
  * 
  * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
  * - runs validationDuplicationCheck(), checking for logic duplicates
