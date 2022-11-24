@@ -24,6 +24,7 @@ Process & Process::operator = (const Process &src)
 	_config = src._config;
 	_cgi = src._cgi;
 	_cgi_fileending = src._cgi_fileending;
+	_with_cgi = src._with_cgi;
 	return *this;
 }
 
@@ -61,6 +62,7 @@ void	Process::process_request(void)
  */
 std::string Process::build_path_with_index__or_script_file()
 {
+	USE_DEBUGGER;
 	if (_request.getPath().first == "/") { // the path is on the top level and not in any subdirectory
 		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
 			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
@@ -68,10 +70,18 @@ std::string Process::build_path_with_index__or_script_file()
 			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
 		}
 	} else {
-		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
-			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-		} else { // there is a script file available like /echo.php
-			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
+		// if it is not a nested path, we can just add the index file to the path or the script file
+		std::cout << _request.hasNestedRequestPath 	<< std::endl;
+		if (!_request.hasNestedRequestPath) { // if the path is not nested
+			std::cout << "path is not nested: " << _request.getPath().first << std::endl;
+			if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
+				return _config.getConfigurationKeysWithType(ROOT).front().root  + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+			} else { // there is a script file available like /echo.php
+				return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
+			}
+		} else { // we do not provide the index files for a nested path
+			debugger.debug("THIS IS A NESTED PATH!");
+			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getPath().first + "/" + _request.getScript().first;
 		}
 	}
 }
@@ -114,6 +124,7 @@ void	Process::handle_request(void)
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
 		path = build_path_with_index__or_script_file(); // we return the file looked for or the index file
+		std::cout << "LOCATION /" << std::endl;
 		try {
 			build_response(path, "200", "OK");}
 		catch (int e){
@@ -127,6 +138,7 @@ void	Process::handle_request(void)
 	{
 		if (_request.getScript().first.empty()) // if no script is given
 		{
+			std::cout << "LOCATION DL" << std::endl;
 			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
 			{
 				if (find_vector(_methods, _request.getMethod().first) == -1)
@@ -142,6 +154,7 @@ void	Process::handle_request(void)
 			else // if not, we try to return the index file
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
+				std::cout << "PATH: " << path << std::endl;
 				if (find_vector(_methods, _request.getMethod().first) == -1)
 					throw (405);
 				try {
@@ -156,6 +169,7 @@ void	Process::handle_request(void)
 		else
 		{
 			path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
+			std::cout << "PATH: " << path << std::endl;
 			if (find_vector(_methods, _request.getMethod().first) == -1)
 				throw (405);
 			if (is_file_accessible(path))
@@ -176,7 +190,20 @@ void	Process::handle_request(void)
 	}
 	else
 	{
-		throw(404);
+		// nested directory
+		path = build_path_with_index__or_script_file();
+		std::cout << "PATH generated: " << path << std::endl;
+
+		if (find_vector(_methods, _request.getMethod().first) == -1)
+			throw (405);
+		
+		try {
+			build_response(path, "200", "OK");}
+		catch (int e){
+			debugger.error("UNABLE TO BUILD RESPONSE!");
+			throw(404);
+			return ;
+		}
 	}
 }
 

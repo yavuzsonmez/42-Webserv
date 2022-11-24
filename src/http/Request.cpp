@@ -7,6 +7,7 @@
  * @brief Default constructor, default values for testing
  */
 Request::Request() :
+	hasNestedRequestPath(false),
 	_method(UNKNOWN, false),
 	_protocol("http", true),
 	_domain("", true),
@@ -24,6 +25,7 @@ Request::Request() :
  * @brief Copy constructor
  */
 Request::Request( const Request &src ) :
+	hasNestedRequestPath(src.hasNestedRequestPath),
 	_method(src._method),
 	_protocol(src._protocol),
 	_port(src._port),
@@ -33,7 +35,23 @@ Request::Request( const Request &src ) :
 	_fragment(src._fragment),
 	_httpVersion(src._httpVersion),
 	_headers(src._headers),
-	_body(src._body) {}
+	_body(src._body)  {}
+
+Request & Request::operator = (const Request &rhs)
+{
+	_method = rhs._method;
+	_protocol = rhs._protocol;
+	_port = rhs._port;
+	_script = rhs._script;
+	_path = rhs._path;
+	_query = rhs._query;
+	_fragment = rhs._fragment;
+	_httpVersion = rhs._httpVersion;
+	_headers = rhs._headers;
+	_body = rhs._body;
+	hasNestedRequestPath = rhs.hasNestedRequestPath;
+	return *this;
+}
 
 Request::~Request() {}
 
@@ -243,6 +261,21 @@ void Request::setPath(std::string &url)
 {
 	// remove everything after double slashes
 	removeDoubleSlashesInUrl(url);
+
+	// Count amount of slashes in the url
+	size_t pos = url.find("/");
+	size_t count = 0;
+	while (pos != std::string::npos)
+	{
+		count++;
+		pos = url.find("/", pos + 1);
+	}
+	if (count > 1)
+	{
+		std::cout << "count: " << count << std::endl;
+		hasNestedRequestPath = true;
+	}
+
 	// if the url does not end with an fileending and the url does not end with a slash, add a slash. Also if it contains a question mark do not modify the string
 	if (url.find('.') == std::string::npos && url.find('/') == std::string::npos && url.find('?') == std::string::npos)
 		url += "/";
