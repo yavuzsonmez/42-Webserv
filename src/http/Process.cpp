@@ -56,6 +56,39 @@ void	Process::process_request(void)
 }
 
 /**
+ * @brief Gets the path for a nested script or index file
+ * @return std::string 
+ */
+std::string Process::getPathForNestedLocation()
+{
+	USE_DEBUGGER;
+	std::cout << _request.hasNestedRequestPath 	<< std::endl;
+	if (!_request.hasNestedRequestPath) { // if the path is not nested
+		std::cout << "path is not nested: " << _request.getPath().first << std::endl;
+		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root  + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+		} else { // there is a script file available like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
+		}
+	} else { // we do not provide the index files for a nested path
+		// here we build the nested path for the location. this needs to be put in a seperate function later for sure...
+		debugger.debug("THIS IS A NESTED PATH!");
+		// we use get_location to get the correct root path
+		std::string primaryLocation = get_first_location_in_path(_request.getPath().first); // where the nested folder is
+			// we need to add a slash to the location to get the correct root path and a slash after to match the location of the configuration file
+			// TODO Generate the full path for the nested path
+		std::string root = get_location(primaryLocation.insert(0, "/") + "/", ROOT);
+		// now append the rest of the path to the newly gained root path
+		std::string path = root +  "/" + _request.getPath().first.substr(primaryLocation.length());
+		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php. Return the index file for the location of the nested path
+			return path + "/" + get_location(primaryLocation + "/", INDEX);
+		} else { // there is a script file available like /echo.php
+			return path + "/" + _request.getScript().first;
+		}
+	}
+}
+
+/**
  * @brief Returns the path with the index file defined in the configuration.
  * Will check every index file if available and accessible and chooses the first one that is accessible
  * @returns std::string path
@@ -71,30 +104,7 @@ std::string Process::build_path_with_index__or_script_file()
 		}
 	} else {
 		// if it is not a nested path, we can just add the index file to the path or the script file
-		std::cout << _request.hasNestedRequestPath 	<< std::endl;
-		if (!_request.hasNestedRequestPath) { // if the path is not nested
-			std::cout << "path is not nested: " << _request.getPath().first << std::endl;
-			if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
-				return _config.getConfigurationKeysWithType(ROOT).front().root  + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-			} else { // there is a script file available like /echo.php
-				return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
-			}
-		} else { // we do not provide the index files for a nested path
-			// here we build the nested path for the location. this needs to be put in a seperate function later for sure...
-			debugger.debug("THIS IS A NESTED PATH!");
-			// we use get_location to get the correct root path
-			std::string primaryLocation = get_first_location_in_path(_request.getPath().first); // where the nested folder is
-			 // we need to add a slash to the location to get the correct root path and a slash after to match the location of the configuration file
-			 // TODO Generate the full path for the nested path
-			std::string root = get_location(primaryLocation.insert(0, "/") + "/", ROOT);
-			// now append the rest of the path to the newly gained root path
-			std::string path = root +  "/" + _request.getPath().first.substr(primaryLocation.length());
-			if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
-				return path + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-			} else { // there is a script file available like /echo.php
-				return path + "/" + _request.getScript().first;
-			}
-		}
+		return getPathForNestedLocation();
 	}
 }
 
