@@ -7,19 +7,23 @@
     </p>
     <p class="subtitle">
 	<?php
-		$line = trim(fgets(fopen("php://stdin","r")));
-		$array = explode("&", $line);
-		$dirpath = $array[0];
-		$location = $array[1];
-		function buildPath($file, $location) {
-			return $location . '/' . $file;
+		echo $_SERVER['REQUEST_URI'];
+
+		if ($POST['dir'] == '') {
+			$dirpath = '.';
+		} else {
+			$dirpath = $POST['dir'];
+		}
+		function buildPath($file) {
+			return  $file;
 		}
 		$dir = opendir($dirpath);
+		echo "<h1>Directory Listing active</h1>";
 		while ($file = readdir($dir)) {
 		if (is_dir($file)) { // is a directory
-			echo "<a href=\"" . buildPath($file, $location) ."\">$file/</a><br>";
+			echo "<a href=\"" . buildPath($file) ."\">$file/</a><br>";
 		} else { // is a file
-			echo "<a href=\"" . buildPath($file, $location) ."\">$file</a><br>";
+			echo "<a href=\"" . buildPath($file) ."\">$file</a><br>";
 		}
 		}
 		closedir($dir);
