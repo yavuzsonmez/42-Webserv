@@ -360,6 +360,12 @@ void Request::setHeaders(std::string &req)
 	}
 }
 
+/**
+ * @brief Check if the header is valid
+ * 
+ * @param hdr 
+ * @param direct 
+ */
 void Request::checkHeader(str_flag &hdr, str_flag &direct)
 {
 	if (hdr.first == Host)
