@@ -84,7 +84,7 @@ std::string Process::build_path_with_index__or_script_file()
 bool Process::check_if_request_is_too_large()
 {
 	if (_config.getConfigurationKeysWithType(POST_MAX_SIZE).size() > 0) {
-		if ((long) _request.getBody().first.size() > (_config.getConfigurationKeysWithType(POST_MAX_SIZE).front().post_max_size * 1000))
+		if ((long) _request.getBody().first.size() > (_config.getConfigurationKeysWithType(POST_MAX_SIZE).front().post_max_size * 1000000))
 		{
 			std::cout << "Request too big" << std::endl;
 			exception(413);

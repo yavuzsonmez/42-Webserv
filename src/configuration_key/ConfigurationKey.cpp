@@ -406,6 +406,7 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
  * - isCurrentlyParsingLocationBlock
  * - Will check if the last character in location is a opening bracket
  * - Will remove the last character from location if it is a opening bracket to enable parsing of the location path
+ * - Always adds a / at the end of the location path if there is no / present
  */
 bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 	if (raw.first == "location" && !raw.second.empty()) {
@@ -415,6 +416,14 @@ bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 		}
 		raw.second.erase(raw.second.length() - 1); // delete the last character
 		raw.second = trim_whitespaces(raw.second);
+		// check if a slash is the last character. If not, add one
+		if (raw.second[raw.second.length() - 1] != '/') {
+			raw.second += "/";
+		}
+		// check there are no forbidden characters in the location path
+		if (raw.second.find_first_of(" ") != std::string::npos) {
+			throwInvalidConfigurationFileExceptionWithMessage("Location path cannot contain spaces!");
+		}
 		return true;
 	}
 	return false;
