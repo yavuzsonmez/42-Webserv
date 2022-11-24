@@ -263,12 +263,13 @@ void Request::setPath(std::string &url)
 	removeDoubleSlashesInUrl(url);
 
 	// Count amount of slashes in the url
-	size_t pos = url.find("/");
+	std::string nestedPath =  url + getScript().first;
+	size_t pos = nestedPath.find("/");
 	size_t count = 0;
 	while (pos != std::string::npos)
 	{
 		count++;
-		pos = url.find("/", pos + 1);
+		pos = nestedPath.find("/", pos + 1);
 	}
 	if (count > 1)
 	{
