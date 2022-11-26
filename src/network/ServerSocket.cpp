@@ -10,16 +10,16 @@
  * @param config, parsed server config file.
  * @param address, network interface where to listen.
  */
-ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
+ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _serverBlock(config)
 {
 	std::vector<struct sockaddr_in>::iterator	so;
-	listeningSockets = _config.getAllServerPorts().size();
+	listeningSockets = _serverBlock.getAllServerPorts().size();
 	_sockets.resize(listeningSockets);
 	int	i = 0;
 	for (so = _sockets.begin(); so != _sockets.end(); so++, i++) //configure the sockets
 	{
 		(*so).sin_family = AF_INET;
-		(*so).sin_port = htons(_config.getAllServerPorts()[i]);
+		(*so).sin_port = htons(_serverBlock.getAllServerPorts()[i]);
 		(*so).sin_addr.s_addr = address;
 		bzero(&((*so).sin_zero), 8);
 	}
@@ -134,7 +134,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	};
 	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
 		debugger.debug( to_string(_clients.size()) + " / 10Maximum number of clients reached. Declining connection.");
-		int result = send_server_unavailable(forward, _config);
+		int result = send_server_unavailable(forward, _serverBlock);
 		if (result == -1) {
 			debugger.verbose("Error while sending 503 to client. Closing connection.");
 			close(forward);
@@ -149,7 +149,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	tmp.events = POLLIN;
 	tmp.revents = 0;
 	pollfds.push_back(tmp); //add the new fd/socket to the set, considered as "client"
-	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward))); //Link the forwarded fd to a new client
+	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _serverBlock, forward))); //Link the forwarded fd to a new client
 	return true;
 }
 
@@ -162,7 +162,7 @@ void ServerSocket::processConnections()
 {
 	USE_DEBUGGER;
 	std::vector<pollfd> pollfds;
-	pollfds.resize(_config.getAllServerPorts().size()); //create a vector of pollfds struct, same length as the number of listening sockets
+	pollfds.resize(_serverBlock.getAllServerPorts().size()); //create a vector of pollfds struct, same length as the number of listening sockets
 	std::vector<int>::iterator	it = _fds.begin();
 	std::vector<int>::iterator	ite = _fds.end();
 
