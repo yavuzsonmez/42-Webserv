@@ -22,6 +22,7 @@ class ConfigFileParsing {
 
 		// The server block vector which will provide the servers and their configurations
 		std::vector<ServerBlock> serverBlocks;
+		std::vector<unsigned int> getAllServerPortsFromAllBlocks();
 	private:
 		bool isGeneralFaultyFile( std::string &file_content );
 		void determineConfigurationKeys( std::string &file_content );

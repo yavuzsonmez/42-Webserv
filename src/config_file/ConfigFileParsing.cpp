@@ -344,3 +344,18 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 		}
 	}
 }
+
+/**
+ * @brief Get all the server ports from all the server blocks
+ * @return std::vector<unsigned int> 
+ */
+std::vector<unsigned int> ConfigFileParsing::getAllServerPortsFromAllBlocks() {
+	std::vector<unsigned int> ports = std::vector<unsigned int>();
+	std::vector<ServerBlock>::iterator i = this->serverBlocks.begin();
+	for (this->serverBlocks.begin(), this->serverBlocks.begin(); i != this->serverBlocks.end(); ++i) {
+		std::cout << "SERVER PORT SIZE GIVEN: " << i->getAllServerPorts().size() << std::endl;
+		ports.insert(ports.end(), i->getAllServerPorts().begin(), i->getAllServerPorts().end());
+	}
+	std::cout << "PORTS SIZE: " << ports.size() << std::endl;
+	return ports;
+}

@@ -87,7 +87,8 @@ std::string ServerBlock::getCgiFileEnding() {
  * - adds the member of the vector ports of the configuration key
  * 	 to the result ports of getAllServerPorts
  */
-std::vector<unsigned int> ServerBlock::getAllServerPorts() {
+std::vector<unsigned int> ServerBlock::getAllServerPorts()
+{
 
 	std::vector<ConfigurationKey>::iterator i = this->configurationKeys.begin();
 	std::vector<unsigned int> ports;

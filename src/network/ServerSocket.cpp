@@ -14,16 +14,20 @@
 ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address): _serverBlock(serverBlock), _configFile(configFile)
 {
 	std::vector<struct sockaddr_in>::iterator	so;
-	listeningSockets = _serverBlock.getAllServerPorts().size();
+	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(configFile.serverBlocks);
+	listeningSockets = allPorts.size();
+	std::cout << "listeningSockets: " << listeningSockets << std::endl;
 	_sockets.resize(listeningSockets);
+	std::cout << "RESIZE OK" << std::endl;
 	int	i = 0;
 	for (so = _sockets.begin(); so != _sockets.end(); so++, i++) //configure the sockets
 	{
 		(*so).sin_family = AF_INET;
-		(*so).sin_port = htons(_serverBlock.getAllServerPorts()[i]);
+		(*so).sin_port = htons(allPorts[i]);
 		(*so).sin_addr.s_addr = address;
 		bzero(&((*so).sin_zero), 8);
 	}
+	std::cout << "STILL OK" << std::endl;
 	const int	enable = 1;
 	_fds.resize(_sockets.size());
 	std::vector<int>::iterator	fd;
@@ -162,8 +166,10 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 void ServerSocket::processConnections()
 {
 	USE_DEBUGGER;
+	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(_configFile.serverBlocks);
+
 	std::vector<pollfd> pollfds;
-	pollfds.resize(_serverBlock.getAllServerPorts().size()); //create a vector of pollfds struct, same length as the number of listening sockets
+	pollfds.resize(allPorts.size()); //create a vector of pollfds struct, same length as the number of listening sockets
 	std::vector<int>::iterator	it = _fds.begin();
 	std::vector<int>::iterator	ite = _fds.end();
 
