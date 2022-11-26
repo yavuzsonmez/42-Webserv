@@ -7,10 +7,11 @@
 
 /**
  * @brief Setup, bind and put the sockets in listening mode. (Ports of one server Block)
- * @param config, parsed server config file.
+ * @param serverBlock, parsed server config file.
  * @param address, network interface where to listen.
+ * @param configFile the configuration File
  */
-ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _serverBlock(config)
+ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address): _serverBlock(serverBlock), _configFile(configFile)
 {
 	std::vector<struct sockaddr_in>::iterator	so;
 	listeningSockets = _serverBlock.getAllServerPorts().size();

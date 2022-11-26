@@ -46,11 +46,8 @@ int main(int argc, char **argv)
 	}
 
 	try {
-		for (int i = 0; i < (int) configurationFileParsing->serverBlocks.size(); i++)
-		{
-			ServerSocket server(configurationFileParsing->serverBlocks[i], INADDR_ANY);
-		}
-		ServerSocket server(configurationFileParsing->serverBlocks[0], INADDR_ANY);
+		ServerSocket server(configurationFileParsing->serverBlocks[0], *configurationFileParsing, INADDR_ANY);
+
 	} catch (int e) {
 		// print exception information
 		std::cout << "Something went wrong with error code " << e << std::endl;

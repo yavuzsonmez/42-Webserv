@@ -21,7 +21,7 @@ class ServerSocket
 
 	public:
 
-		ServerSocket(ServerBlock config, unsigned int address);
+		ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address);
 
 		//ServerSocket( const ServerSocket &src );
 		virtual ~ServerSocket();
@@ -52,6 +52,7 @@ class ServerSocket
 		void socketFailed(std::vector<pollfd> &pollfds, int i);
 		std::vector<std::pair<int, ClientSocket> >	_clients;
 		ServerBlock	_serverBlock;
+		ConfigFileParsing _configFile;
 		unsigned int listeningSockets;
 };
 
