@@ -59,6 +59,7 @@ void	ClientSocket::call_func_ptr(void)
 /**
  * @brief reads the requst from the clientSocket until \r\n\r\n.
  * If a Body is appended change the _state = BODY and reads until it reaches content_lenght as it is defined in the header.
+ * After parsing the request it will call the setup function to set up the response, either after building header and not seeing any body or after building the body.
  */
 void	ClientSocket::read_in_buffer(void)
 {
@@ -153,15 +154,35 @@ void	ClientSocket::send_response(void)
 }
 
 /**
+ * @brief Returns the fitting server block for the client request which was parsed in the read_in_buffer function
+ * 
+ * @return ServerBlock 
+ */
+ServerBlock ClientSocket::getServerBlock()
+{
+	USE_DEBUGGER;
+	std::string host = _clientRequest.findHeader("Host");
+	if (host.empty())
+		host = _clientRequest.getHost();
+	// remove the port from the host header and cut everything after it like path
+	size_t pos = host.find(":");
+	if (pos != std::string::npos)
+		host = host.substr(0, pos);
+	std::cout << "HOST: " << host << std::endl;
+	host = trim_whitespaces(host);
+	return _configFile.getServerBlockForServerName(host);
+}
+
+/**
  * @brief sets up the process object.
  * in case of a cgi, it sets the _func_ptr to the next function that handels the cgi and updates the filedescriptor
  */
 void	ClientSocket::set_up(void)
 {
-	// here we need to select the correct server block for the Process based on hostname and server port given
-	_process = Process(_clientRequest, _config);
+	// TODO: here we need to select the correct server block for the Process based on hostname and server port given
 	try
 	{
+		_process = Process(_clientRequest, getServerBlock());
 		_process.process_request();
 	}
 	catch (int e)

@@ -367,7 +367,7 @@ void Request::setHttpversion(std::string &req)
  * @brief Get the host value from the headers
  * 
  */
-std::string Request::getHost(std::string) {
+std::string Request::getHost() {
 	std::string host = findHeader("Host");
 	return host;
 }
