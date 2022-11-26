@@ -51,7 +51,7 @@ class ServerSocket
 		void checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i);
 		void socketFailed(std::vector<pollfd> &pollfds, int i);
 		std::vector<std::pair<int, ClientSocket> >	_clients;
-		ServerBlock	_config;
+		ServerBlock	_serverBlock;
 		unsigned int listeningSockets;
 };
 
