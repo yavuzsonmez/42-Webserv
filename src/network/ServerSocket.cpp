@@ -154,7 +154,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	tmp.events = POLLIN;
 	tmp.revents = 0;
 	pollfds.push_back(tmp); //add the new fd/socket to the set, considered as "client"
-	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _serverBlock, forward))); //Link the forwarded fd to a new client
+	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _serverBlock, forward, _configFile))); //Link the forwarded fd to a new client
 	return true;
 }
 
@@ -162,6 +162,8 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 /**
  * @brief Handles connections by using POLL
  * and checking if the fds are rdy for I/O operations
+ * - first prepares the socket port listeners for polling
+ *  - then await new clients on the ports and accepts them
  */
 void ServerSocket::processConnections()
 {

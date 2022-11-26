@@ -29,7 +29,7 @@ class ClientSocket
 {
 	public:
 
-		ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config, int forward);
+		ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config, int forward, ConfigFileParsing configFile);
 		virtual ~ClientSocket();
 
 		void	call_func_ptr(void);
@@ -65,6 +65,7 @@ class ClientSocket
 
 		struct sockaddr_in	_socket;
 		ServerBlock			_config;
+		ConfigFileParsing	_configFile;
 		int					_fd_cgi;
 		int					_bytes;
 		size_t				_count;
