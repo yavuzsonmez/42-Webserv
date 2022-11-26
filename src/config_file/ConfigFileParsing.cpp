@@ -359,3 +359,30 @@ std::vector<unsigned int> ConfigFileParsing::getAllServerPortsFromAllBlocks() {
 	std::cout << "PORTS SIZE: " << ports.size() << std::endl;
 	return ports;
 }
+
+/**
+ * @brief Gets a server block which has the server name given
+ * @throws 404 when no server block is found
+ * 
+ * @param server_name 
+ * @return ServerBlock which the given name or the first server block when the server name is localhost or 127.0.0.1
+ */
+ServerBlock ConfigFileParsing::getServerBlockForServerName( std::string server_name ) {
+	std::vector<ServerBlock>::iterator i = this->serverBlocks.begin();
+	for (this->serverBlocks.begin(), this->serverBlocks.begin(); i != this->serverBlocks.end(); ++i) {
+		std::vector<std::string> server_names = i->getAllServerNames();
+		std::vector<std::string>::iterator j = server_names.begin();
+		for (server_names.begin(), server_names.begin(); j != server_names.end(); ++j) {
+			if (*j == server_name) {
+				return *i;
+			}
+		}
+	}
+	if (server_name == "127.0.0.1") {
+		return this->serverBlocks[0];
+	}
+	if (server_name == "localhost") {
+		return this->serverBlocks[0];
+	}
+	throw 404;
+}

@@ -75,6 +75,7 @@ class ClientSocket
 		states				_state;
 		unsigned long		_content_length;
 		void					(ClientSocket::*_func_ptr)(void);
+		ServerBlock			getServerBlock();
 		Request				_clientRequest;
 		Process				_process;
 };
