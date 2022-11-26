@@ -9,7 +9,7 @@
  * @param config, Config of the server
  * @param forward, Fd linked to the client (where we will read the request and respond)
  */
-ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &config, int forward) : _config(config)
+ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &serverBlock, int forward, ConfigFileParsing configFile) : _config(serverBlock), _configFile(configFile)
 {
 	_socket.sin_family = clientSocket.sin_family;
 	_socket.sin_port = clientSocket.sin_port;
@@ -158,6 +158,7 @@ void	ClientSocket::send_response(void)
  */
 void	ClientSocket::set_up(void)
 {
+	// here we need to select the correct server block for the Process based on hostname and server port given
 	_process = Process(_clientRequest, _config);
 	try
 	{
