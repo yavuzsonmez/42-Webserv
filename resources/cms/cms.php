@@ -30,6 +30,7 @@
 
 $dirname = "uploads/";
 $images = glob($dirname."*.{jpg,jpeg,png,gif}", GLOB_BRACE);
+// remove everything after the last dot
 foreach($images as $image) {
 	// display the image
 
@@ -40,7 +41,8 @@ foreach($images as $image) {
 	echo '<p class="fs-5 mb-4">'.$image.'</p>';
 	echo '<div class="d-grid gap-2 d-sm-flex justify-content-sm-center">';
 	echo '<img width="50%" src="'.$image.'" /><br />';
-	echo '<button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Delete picture</button>';
+	// here we built the delete button
+	echo '<form method="post"><input style="display:none"type="text" name="file" id="file" value="'.$image.'"/> <button type="submit" formaction="/cms/delete_image.php" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Delete picture</button></form>';
 	echo '</div>';
 	echo '</div>';
 	echo '</div>';
