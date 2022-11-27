@@ -12,3 +12,4 @@ debug.log
 .DS_Store
 cgi-bin/test.png
 .DS_Store
+./resources/cms/uploads
