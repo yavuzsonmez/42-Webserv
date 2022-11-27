@@ -372,9 +372,6 @@ ServerBlock ConfigFileParsing::getServerBlockWithServerNameAndServerPort(std::st
 	std::vector<ServerBlock> validServerBlocksWithGivenPorts = getServerBlocksWithPort(port); // get all server blocks with the given port
 	ServerBlock validServerBlockWithGivenServerName = getServerBlockForServerName(server_name); // get the server block with the given server name
 	// check if validServerBlockWithGivenServerName is contained in validServerBlocksWithGivenPorts
-	std::cout << "VALID SERVER BLOCKS WITH GIVEN PORTS SIZE: " << validServerBlocksWithGivenPorts.size() << std::endl;
-	std::cout << "Server index 1 " << validServerBlockWithGivenServerName.serverIndex << std::endl;
-	std::cout << "Server index 2 " << validServerBlocksWithGivenPorts[0].serverIndex << std::endl;
 	for (int i = 0; i < (int) validServerBlocksWithGivenPorts.size(); i++) {
 		if (validServerBlocksWithGivenPorts[i].serverIndex == validServerBlockWithGivenServerName.serverIndex) {
 			return validServerBlockWithGivenServerName;
@@ -382,7 +379,7 @@ ServerBlock ConfigFileParsing::getServerBlockWithServerNameAndServerPort(std::st
 	}
 	// if not found, means we need to fallbakc to the default server block or just return an error 404
 	debugger.error("No server block found with server name " + server_name + " and port " + to_string(port));
-	return this->serverBlocks[0];
+	return this->serverBlocks[0]; // here we should return the default server, currently we just return the first server block
 }
 
 /**
