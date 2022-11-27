@@ -268,12 +268,12 @@ bool ConfigurationKey::validatePostMaxSize(std::string to_validate)
 		throwInvalidConfigurationFileExceptionWithMessage("Invalid post max size. Only numbers allowed.");
 		return false;
 	}
-	if (stoi(to_validate.substr(0, to_validate.length() - 1)) <= 0)
+	if (stoi_replacement(to_validate.substr(0, to_validate.length() - 1)) <= 0)
 	{
 		throwInvalidConfigurationFileExceptionWithMessage("Number needs to be bigger than 0.");
 		return false;
 	}
-	if (stoi(to_validate.substr(0, to_validate.length() - 1)) > 1000)
+	if (stoi_replacement(to_validate.substr(0, to_validate.length() - 1)) > 1000)
 	{
 		throwInvalidConfigurationFileExceptionWithMessage("Number needs to be smaller than 1000M.");
 		return false;
@@ -300,7 +300,7 @@ bool ConfigurationKey::isPostMaxSizeType(internal_keyvalue raw)
 			return false;
 		}
 		std::string value = raw.second.substr(0, raw.second.length() - 1);
-		this->post_max_size = stoi(value);
+		this->post_max_size = stoi_replacement(value);
 		return true;
 	}
 	return false;

@@ -16,7 +16,7 @@
 # include <vector>
 # include <map>
 # include <utility>
-#include <pthread.h>
+# include <pthread.h>
 # include <set>
 # include <unistd.h>
 # include "../config_file/ConfigFileParsing.hpp"
@@ -60,7 +60,7 @@ int is_valid_fd(int fd);
 int send_server_unavailable(int forward, ServerBlock serverblock);
 int send_client_timeout(int forward, ServerBlock serverblock);
 std::string get_file_content_cached(std::string path);
-int stoi( std::string & s );
+int stoi_replacement( std::string s );
 int kill_with_error(int pid);
 std::string lower_str_ret(std::string str);
 void removeDoubleSlashesInUrl(std::string &url);
