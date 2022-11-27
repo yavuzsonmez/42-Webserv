@@ -33,6 +33,9 @@ std::vector<unsigned int> getAllServerPortsFromAllServerBlocks(std::vector<Serve
 	for (serverBlocks.begin(), serverBlocks.end(); i != serverBlocks.end(); ++i) {
 		append_vector(ports, (*i).getAllServerPorts());
 	}
+	// remove double ports
+	std::sort(ports.begin(), ports.end());
+	ports.erase(std::unique(ports.begin(), ports.end()), ports.end());
 	return ports;
 }
 
