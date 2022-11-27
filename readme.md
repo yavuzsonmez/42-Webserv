@@ -24,3 +24,5 @@ TODO:
 
 Multiplexer:
 	All server ports run now over a single server socket. The Server socket also receives the full configuration file and passes it on to the client socket. The client socket will then assign the correct server block to each Process.cpp based on hostname/server port.
+
+- To improve performance, cache the serverblocks and do not run the getServerBlocksForPorts/Names again and again for every request.

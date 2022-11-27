@@ -31,6 +31,7 @@ class ServerBlock
 		std::vector<ConfigurationKey> getConfigurationKeysWithType(ConfigurationKeyType type);
         std::string getErrorPagePathForCode(int statuscode);
         std::string getFallbackErrorPageForCode(int statuscode);
+        int serverIndex;
 };
 
  #endif
