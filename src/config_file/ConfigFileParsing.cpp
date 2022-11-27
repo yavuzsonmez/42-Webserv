@@ -24,6 +24,8 @@ ConfigFileParsing::~ConfigFileParsing()
 
 ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src) {
 	(void) src;
+	serverBlocks = src.serverBlocks;
+	isCurrentlyInLocationBlock = src.isCurrentlyInLocationBlock;
 	return (*this);
 }
 
@@ -222,7 +224,8 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 		currentServerIndex++;
 		this->server_bracket_counter++;
 		serverBlocks.push_back(ServerBlock());
-		serverBlocks[currentServerIndex].serverIndex = (currentServerIndex - 1);
+		serverBlocks[currentServerIndex].serverIndex = (currentServerIndex + 1);
+		std::cout << "Server " << serverBlocks[currentServerIndex].serverIndex << " created" << std::endl;
 		this->isCurrentlyInServerBlock = true;
 	}
 	else
@@ -369,6 +372,9 @@ ServerBlock ConfigFileParsing::getServerBlockWithServerNameAndServerPort(std::st
 	std::vector<ServerBlock> validServerBlocksWithGivenPorts = getServerBlocksWithPort(port); // get all server blocks with the given port
 	ServerBlock validServerBlockWithGivenServerName = getServerBlockForServerName(server_name); // get the server block with the given server name
 	// check if validServerBlockWithGivenServerName is contained in validServerBlocksWithGivenPorts
+	std::cout << "VALID SERVER BLOCKS WITH GIVEN PORTS SIZE: " << validServerBlocksWithGivenPorts.size() << std::endl;
+	std::cout << "Server index 1 " << validServerBlockWithGivenServerName.serverIndex << std::endl;
+	std::cout << "Server index 2 " << validServerBlocksWithGivenPorts[0].serverIndex << std::endl;
 	for (int i = 0; i < (int) validServerBlocksWithGivenPorts.size(); i++) {
 		if (validServerBlocksWithGivenPorts[i].serverIndex == validServerBlockWithGivenServerName.serverIndex) {
 			return validServerBlockWithGivenServerName;

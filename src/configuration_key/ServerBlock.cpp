@@ -14,6 +14,7 @@ ServerBlock::ServerBlock()
 ServerBlock::ServerBlock( const ServerBlock &src )
 {
 	this->configurationKeys = src.configurationKeys;
+	this->serverIndex = src.serverIndex;
 }
 
 ServerBlock::~ServerBlock()
@@ -23,6 +24,7 @@ ServerBlock::~ServerBlock()
 
 ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
 	configurationKeys = src.configurationKeys;
+	serverIndex = src.serverIndex;
 	return (*this);
 }
 
