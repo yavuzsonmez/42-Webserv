@@ -16,7 +16,7 @@
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
 		<form class="d-grid gap-2 d-sm-flex justify-content-sm-center" action="upload_image.php" method="post"
 			enctype="multipart/form-data">
-			<label for="file">Filename (no spaces!):</label>
+			<label for="file">Filename (only png files!):</label>
 			<input type="file" name="file" id="file" /> 
 			<br />
 			<input class="btn btn-outline-light btn-lg px-4" type="submit" name="submit" value="Submit" />
