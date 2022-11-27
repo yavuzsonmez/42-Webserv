@@ -222,6 +222,7 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 		currentServerIndex++;
 		this->server_bracket_counter++;
 		serverBlocks.push_back(ServerBlock());
+		serverBlocks[currentServerIndex].serverIndex = (currentServerIndex - 1);
 		this->isCurrentlyInServerBlock = true;
 	}
 	else
@@ -356,6 +357,29 @@ std::vector<unsigned int> ConfigFileParsing::getAllServerPortsFromAllBlocks() {
 }
 
 /**
+ * @brief Get the Server Block with a requested server name and a requested server port
+ * 
+ * @param server_name 
+ * @param port 
+ * @return ServerBlock 
+ */
+ServerBlock ConfigFileParsing::getServerBlockWithServerNameAndServerPort(std::string server_name, unsigned int port)
+{
+	USE_DEBUGGER;
+	std::vector<ServerBlock> validServerBlocksWithGivenPorts = getServerBlocksWithPort(port); // get all server blocks with the given port
+	ServerBlock validServerBlockWithGivenServerName = getServerBlockForServerName(server_name); // get the server block with the given server name
+	// check if validServerBlockWithGivenServerName is contained in validServerBlocksWithGivenPorts
+	for (int i = 0; i < (int) validServerBlocksWithGivenPorts.size(); i++) {
+		if (validServerBlocksWithGivenPorts[i].serverIndex == validServerBlockWithGivenServerName.serverIndex) {
+			return validServerBlockWithGivenServerName;
+		}
+	}
+	// if not found, means we need to fallbakc to the default server block or just return an error 404
+	debugger.error("No server block found with server name " + server_name + " and port " + to_string(port));
+	return this->serverBlocks[0];
+}
+
+/**
  * @brief Gets a server block which has the server name given
  * @throws 404 when no server block is found
  * 
@@ -380,4 +404,25 @@ ServerBlock ConfigFileParsing::getServerBlockForServerName( std::string server_n
 		return this->serverBlocks[0];
 	}
 	return this->serverBlocks[0];
+}
+
+/**
+ * @brief Returns all the server blocks which contain the given port
+ * @param port 
+ * @return std::vector<ServerBlock> 
+ */
+std::vector<ServerBlock> ConfigFileParsing::getServerBlocksWithPort( unsigned int port )
+{
+	std::vector<ServerBlock> serverBlocks = std::vector<ServerBlock>();
+	std::vector<ServerBlock>::iterator i = this->serverBlocks.begin();
+	for (this->serverBlocks.begin(), this->serverBlocks.begin(); i != this->serverBlocks.end(); ++i) {
+		std::vector<unsigned int> server_ports = i->getAllServerPorts();
+		std::vector<unsigned int>::iterator j = server_ports.begin();
+		for (server_ports.begin(), server_ports.begin(); j != server_ports.end(); ++j) {
+			if (*j == port) {
+				serverBlocks.push_back(*i);
+			}
+		}
+	}
+	return serverBlocks;
 }

@@ -162,6 +162,11 @@ ServerBlock ClientSocket::getServerBlock()
 {
 	USE_DEBUGGER;
 	std::string host = _clientRequest.findHeader("Host");
+	// get port from host
+	std::string portString = host.substr(host.find(":") + 1);
+	unsigned int port = 80;
+	if (portString != "")
+		port = atoi(portString.c_str());
 	if (host.empty())
 		host = _clientRequest.getHost();
 	// remove the port from the host header and cut everything after it like path
@@ -170,7 +175,7 @@ ServerBlock ClientSocket::getServerBlock()
 		host = host.substr(0, pos);
 	std::cout << "HOST: " << host << std::endl;
 	host = trim_whitespaces(host);
-	return _configFile.getServerBlockForServerName(host);
+	return _configFile.getServerBlockWithServerNameAndServerPort(host, port);
 }
 
 /**

@@ -20,6 +20,8 @@ class ConfigFileParsing {
 		ConfigFileParsing & operator = (const ConfigFileParsing &src);
 		bool parseConfigFile( std::string &file_content );
 		ServerBlock getServerBlockForServerName( std::string server_name );
+		std::vector<ServerBlock> getServerBlocksWithPort( unsigned int port );
+		ServerBlock getServerBlockWithServerNameAndServerPort(std::string server_name, unsigned int port);
 
 		// The server block vector which will provide the servers and their configurations
 		std::vector<ServerBlock> serverBlocks;
