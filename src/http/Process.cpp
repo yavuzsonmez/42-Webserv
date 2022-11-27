@@ -80,7 +80,6 @@ std::string Process::getPathForNestedLocation()
 		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php. Return the index file for the location of the nested path
 			return path + "/" + get_location(primaryLocation + "/", INDEX);
 		} else { // there is a script file available like /echo.php
-			std::cout << _request.getScript().first << std::endl;
 			return path + "/" + _request.getScript().first;
 		}
 	}

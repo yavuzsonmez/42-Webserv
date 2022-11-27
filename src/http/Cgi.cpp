@@ -164,8 +164,6 @@ void CGI::wait_for_child(pid_t worker_pid)
 				debugger.error("[FINISHED] sometimes happens cgi execution");
 				return ; // we're done
 			}
-			if (ENABLE_LOGGING)
-				std::cerr << strerror(errno) << std::endl;
 			debugger.error("Worker did not exit normally."); // this is being called if the worker timed out
 			//throw(502); // else we throw a 500 error
 			return ; 
