@@ -180,6 +180,7 @@ ServerBlock ClientSocket::getServerBlock()
 void	ClientSocket::set_up(void)
 {
 	// TODO: here we need to select the correct server block for the Process based on hostname and server port given
+	// TODO: IMPORTANT: we need to check if the server block is valid and if not, we need to send a 404. We cannot()! send a 404 if the construction of the Process fails. Fix this ASAP
 	try
 	{
 		_process = Process(_clientRequest, getServerBlock());
