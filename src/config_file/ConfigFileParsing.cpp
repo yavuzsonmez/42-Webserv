@@ -384,5 +384,5 @@ ServerBlock ConfigFileParsing::getServerBlockForServerName( std::string server_n
 	if (server_name == "localhost") {
 		return this->serverBlocks[0];
 	}
-	throw 404;
+	return this->serverBlocks[0];
 }
