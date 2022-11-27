@@ -32,21 +32,15 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
  * * - checking double ports on all server blocks
  * - checking double server names on all server blocks
  * - checking double location paths for each server block
- * - checking double ports on all server blocks
  * - checking double post max body size for each server block
  * @return true 
  * @return false 
  */
 bool ConfigFileParsing::validationDuplicationCheck() {
 	USE_DEBUGGER;
-	std::vector<unsigned int> allServerPorts = getAllServerPortsFromAllServerBlocks(this->serverBlocks);
 	std::vector<std::string> allServerNames = getAllServerNamesFromAllServerBlocks(this->serverBlocks); 
 	if (checksIfAnyServerBlockHasDoubleErrorPages(this->serverBlocks)) {
 		debugger.error("Error: Double error pages found in configuration file.");
-		throw InvalidConfigurationFile();
-	}
-	if (vector_has_duplicate_element(allServerPorts)) {
-		debugger.error("Configuration file has duplicate ports.");
 		throw InvalidConfigurationFile();
 	}
 	if (vector_has_duplicate_element(allServerNames)) {
@@ -346,7 +340,7 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 }
 
 /**
- * @brief Get all the server ports from all the server blocks
+ * @brief Get all the server ports from all the server blocks but only if the server port is not already in the vector
  * @return std::vector<unsigned int> 
  */
 std::vector<unsigned int> ConfigFileParsing::getAllServerPortsFromAllBlocks() {
@@ -356,7 +350,8 @@ std::vector<unsigned int> ConfigFileParsing::getAllServerPortsFromAllBlocks() {
 		std::cout << "SERVER PORT SIZE GIVEN: " << i->getAllServerPorts().size() << std::endl;
 		ports.insert(ports.end(), i->getAllServerPorts().begin(), i->getAllServerPorts().end());
 	}
-	std::cout << "PORTS SIZE: " << ports.size() << std::endl;
+	std::sort(ports.begin(), ports.end());
+	ports.erase(std::unique(ports.begin(), ports.end()), ports.end());
 	return ports;
 }
 
