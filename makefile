@@ -66,16 +66,14 @@ SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
 OBJS			=		$(SRCS:.cpp=.o)
 
-DEBUG			=		-g -fsanitize=address
-
 FLAGS			=		-Werror -Wall -Wextra
 
 # Here we define how every single file is being compiled.
 # With MAKECMDGOALS we detect if we are running a debug build and then inject the defines.
 ifeq ($(MAKECMDGOALS),rebug)
-    FLAGS += -std=c++98 -D DEBUGMODE=1 -g -fsanitize=address -D ENABLE_LOGGING=1 -fno-omit-frame-pointer -Wall -Wextra -Werror
+    FLAGS += -std=c++98 -D DEBUGMODE=1 -g -D ENABLE_LOGGING=1 -Wall -Wextra -Werror
 else ifeq ($(MAKECMDGOALS),debug)
-    FLAGS += -std=c++98 -D DEBUGMODE=1 -g -fsanitize=address -D ENABLE_LOGGING=1 -fno-omit-frame-pointer -Wall -Wextra -Werror
+    FLAGS += -std=c++98 -D DEBUGMODE=1 -g -D ENABLE_LOGGING=1 -Wall -Wextra -Werror
 else
     FLAGS += -std=c++98 -D DEBUGMODE=0 -D ENABLE_LOGGING=0 -Wall -Wextra -Werror
 endif
