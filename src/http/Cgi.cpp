@@ -203,7 +203,7 @@ void	CGI::execute_cgi(void)
 			dup2(fileno(_tmpout), STDOUT_FILENO) < 0)
 		{
 			debugger.error("Failed to dup2 the CGI.");
-			std::exit(errno); // exit the child
+			std::exit(1); // exit the child
 		}
 		_envp = map_to_array(_env);
 		_query_parameters.insert(_query_parameters.begin(), split_once_on_delimiter(_path, '?')[0].c_str());
@@ -213,7 +213,7 @@ void	CGI::execute_cgi(void)
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
 		close(_fd_in);
 		close(_fd_out);
-		std::exit(errno); // exit the child
+		std::exit(1); // exit the child
 	}
 	else // parent
 		return wait_for_child(pid);
