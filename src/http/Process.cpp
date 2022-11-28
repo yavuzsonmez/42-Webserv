@@ -303,7 +303,7 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		{
 			// the request is a static file
 			try {
-				_response.set_body(get_file_content_cached(path));
+				_response.set_body(get_file_content_for_request(path));
 			} catch (int e) {
 				throw (404);
 			}
