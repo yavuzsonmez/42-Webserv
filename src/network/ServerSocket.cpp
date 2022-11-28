@@ -16,9 +16,7 @@ ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile
 	std::vector<struct sockaddr_in>::iterator	so;
 	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(configFile.serverBlocks);
 	listeningSockets = allPorts.size();
-	std::cout << "listeningSockets: " << listeningSockets << std::endl;
 	_sockets.resize(listeningSockets);
-	std::cout << "RESIZE OK" << std::endl;
 	int	i = 0;
 	for (so = _sockets.begin(); so != _sockets.end(); so++, i++) //configure the sockets
 	{
