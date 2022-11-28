@@ -9,20 +9,20 @@ Process::Process()
 Process::Process(Request request, ServerBlock config) : _request(request), _config(config)
 {
 	_with_cgi = false;
-	_cgi = _config.getCgiPath();
+	_cgi_path = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
 }
 
 Process::~Process(void)
 {
-
+	USE_DEBUGGER;
 }
 
 Process & Process::operator = (const Process &src)
 {
 	_request = src._request;
 	_config = src._config;
-	_cgi = src._cgi;
+	_cgi_path = src._cgi_path;
 	_cgi_fileending = src._cgi_fileending;
 	_with_cgi = src._with_cgi;
 	return *this;
@@ -294,8 +294,8 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 		{
 			_with_cgi = true;
-			_cgi = _config.getCgiPath();
-			_CGI = CGI(_request, _config, path, _cgi); // activates the cgi
+			_cgi_path = _config.getCgiPath();
+			_CGI = CGI(_request, _config, path, _cgi_path); // activates the cgi
 			_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 			return ;
 		}
@@ -390,7 +390,7 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 		if (!(*it).value.compare(location))
 		{
 			if (!(*it).cgi_path.empty())
-				_cgi = (*it).cgi_path; 
+				_cgi_path = (*it).cgi_path; 
 			if (!(*it).cgi_fileending.empty())
 				_cgi_fileending = (*it).cgi_fileending;
 			if (!(*it).redirection.empty())
