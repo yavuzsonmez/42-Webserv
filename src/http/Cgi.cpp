@@ -4,7 +4,6 @@
 
 CGI::CGI()
 {
-	
 }
 
 /**
@@ -53,7 +52,6 @@ CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_
 		std::string	query = _request.getQuery().first; //Get query string
 		_query_parameters = split_on_delimiter(query, '&');  //Split query string on '&' to get the parameters of the GET request
 	}
-	set_environment();
 }
 
 CGI::~CGI()

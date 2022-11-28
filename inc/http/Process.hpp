@@ -43,7 +43,7 @@ class Process
 	//Response	_response;
 	Request		_request;
 	ServerBlock	_config;
-	std::string	_cgi;
+	std::string	_cgi_path;
 	std::string	_cgi_fileending;
 	std::string	_redirection;
 	std::vector<method>	_methods;
