@@ -168,17 +168,19 @@ void ServerSocket::processConnections()
 	USE_DEBUGGER;
 	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(_configFile.serverBlocks);
 
-	std::vector<pollfd> pollfds;
-	pollfds.resize(allPorts.size()); //create a vector of pollfds struct, same length as the number of listening sockets
+	// std::vector<pollfd> pollfds;
+	// std::vector<pollfd> pollfds = new std::vector<pollfd>;
+	std::vector<pollfd> *pollfds = new std::vector<pollfd>;
+	(*pollfds).resize(allPorts.size()); //create a vector of pollfds struct, same length as the number of listening sockets
 	std::vector<int>::iterator	it = _fds.begin();
 	std::vector<int>::iterator	ite = _fds.end();
 
 	//setup the expected event for the listening sockets to "read"
 	for (unsigned int i = 0; it != ite; ++it, ++i)
 	{
-		pollfds[i].fd = *it;
-		pollfds[i].events = POLLIN;
-		pollfds[i].revents = 0;
+		(*pollfds)[i].fd = *it;
+		(*pollfds)[i].events = POLLIN;
+		(*pollfds)[i].revents = 0;
 	}
 	
 	// TODO:
@@ -186,19 +188,19 @@ void ServerSocket::processConnections()
 	// See, when the response is actually being sent
 	// Main routine. This will be called the whole time the server runs
 	while (1) {
-		if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) // Here we wait for poll information.
+		if (poll((struct pollfd *)((*pollfds).data()), (*pollfds).size(), -1) < 1) // Here we wait for poll information.
 		{
 			std::cout << "An error occured when polling.";
 		}
-		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire area of sockets
+		for (unsigned long i = 0; i < (*pollfds).size(); ++i) //iterate through the entire area of sockets
 		{
 			/**
 			 * Listen to the listening sockets for new connections (ports)
 			 */
 			if (i < listeningSockets)
 			{
-				if (pollfds[i].revents == POLLIN)
-					if (!acceptNewConnectionsIfAvailable(pollfds, i))
+				if ((*pollfds)[i].revents == POLLIN)
+					if (!acceptNewConnectionsIfAvailable((*pollfds), i))
 						continue;
 			}
 			/**
@@ -207,48 +209,48 @@ void ServerSocket::processConnections()
 			else //area of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
 			{
 				client_iter	pos;
-				pos = get_CS_position(_clients, pollfds[i].fd); //retrieve the right client
-				if (pollfds[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
+				pos = get_CS_position(_clients, (*pollfds)[i].fd); //retrieve the right client
+				if ((*pollfds)[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second.Timeout()) //if the client timeouts, remove it from the list.
 					{
 						debugger.verbose("Client timed out.");
-						disconnectClient(pollfds, i);
+						disconnectClient((*pollfds), i);
 						continue;
 					}
 					if ((*pos).second._remove) // If a client asks to be removed, remove it from the list
 					{
 						debugger.error("Client asked to be removed. 1");
-						disconnectClient(pollfds, i);
+						disconnectClient((*pollfds), i);
 						continue;
 					}
 					else
 					{
-						pollfds[i].events = (*pos).second._event;
-						pollfds[i].fd = (*pos).second._fd;
+						(*pollfds)[i].events = (*pos).second._event;
+						(*pollfds)[i].fd = (*pos).second._fd;
 						(*pos).first = (*pos).second._fd;
 					}
 				}
-			 	else if (pollfds[i].revents == 	POLLOUT)
+			 	else if ((*pollfds)[i].revents == 	POLLOUT)
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second._remove) // The client asks to be removed
 					{
 						debugger.verbose("Client asked to be removed. 2");
-						disconnectClient(pollfds, i);
+						disconnectClient((*pollfds), i);
 						continue;
 					}
 					else
 					{
-						pollfds[i].events = (*pos).second._event;
-						pollfds[i].fd = (*pos).second._fd;
+						(*pollfds)[i].events = (*pos).second._event;
+						(*pollfds)[i].fd = (*pos).second._fd;
 						(*pos).first = (*pos).second._fd;
 					}
 				}
 				else
 				{
-					checkIfConnectionIsBroken(pollfds, i);
+					checkIfConnectionIsBroken((*pollfds), i);
 					continue;
 				}
 			}

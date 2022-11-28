@@ -47,7 +47,6 @@ int main(int argc, char **argv)
 
 	try {
 		ServerSocket server(configurationFileParsing->serverBlocks[0], *configurationFileParsing, INADDR_ANY);
-
 	} catch (int e) {
 		// print exception information
 		std::cout << "Something went wrong with error code " << e << std::endl;
