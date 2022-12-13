@@ -14,6 +14,7 @@ ServerBlock::ServerBlock()
 ServerBlock::ServerBlock( const ServerBlock &src )
 {
 	this->configurationKeys = src.configurationKeys;
+	this->serverIndex = src.serverIndex;
 }
 
 ServerBlock::~ServerBlock()
@@ -23,6 +24,7 @@ ServerBlock::~ServerBlock()
 
 ServerBlock & ServerBlock::operator = (const ServerBlock &src) {
 	configurationKeys = src.configurationKeys;
+	serverIndex = src.serverIndex;
 	return (*this);
 }
 
@@ -87,7 +89,8 @@ std::string ServerBlock::getCgiFileEnding() {
  * - adds the member of the vector ports of the configuration key
  * 	 to the result ports of getAllServerPorts
  */
-std::vector<unsigned int> ServerBlock::getAllServerPorts() {
+std::vector<unsigned int> ServerBlock::getAllServerPorts()
+{
 
 	std::vector<ConfigurationKey>::iterator i = this->configurationKeys.begin();
 	std::vector<unsigned int> ports;
@@ -150,31 +153,31 @@ std::string ServerBlock::getFallbackErrorPageForCode(int statuscode)
 	switch (statuscode)
 	{
 		case 404:
-			return "default_pages/404_default.html";
+			return "resources/default_pages/404_default.html";
 			break;
 		case 405:
-			return "default_pages/405_default.html";
+			return "resources/default_pages/405_default.html";
 			break;
 		case 500:
-			return "default_pages/500_default.html";
+			return "resources/default_pages/500_default.html";
 			break;
 		case 501:
-			return "default_pages/501_default.html";
+			return "resources/default_pages/501_default.html";
 			break;
 		case 502:
-			return "default_pages/502_default.html";
+			return "resources/default_pages/502_default.html";
 			break;
 		case 504:
-			return "default_pages/504_default.html";
+			return "resources/default_pages/504_default.html";
 			break;
 		case 503:
-			return "default_pages/503_default.html";
+			return "resources/default_pages/503_default.html";
 			break;
 		case 413:
-			return "default_pages/413_default.html";
+			return "resources/default_pages/413_default.html";
 			break;
 		default:
-			return "default_pages/500_default.html";
+			return "resources/default_pages/500_default.html";
 			break;
 	}
 }

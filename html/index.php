@@ -1,3 +1,4 @@
+<b>INDEX PHP IN HTML</b>
 <?php
 
 foreach (getallheaders() as $name => $value) {
@@ -5,3 +6,4 @@ foreach (getallheaders() as $name => $value) {
 }
 
 ?>
+<b>INDEX PHP IN HTML</b>

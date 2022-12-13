@@ -24,6 +24,8 @@ ConfigFileParsing::~ConfigFileParsing()
 
 ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src) {
 	(void) src;
+	serverBlocks = src.serverBlocks;
+	isCurrentlyInLocationBlock = src.isCurrentlyInLocationBlock;
 	return (*this);
 }
 
@@ -32,21 +34,15 @@ ConfigFileParsing & ConfigFileParsing::operator = (const ConfigFileParsing &src)
  * * - checking double ports on all server blocks
  * - checking double server names on all server blocks
  * - checking double location paths for each server block
- * - checking double ports on all server blocks
  * - checking double post max body size for each server block
  * @return true 
  * @return false 
  */
 bool ConfigFileParsing::validationDuplicationCheck() {
 	USE_DEBUGGER;
-	std::vector<unsigned int> allServerPorts = getAllServerPortsFromAllServerBlocks(this->serverBlocks);
 	std::vector<std::string> allServerNames = getAllServerNamesFromAllServerBlocks(this->serverBlocks); 
 	if (checksIfAnyServerBlockHasDoubleErrorPages(this->serverBlocks)) {
 		debugger.error("Error: Double error pages found in configuration file.");
-		throw InvalidConfigurationFile();
-	}
-	if (vector_has_duplicate_element(allServerPorts)) {
-		debugger.error("Configuration file has duplicate ports.");
 		throw InvalidConfigurationFile();
 	}
 	if (vector_has_duplicate_element(allServerNames)) {
@@ -61,13 +57,14 @@ bool ConfigFileParsing::validationDuplicationCheck() {
 }
 
 /**
- * GENERAL VALIDATION FUNCITON
+ * GENERAL VALIDATION FUNCTION
  * 
  * @brief To be run after parsing. Checks if the configuration file is valid. (e.g. no double ports, no double server names)
  * - runs validationDuplicationCheck(), checking for logic duplicates
  * - checks that there is a root available in each server block
  * - checks that there is a server name available in each server block
  * - checks that for every location cgi there is a file ending available
+ * - checks that no locations are double defined in a server block
  * @return true 
  * @return false 
  */
@@ -97,8 +94,8 @@ bool ConfigFileParsing::validateConfiguration() {
 		debugger.error("Configuration file has no cgi_fileending defined in one or more location blocks.");
 		throw InvalidConfigurationFile();
 	}
-	if (!keyExistsInEachLocationBlock(serverBlocks, ROOT)) {
-		debugger.error("At least one location block does not contain a ROOT option. This is required.");
+	if (!keyExistsOrAlternativeInEachLocationBlock(serverBlocks, ROOT, REDIRECTION)) {
+		debugger.error("At least one location block does not contain a ROOT or alternative REDIRECTION option. This is required.");
 		throw InvalidConfigurationFile();
 	}
 
@@ -227,6 +224,8 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 		currentServerIndex++;
 		this->server_bracket_counter++;
 		serverBlocks.push_back(ServerBlock());
+		serverBlocks[currentServerIndex].serverIndex = (currentServerIndex + 1);
+		std::cout << "Server " << serverBlocks[currentServerIndex].serverIndex << " created" << std::endl;
 		this->isCurrentlyInServerBlock = true;
 	}
 	else
@@ -342,4 +341,91 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 			}
 		}
 	}
+}
+
+/**
+ * @brief Get all the server ports from all the server blocks but only if the server port is not already in the vector
+ * @return std::vector<unsigned int> 
+ */
+std::vector<unsigned int> ConfigFileParsing::getAllServerPortsFromAllBlocks() {
+	std::vector<unsigned int> ports = std::vector<unsigned int>();
+	std::vector<ServerBlock>::iterator i = this->serverBlocks.begin();
+	for (this->serverBlocks.begin(), this->serverBlocks.begin(); i != this->serverBlocks.end(); ++i) {
+		std::cout << "SERVER PORT SIZE GIVEN: " << i->getAllServerPorts().size() << std::endl;
+		ports.insert(ports.end(), i->getAllServerPorts().begin(), i->getAllServerPorts().end());
+	}
+	std::sort(ports.begin(), ports.end());
+	ports.erase(std::unique(ports.begin(), ports.end()), ports.end());
+	return ports;
+}
+
+/**
+ * @brief Get the Server Block with a requested server name and a requested server port
+ * 
+ * @param server_name 
+ * @param port 
+ * @return ServerBlock 
+ */
+ServerBlock ConfigFileParsing::getServerBlockWithServerNameAndServerPort(std::string server_name, unsigned int port)
+{
+	USE_DEBUGGER;
+	std::vector<ServerBlock> validServerBlocksWithGivenPorts = getServerBlocksWithPort(port); // get all server blocks with the given port
+	ServerBlock validServerBlockWithGivenServerName = getServerBlockForServerName(server_name); // get the server block with the given server name
+	// check if validServerBlockWithGivenServerName is contained in validServerBlocksWithGivenPorts
+	for (int i = 0; i < (int) validServerBlocksWithGivenPorts.size(); i++) {
+		if (validServerBlocksWithGivenPorts[i].serverIndex == validServerBlockWithGivenServerName.serverIndex) {
+			return validServerBlockWithGivenServerName;
+		}
+	}
+	// if not found, means we need to fallbakc to the default server block or just return an error 404
+	debugger.error("No server block found with server name " + server_name + " and port " + to_string(port));
+	return this->serverBlocks[0]; // here we should return the default server, currently we just return the first server block
+}
+
+/**
+ * @brief Gets a server block which has the server name given
+ * @throws 404 when no server block is found
+ * 
+ * @param server_name 
+ * @return ServerBlock which the given name or the first server block when the server name is localhost or 127.0.0.1
+ */
+ServerBlock ConfigFileParsing::getServerBlockForServerName( std::string server_name ) {
+	std::vector<ServerBlock>::iterator i = this->serverBlocks.begin();
+	for (this->serverBlocks.begin(), this->serverBlocks.begin(); i != this->serverBlocks.end(); ++i) {
+		std::vector<std::string> server_names = i->getAllServerNames();
+		std::vector<std::string>::iterator j = server_names.begin();
+		for (server_names.begin(), server_names.begin(); j != server_names.end(); ++j) {
+			if (*j == server_name) {
+				return *i;
+			}
+		}
+	}
+	if (server_name == "127.0.0.1") {
+		return this->serverBlocks[0];
+	}
+	if (server_name == "localhost") {
+		return this->serverBlocks[0];
+	}
+	return this->serverBlocks[0];
+}
+
+/**
+ * @brief Returns all the server blocks which contain the given port
+ * @param port 
+ * @return std::vector<ServerBlock> 
+ */
+std::vector<ServerBlock> ConfigFileParsing::getServerBlocksWithPort( unsigned int port )
+{
+	std::vector<ServerBlock> serverBlocks = std::vector<ServerBlock>();
+	std::vector<ServerBlock>::iterator i = this->serverBlocks.begin();
+	for (this->serverBlocks.begin(), this->serverBlocks.begin(); i != this->serverBlocks.end(); ++i) {
+		std::vector<unsigned int> server_ports = i->getAllServerPorts();
+		std::vector<unsigned int>::iterator j = server_ports.begin();
+		for (server_ports.begin(), server_ports.begin(); j != server_ports.end(); ++j) {
+			if (*j == port) {
+				serverBlocks.push_back(*i);
+			}
+		}
+	}
+	return serverBlocks;
 }

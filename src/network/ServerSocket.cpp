@@ -7,22 +7,25 @@
 
 /**
  * @brief Setup, bind and put the sockets in listening mode. (Ports of one server Block)
- * @param config, parsed server config file.
+ * @param serverBlock, parsed server config file.
  * @param address, network interface where to listen.
+ * @param configFile the configuration File
  */
-ServerSocket::ServerSocket(ServerBlock config, unsigned int address) : _config(config)
+ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address): _serverBlock(serverBlock), _configFile(configFile)
 {
 	std::vector<struct sockaddr_in>::iterator	so;
-	listeningSockets = _config.getAllServerPorts().size();
+	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(configFile.serverBlocks);
+	listeningSockets = allPorts.size();
 	_sockets.resize(listeningSockets);
 	int	i = 0;
 	for (so = _sockets.begin(); so != _sockets.end(); so++, i++) //configure the sockets
 	{
 		(*so).sin_family = AF_INET;
-		(*so).sin_port = htons(_config.getAllServerPorts()[i]);
+		(*so).sin_port = htons(allPorts[i]);
 		(*so).sin_addr.s_addr = address;
 		bzero(&((*so).sin_zero), 8);
 	}
+	std::cout << "STILL OK" << std::endl;
 	const int	enable = 1;
 	_fds.resize(_sockets.size());
 	std::vector<int>::iterator	fd;
@@ -134,7 +137,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	};
 	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
 		debugger.debug( to_string(_clients.size()) + " / 10Maximum number of clients reached. Declining connection.");
-		int result = send_server_unavailable(forward, _config);
+		int result = send_server_unavailable(forward, _serverBlock);
 		if (result == -1) {
 			debugger.verbose("Error while sending 503 to client. Closing connection.");
 			close(forward);
@@ -149,7 +152,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	tmp.events = POLLIN;
 	tmp.revents = 0;
 	pollfds.push_back(tmp); //add the new fd/socket to the set, considered as "client"
-	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _config, forward))); //Link the forwarded fd to a new client
+	_clients.push_back(std::pair<int, ClientSocket>(forward, ClientSocket(clientSocket, _serverBlock, forward, _configFile))); //Link the forwarded fd to a new client
 	return true;
 }
 
@@ -157,21 +160,27 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 /**
  * @brief Handles connections by using POLL
  * and checking if the fds are rdy for I/O operations
+ * - first prepares the socket port listeners for polling
+ *  - then await new clients on the ports and accepts them
  */
 void ServerSocket::processConnections()
 {
 	USE_DEBUGGER;
-	std::vector<pollfd> pollfds;
-	pollfds.resize(_config.getAllServerPorts().size()); //create a vector of pollfds struct, same length as the number of listening sockets
+	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(_configFile.serverBlocks);
+
+	// std::vector<pollfd> pollfds;
+	// std::vector<pollfd> pollfds = new std::vector<pollfd>;
+	std::vector<pollfd> *pollfds = new std::vector<pollfd>;
+	(*pollfds).resize(allPorts.size()); //create a vector of pollfds struct, same length as the number of listening sockets
 	std::vector<int>::iterator	it = _fds.begin();
 	std::vector<int>::iterator	ite = _fds.end();
 
 	//setup the expected event for the listening sockets to "read"
 	for (unsigned int i = 0; it != ite; ++it, ++i)
 	{
-		pollfds[i].fd = *it;
-		pollfds[i].events = POLLIN;
-		pollfds[i].revents = 0;
+		(*pollfds)[i].fd = *it;
+		(*pollfds)[i].events = POLLIN;
+		(*pollfds)[i].revents = 0;
 	}
 	
 	// TODO:
@@ -179,19 +188,19 @@ void ServerSocket::processConnections()
 	// See, when the response is actually being sent
 	// Main routine. This will be called the whole time the server runs
 	while (1) {
-		if (poll((struct pollfd *)(pollfds.data()), pollfds.size(), -1) < 1) // Here we wait for poll information.
+		if (poll((struct pollfd *)((*pollfds).data()), (*pollfds).size(), -1) < 1) // Here we wait for poll information.
 		{
 			std::cout << "An error occured when polling.";
 		}
-		for (unsigned long i = 0; i < pollfds.size(); ++i) //iterate through the entire area of sockets
+		for (unsigned long i = 0; i < (*pollfds).size(); ++i) //iterate through the entire area of sockets
 		{
 			/**
 			 * Listen to the listening sockets for new connections (ports)
 			 */
 			if (i < listeningSockets)
 			{
-				if (pollfds[i].revents == POLLIN)
-					if (!acceptNewConnectionsIfAvailable(pollfds, i))
+				if ((*pollfds)[i].revents == POLLIN)
+					if (!acceptNewConnectionsIfAvailable((*pollfds), i))
 						continue;
 			}
 			/**
@@ -200,48 +209,48 @@ void ServerSocket::processConnections()
 			else //area of ClientSocket, sockets that are the result of a forwarded fd (accepted connection), and that we consider as client.
 			{
 				client_iter	pos;
-				pos = get_CS_position(_clients, pollfds[i].fd); //retrieve the right client
-				if (pollfds[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
+				pos = get_CS_position(_clients, (*pollfds)[i].fd); //retrieve the right client
+				if ((*pollfds)[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second.Timeout()) //if the client timeouts, remove it from the list.
 					{
 						debugger.verbose("Client timed out.");
-						disconnectClient(pollfds, i);
+						disconnectClient((*pollfds), i);
 						continue;
 					}
 					if ((*pos).second._remove) // If a client asks to be removed, remove it from the list
 					{
 						debugger.error("Client asked to be removed. 1");
-						disconnectClient(pollfds, i);
+						disconnectClient((*pollfds), i);
 						continue;
 					}
 					else
 					{
-						pollfds[i].events = (*pos).second._event;
-						pollfds[i].fd = (*pos).second._fd;
+						(*pollfds)[i].events = (*pos).second._event;
+						(*pollfds)[i].fd = (*pos).second._fd;
 						(*pos).first = (*pos).second._fd;
 					}
 				}
-			 	else if (pollfds[i].revents == 	POLLOUT)
+			 	else if ((*pollfds)[i].revents == 	POLLOUT)
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second._remove) // The client asks to be removed
 					{
 						debugger.verbose("Client asked to be removed. 2");
-						disconnectClient(pollfds, i);
+						disconnectClient((*pollfds), i);
 						continue;
 					}
 					else
 					{
-						pollfds[i].events = (*pos).second._event;
-						pollfds[i].fd = (*pos).second._fd;
+						(*pollfds)[i].events = (*pos).second._event;
+						(*pollfds)[i].fd = (*pos).second._fd;
 						(*pos).first = (*pos).second._fd;
 					}
 				}
 				else
 				{
-					checkIfConnectionIsBroken(pollfds, i);
+					checkIfConnectionIsBroken((*pollfds), i);
 					continue;
 				}
 			}

@@ -4,7 +4,6 @@
 
 CGI::CGI()
 {
-	
 }
 
 /**
@@ -16,7 +15,7 @@ void CGI::set_environment()
 	_env["SERVER_SOFTWARE"] = "webserv/1.0";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
 	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";										//The revision of the CGI specification to which this server complies. Format: CGI/revision
-	_env["SERVER_PROTOCOL"] = _request.getProtocol().first;							//The name and revision of the information protcol this request came in with. Format: protocol/revision
+	_env["SERVER_PROTOCOL"] = "HTTP/1.1";							//The name and revision of the information protcol this request came in with. Format: protocol/revision
 	_env["SERVER_PORT"] = to_str(_request.getPort().first);									//The port number to which the request was sent.
 	_env["REQUEST_METHOD"] = _request.getMethodasString();							//The method with which the request was made. For HTTP, this is "GET", "HEAD", "POST", etc.
 	_env["PATH_INFO"] =  get_abs_path(_path);														//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
@@ -30,8 +29,10 @@ void CGI::set_environment()
 	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only. 
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
-	_env["REDIRECT_STATUS"] = "500";
+	_env["HOST"] = _request.findHeader("Host");					//The length of the said content as given by the client.
+	_env["REDIRECT_STATUS"] = "500";							//If the server supports redirection, this variable should be set to the status code of the redirection.
 	_env["BODY"] = _request.getBody().first;
+	_env["REQUEST_URI"] = _request.getPath().first;
 }
 
 /**
@@ -65,6 +66,8 @@ CGI & CGI::operator=(const CGI &src)
 	_config = src._config;
 	_path = src._path;
 	_cgi_path = src._cgi_path;
+	_env = src._env;
+	_query_parameters = src._query_parameters;
 	return *this;
 }
 
@@ -159,8 +162,6 @@ void CGI::wait_for_child(pid_t worker_pid)
 				debugger.error("[FINISHED] sometimes happens cgi execution");
 				return ; // we're done
 			}
-			if (ENABLE_LOGGING)
-				std::cerr << strerror(errno) << std::endl;
 			debugger.error("Worker did not exit normally."); // this is being called if the worker timed out
 			//throw(502); // else we throw a 500 error
 			return ; 
@@ -200,7 +201,7 @@ void	CGI::execute_cgi(void)
 			dup2(fileno(_tmpout), STDOUT_FILENO) < 0)
 		{
 			debugger.error("Failed to dup2 the CGI.");
-			std::exit(errno); // exit the child
+			std::exit(1); // exit the child
 		}
 		_envp = map_to_array(_env);
 		_query_parameters.insert(_query_parameters.begin(), split_once_on_delimiter(_path, '?')[0].c_str());
@@ -210,7 +211,7 @@ void	CGI::execute_cgi(void)
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
 		close(_fd_in);
 		close(_fd_out);
-		std::exit(errno); // exit the child
+		std::exit(1); // exit the child
 	}
 	else // parent
 		return wait_for_child(pid);

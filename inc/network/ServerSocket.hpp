@@ -7,9 +7,9 @@
 #include "../configuration_key/ServerBlock.hpp"
 #include "./ClientSocket.hpp"
 
-#define BACKLOG 10 // maximum number of allowed incoming connection in the queue until being accept()
+#define BACKLOG 25 // maximum number of allowed incoming connection in the queue until being accept()
 
-#define MAXIMUM_CONNECTED_CLIENTS 10 // maximum number of connected clients
+#define MAXIMUM_CONNECTED_CLIENTS 100 // maximum number of connected clients
 
 /**
  * @brief Server Socket listening for requests
@@ -21,7 +21,7 @@ class ServerSocket
 
 	public:
 
-		ServerSocket(ServerBlock config, unsigned int address);
+		ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address);
 
 		//ServerSocket( const ServerSocket &src );
 		virtual ~ServerSocket();
@@ -51,7 +51,8 @@ class ServerSocket
 		void checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i);
 		void socketFailed(std::vector<pollfd> &pollfds, int i);
 		std::vector<std::pair<int, ClientSocket> >	_clients;
-		ServerBlock	_config;
+		ServerBlock	_serverBlock;
+		ConfigFileParsing _configFile;
 		unsigned int listeningSockets;
 };
 
