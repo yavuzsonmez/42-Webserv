@@ -245,7 +245,7 @@ bool ConfigurationKey::validateCgiFileEnding(std::string to_validate)
  * @brief Validates Post Max Size.
  * - has to have an M at the end
  * - otherwise only can contain numbers
- * 
+ * - only accepts values between 1 and 1000, otherwise it is too big or too small and will be rejected
  * @param raw 
  * @return true 
  * @return false 
@@ -266,6 +266,16 @@ bool ConfigurationKey::validatePostMaxSize(std::string to_validate)
 	if (!isnumberstring(to_validate.substr(0, to_validate.length() - 1)))
 	{
 		throwInvalidConfigurationFileExceptionWithMessage("Invalid post max size. Only numbers allowed.");
+		return false;
+	}
+	if (stoi_replacement(to_validate.substr(0, to_validate.length() - 1)) <= 0)
+	{
+		throwInvalidConfigurationFileExceptionWithMessage("Number needs to be bigger than 0.");
+		return false;
+	}
+	if (stoi_replacement(to_validate.substr(0, to_validate.length() - 1)) > 1000)
+	{
+		throwInvalidConfigurationFileExceptionWithMessage("Number needs to be smaller than 1000M.");
 		return false;
 	}
 	return true;
@@ -290,7 +300,7 @@ bool ConfigurationKey::isPostMaxSizeType(internal_keyvalue raw)
 			return false;
 		}
 		std::string value = raw.second.substr(0, raw.second.length() - 1);
-		this->post_max_size = stoi(value);
+		this->post_max_size = stoi_replacement(value);
 		return true;
 	}
 	return false;
@@ -396,6 +406,7 @@ ConfigurationKeyType ConfigurationKey::detectConfigurationType(internal_keyvalue
  * - isCurrentlyParsingLocationBlock
  * - Will check if the last character in location is a opening bracket
  * - Will remove the last character from location if it is a opening bracket to enable parsing of the location path
+ * - Always adds a / at the end of the location path if there is no / present
  */
 bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 	if (raw.first == "location" && !raw.second.empty()) {
@@ -405,6 +416,16 @@ bool ConfigurationKey::isLocationKeyType(internal_keyvalue &raw) {
 		}
 		raw.second.erase(raw.second.length() - 1); // delete the last character
 		raw.second = trim_whitespaces(raw.second);
+		// check if a slash is the last character. If not, add one
+		if (raw.second[raw.second.length() - 1] != '/') {
+			raw.second += "/";
+		}
+		// check there are no forbidden characters in the location path
+		if (raw.second.find_first_of(" ") != std::string::npos) {
+			throwInvalidConfigurationFileExceptionWithMessage("Location path cannot contain spaces!");
+		}
+		// remove any double slashes in the location path
+		removeDoubleSlashesInUrl(raw.second);
 		return true;
 	}
 	return false;

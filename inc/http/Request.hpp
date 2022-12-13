@@ -38,6 +38,7 @@ class Request
 
 		Request();
 		Request( const Request &src );
+		Request &operator=( const Request &rhs );
 		~Request();
 
 		i_flag				getMethod(void) const;
@@ -51,7 +52,8 @@ class Request
 		str_flag			getHttpversion(void) const;
 		headr_dirctiv		getHeaders(void) const;
 		std::string			getMethodasString();
-		std::string	findHeader(std::string key) const;
+		std::string			getHost();
+		std::string			findHeader(std::string key) const;
 		str_flag			getBody(void) const;
 		//std::string			getStatus(void) const;
 
@@ -70,6 +72,7 @@ class Request
 				void			checkHeader(str_flag &hdr, str_flag &direct);
 			void				setBody(std::string &req);
 
+		bool hasNestedRequestPath; // flag if the request path is nested
 	private:
 
 		i_flag				_method;

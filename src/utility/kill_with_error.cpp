@@ -15,7 +15,6 @@ int kill_with_error(int pid)
 	if (ret == -1)
 	{
 		debugger.error("kill_with_error() failed");
-		debugger.error("kill() failed" + std::string(strerror(errno)));
 		return -1;
 	}
 	return ret;

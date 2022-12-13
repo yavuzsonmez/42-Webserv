@@ -9,21 +9,22 @@ Process::Process()
 Process::Process(Request request, ServerBlock config) : _request(request), _config(config)
 {
 	_with_cgi = false;
-	_cgi = _config.getCgiPath();
+	_cgi_path = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
 }
 
 Process::~Process(void)
 {
-
+	USE_DEBUGGER;
 }
 
 Process & Process::operator = (const Process &src)
 {
 	_request = src._request;
 	_config = src._config;
-	_cgi = src._cgi;
+	_cgi_path = src._cgi_path;
 	_cgi_fileending = src._cgi_fileending;
+	_with_cgi = src._with_cgi;
 	return *this;
 }
 
@@ -55,12 +56,43 @@ void	Process::process_request(void)
 }
 
 /**
+ * @brief Gets the path for a script or index file in a directory, but also checks if the request is a directory and handles it accordingly.
+ * @return std::string 
+ */
+std::string Process::getPathForNestedLocation()
+{
+	USE_DEBUGGER;
+	if (!_request.hasNestedRequestPath) { // if the path is not nested
+		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root  + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
+		} else { // there is a script file available like /echo.php
+			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
+		}
+	} else { // we do not provide the index files for a nested path
+		// here we build the nested path for the location. this needs to be put in a seperate function later for sure...
+		// we use get_location to get the correct root path
+		std::string primaryLocation = get_first_location_in_path(_request.getPath().first); // where the nested folder is
+			// we need to add a slash to the location to get the correct root path and a slash after to match the location of the configuration file
+			// TODO Generate the full path for the nested path
+		std::string root = get_location(primaryLocation.insert(0, "/") + "/", ROOT);
+		// now append the rest of the path to the newly gained root path
+		std::string path = root +  "/" + _request.getPath().first.substr(primaryLocation.length());
+		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php. Return the index file for the location of the nested path
+			return path + "/" + get_location(primaryLocation + "/", INDEX);
+		} else { // there is a script file available like /echo.php
+			return path + "/" + _request.getScript().first;
+		}
+	}
+}
+
+/**
  * @brief Returns the path with the index file defined in the configuration.
  * Will check every index file if available and accessible and chooses the first one that is accessible
  * @returns std::string path
  */
 std::string Process::build_path_with_index__or_script_file()
 {
+	USE_DEBUGGER;
 	if (_request.getPath().first == "/") { // the path is on the top level and not in any subdirectory
 		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
 			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
@@ -68,11 +100,8 @@ std::string Process::build_path_with_index__or_script_file()
 			return _config.getConfigurationKeysWithType(ROOT).front().root + "/" + _request.getScript().first;
 		}
 	} else {
-		if (_request.getScript().first.empty()) { // there is no additional script like /echo.php
-			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _config.getConfigurationKeysWithType(INDEX).front().indexes.front();
-		} else { // there is a script file available like /echo.php
-			return _config.getConfigurationKeysWithType(ROOT).front().root + _request.getPath().first + "/" + _request.getScript().first;
-		}
+		// if it is not a nested path, we can just add the index file to the path or the script file
+		return getPathForNestedLocation();
 	}
 }
 
@@ -84,7 +113,7 @@ std::string Process::build_path_with_index__or_script_file()
 bool Process::check_if_request_is_too_large()
 {
 	if (_config.getConfigurationKeysWithType(POST_MAX_SIZE).size() > 0) {
-		if ((long) _request.getBody().first.size() > (_config.getConfigurationKeysWithType(POST_MAX_SIZE).front().post_max_size * 1000))
+		if ((long) _request.getBody().first.size() > (_config.getConfigurationKeysWithType(POST_MAX_SIZE).front().post_max_size * 1000000))
 		{
 			std::cout << "Request too big" << std::endl;
 			exception(413);
@@ -106,9 +135,10 @@ void	Process::handle_request(void)
 	USE_DEBUGGER;
 	std::string	path;
 
+	// check if request is too large
 	if (check_if_request_is_too_large() == false)
 		return exception(413);
-
+	
 	// first we check if the request is too big
 	if (_request.getPath().first == "/") // if the script is the root path
 	{
@@ -126,9 +156,10 @@ void	Process::handle_request(void)
 	{
 		if (_request.getScript().first.empty()) // if no script is given
 		{
-			// if no script is given we check if we can return the directory listing
 			if (get_location_dl(_request.getPath().first.insert(0, "/")) && get_location(_request.getPath().first.insert(0, "/"), INDEX).empty())
 			{
+				if (find_vector(_methods, _request.getMethod().first) == -1)
+					throw (405);
 				try {
 					build_dl_response();}
 				catch (int e){
@@ -140,11 +171,8 @@ void	Process::handle_request(void)
 			else // if not, we try to return the index file
 			{
 				path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + get_location(_request.getPath().first.insert(0, "/"), INDEX);
-				if (find_vector(_methods, _request.getMethod().first) == -1) // the method is not allowed
-				{
-					debugger.error("Method not allowed!");
-					throw(405);
-				}
+				if (find_vector(_methods, _request.getMethod().first) == -1)
+					throw (405);
 				try {
 					build_response(path, "200", "OK");}
 				catch (int e){
@@ -158,7 +186,7 @@ void	Process::handle_request(void)
 		{
 			path = get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/" + _request.getScript().first;
 			if (find_vector(_methods, _request.getMethod().first) == -1)
-				throw (404);
+				throw (405);
 			if (is_file_accessible(path))
 			{
 				try {
@@ -177,7 +205,18 @@ void	Process::handle_request(void)
 	}
 	else
 	{
-		throw(404);
+		// nested directory
+		path = build_path_with_index__or_script_file();
+		removeDoubleSlashesInUrl(path);
+		//if (find_vector(_methods, _request.getMethod().first) == -1)
+		//	throw (405);
+		try {
+			build_response(path, "200", "OK");}
+		catch (int e){
+			debugger.error("UNABLE TO BUILD RESPONSE!");
+			throw(404);
+			return ;
+		}
 	}
 }
 
@@ -255,13 +294,14 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 		{
 			_with_cgi = true;
-			_cgi = _config.getCgiPath();
-			_CGI = CGI(_request, _config, path, _cgi); // activates the cgi
+			_cgi_path = _config.getCgiPath();
+			_CGI = CGI(_request, _config, path, _cgi_path); // activates the cgi
 			_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 			return ;
 		}
 		else // the request is not cgi or redirection, so we just return the content of the file at the location of path.
 		{
+			// the request is a static file
 			try {
 				_response.set_body(get_file_content_for_request(path));
 			} catch (int e) {
@@ -305,12 +345,16 @@ void	Process::build_dl_response(void)
 	getcwd(tmp, 1000);
 	std::string abs(tmp);
 	directory = abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
-	_request.setBody(directory);
+	try {
+		_request.setBody(directory);
+	} catch (int e) {
+		throw (404);
+	}
 	_response.set_protocol("HTTP/1.1");
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 	_with_cgi = true;
-	_CGI = CGI(_request, _config, "./directory_listing/directory_listing.php", "php-cgi");
+	_CGI = CGI(_request, _config, "./resources/directory_listing/directory_listing.php", "php-cgi");
 	_CGI.set_tmps();
 }
 
@@ -346,7 +390,7 @@ std::string	Process::get_location(std::string location, ConfigurationKeyType typ
 		if (!(*it).value.compare(location))
 		{
 			if (!(*it).cgi_path.empty())
-				_cgi = (*it).cgi_path; 
+				_cgi_path = (*it).cgi_path; 
 			if (!(*it).cgi_fileending.empty())
 				_cgi_fileending = (*it).cgi_fileending;
 			if (!(*it).redirection.empty())

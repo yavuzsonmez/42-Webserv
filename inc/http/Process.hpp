@@ -6,7 +6,6 @@
 # include "Cgi.hpp"
 # include "../configuration_key/ConfigurationKey.hpp"
 # include <cstdio>
-# include <filesystem>
 
 class Process
 {
@@ -34,6 +33,7 @@ class Process
 
 	// path builder
 	std::string build_path_with_index__or_script_file();
+	std::string getPathForNestedLocation();
 
 	Response	_response;
 	CGI			_CGI;
@@ -43,7 +43,7 @@ class Process
 	//Response	_response;
 	Request		_request;
 	ServerBlock	_config;
-	std::string	_cgi;
+	std::string	_cgi_path;
 	std::string	_cgi_fileending;
 	std::string	_redirection;
 	std::vector<method>	_methods;

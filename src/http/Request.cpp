@@ -7,6 +7,7 @@
  * @brief Default constructor, default values for testing
  */
 Request::Request() :
+	hasNestedRequestPath(false),
 	_method(UNKNOWN, false),
 	_protocol("http", true),
 	_domain("", true),
@@ -24,6 +25,7 @@ Request::Request() :
  * @brief Copy constructor
  */
 Request::Request( const Request &src ) :
+	hasNestedRequestPath(src.hasNestedRequestPath),
 	_method(src._method),
 	_protocol(src._protocol),
 	_port(src._port),
@@ -33,7 +35,23 @@ Request::Request( const Request &src ) :
 	_fragment(src._fragment),
 	_httpVersion(src._httpVersion),
 	_headers(src._headers),
-	_body(src._body) {}
+	_body(src._body)  {}
+
+Request & Request::operator = (const Request &rhs)
+{
+	_method = rhs._method;
+	_protocol = rhs._protocol;
+	_port = rhs._port;
+	_script = rhs._script;
+	_path = rhs._path;
+	_query = rhs._query;
+	_fragment = rhs._fragment;
+	_httpVersion = rhs._httpVersion;
+	_headers = rhs._headers;
+	_body = rhs._body;
+	hasNestedRequestPath = rhs.hasNestedRequestPath;
+	return *this;
+}
 
 Request::~Request() {}
 
@@ -122,6 +140,10 @@ void Request::setUrl(std::string &req) {
 		throw(Bad_Request);
 	std::string url = req.substr(0, pos);
 	req.erase(0, pos + 1);
+	removeDoubleSlashesInUrl(url);
+	// if path does not end with file ending, add a slash if there is not a path already
+	if (url.find('.') == std::string::npos && url.find('/') == std::string::npos)
+		url += "/";
 	setProtocol(url);
 	setDomain(url);
 	setScript(url);
@@ -164,6 +186,7 @@ void Request::setDomain(std::string &url) {
  */
 void Request::setPort(std::string &url) {
 	USE_DEBUGGER;
+	removeDoubleSlashesInUrl(url);
 	debugger.debug(url);
 	size_t x = url.find(":");
 	size_t y = url.find("/");
@@ -228,10 +251,35 @@ void Request::setScript(std::string &url) {
 
 
 /**
- * @brief
+ * @brief sets the path.
+ * Also modifies the string heavily. We do this to avoid that a missing slash in the url is interpreted incorrectly.
+ * that is why we add a new slash if no slash is available to match the locations in the config file (which will ALWAYS end with a slash)
+ * But we do not add a slash if there are query paramters in the url (the question mark) because that we complicate things. Also we do not
+ * add a slash if we find a dot. Means, directories with dots may be handled not 100% correctly.
  */
 void Request::setPath(std::string &url)
 {
+	// remove everything after double slashes
+	removeDoubleSlashesInUrl(url);
+
+	// Count amount of slashes in the url
+	std::string nestedPath =  url + getScript().first;
+	size_t pos = nestedPath.find("/");
+	size_t count = 0;
+	while (pos != std::string::npos)
+	{
+		count++;
+		pos = nestedPath.find("/", pos + 1);
+	}
+	if (count > 1)
+	{
+		std::cout << "count: " << count << std::endl;
+		hasNestedRequestPath = true;
+	}
+
+	// if the url does not end with an fileending and the url does not end with a slash, add a slash. Also if it contains a question mark do not modify the string
+	if (url.find('.') == std::string::npos && url.find('/') == std::string::npos && url.find('?') == std::string::npos)
+		url += "/";
 	if (url.length())
 		_path.first = url.substr(0, url.length());
 	url.erase(0, url.length());
@@ -315,6 +363,15 @@ void Request::setHttpversion(std::string &req)
 // 	}
 // }
 
+/**
+ * @brief Get the host value from the headers
+ * 
+ */
+std::string Request::getHost() {
+	std::string host = findHeader("Host");
+	return host;
+}
+
 /*
  * @brief Store every single header in a vector of pair
  * vector -> <header: directive>
@@ -342,11 +399,18 @@ void Request::setHeaders(std::string &req)
 	}
 }
 
+/**
+ * @brief Check if the header is valid
+ * 
+ * @param hdr 
+ * @param direct 
+ */
 void Request::checkHeader(str_flag &hdr, str_flag &direct)
 {
 	if (hdr.first == Host)
 	{
 		std::string host_header = direct.first;
+		removeDoubleSlashesInUrl(host_header);
 		setPort(host_header);
 	}
 	if (hdr.first == Content_Length)
@@ -392,7 +456,7 @@ std::string	Request::findHeader(std::string key) const
 	headr_dirctiv::const_iterator	it;
 	for (it = _headers.begin(); it != _headers.end(); it++)
 	{
-		if ((*it).first.first == key)
+		if ( lower_str_ret((*it).first.first) == lower_str_ret(key) )
 			return (*it).second.first;
 	}
 	return null;
@@ -424,8 +488,8 @@ std::ostream &			operator<<( std::ostream & o, Request const & i )
 	str_flag		fragment = i.getFragment();
 	str_flag		httpVersion = i.getHttpversion();
 	headr_dirctiv	headers = i.getHeaders();
-		headr_dirctiv::const_iterator it = headers.begin();
-		headr_dirctiv::const_iterator ite = headers.end();
+	headr_dirctiv::const_iterator it = headers.begin();
+	headr_dirctiv::const_iterator ite = headers.end();
 	str_flag	body = i.getBody();
 
 	o << P << "/* ************************************************************************** */" << std::endl << "/* "
