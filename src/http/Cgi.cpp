@@ -209,8 +209,8 @@ void	CGI::execute_cgi(void)
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
 		execve(_cgi_path.c_str(), _argvp, _envp);
-		delete _argvp; // --> TEST GROWING MEMORY FIX YAVUZ
-		delete _envp; // --> TEST GROWING MEMORY FIX YAVUZ
+		delete _argvp; // --> TEST GROWING MEMORY FIX
+		delete _envp; // --> TEST GROWING MEMORY FIX
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
 		close(_fd_in);
 		close(_fd_out);

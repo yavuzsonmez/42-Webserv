@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	USE_DEBUGGER;
 	if (!check_arguments_and_filename(argc, argv)) return (1);
 
-	ConfigFileParsing static *configurationFileParsing = new ConfigFileParsing();
+	ConfigFileParsing *configurationFileParsing = new ConfigFileParsing();
 	std::string file_content;
 	if (argc == 1)
 		file_content = get_file_content("./conf/webserv.conf");
@@ -56,6 +56,6 @@ int main(int argc, char **argv)
 
 
 	std::cout << "Program exited cleanly." << std::endl;
-	
+
 	return (0);
 }
