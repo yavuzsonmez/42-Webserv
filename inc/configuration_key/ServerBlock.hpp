@@ -16,22 +16,22 @@
  */
 class ServerBlock
 {
-    public:
-        ServerBlock();
-        ServerBlock(ServerBlock const&);
+	public:
+		ServerBlock();
+		ServerBlock(ServerBlock const&);
 		~ServerBlock();
 		ServerBlock & operator = (const ServerBlock &src);
-        std::vector<ConfigurationKey> configurationKeys;
-        std::vector<std::string> getAllServerNames();
-        std::vector<unsigned int> getAllServerPorts();
-        std::vector<std::string> getAllIndexes();
-        std::string getCgiPath();
-        std::string getCgiFileEnding();
-        void addConfigurationKey(ConfigurationKey &configurationKey);
+		std::vector<ConfigurationKey> configurationKeys;
+		std::vector<std::string> getAllServerNames();
+		std::vector<unsigned int> getAllServerPorts();
+		std::vector<std::string> getAllIndexes();
+		std::string getCgiPath();
+		std::string getCgiFileEnding();
+		void addConfigurationKey(ConfigurationKey &configurationKey);
 		std::vector<ConfigurationKey> getConfigurationKeysWithType(ConfigurationKeyType type);
-        std::string getErrorPagePathForCode(int statuscode);
-        std::string getFallbackErrorPageForCode(int statuscode);
-        int serverIndex;
+		std::string getErrorPagePathForCode(int statuscode);
+		std::string getFallbackErrorPageForCode(int statuscode);
+		int serverIndex;
 };
 
  #endif

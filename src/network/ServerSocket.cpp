@@ -11,7 +11,7 @@
  * @param address, network interface where to listen.
  * @param configFile the configuration File
  */
-ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address): _serverBlock(serverBlock), _configFile(configFile)
+ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile, unsigned int address): _serverBlock(serverBlock), _configFile(configFile)
 {
 	std::vector<struct sockaddr_in>::iterator	so;
 	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(configFile.serverBlocks);
@@ -53,7 +53,7 @@ ServerSocket::~ServerSocket(){}
 /**
  * @brief Removes the socket from the vector and closes it.
  * This should be called if the client was not yet created
- * @param pollfds the pollfds 
+ * @param pollfds the pollfds
  * @param i index
  */
 void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
@@ -65,8 +65,8 @@ void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
 
 /**
  * @brief Disconnects the given client from the server
- * 
- * @param pollfds the pollfds 
+ *
+ * @param pollfds the pollfds
  * @param i index
  */
 void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
@@ -110,10 +110,10 @@ void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i
 
 /**
  * @brief Here we listen on the ports and accept new incoming connections.
- * 
+ *
  * @param pollfds the pollfd vector
  * @param i index of the current pollfd
- * 
+ *
  * @returns false, if a client was declined
  */
 bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds, int i) {
@@ -133,7 +133,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	if (val == -1) { // fcntl failed, we now need to close the socket
 		debugger.verbose("fcntl failed. Closing socket.");
 		close(forward);
-		return false; 
+		return false;
 	};
 	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
 		debugger.debug( to_string(_clients.size()) + " / 10Maximum number of clients reached. Declining connection.");
@@ -182,7 +182,7 @@ void ServerSocket::processConnections()
 		(*pollfds)[i].events = POLLIN;
 		(*pollfds)[i].revents = 0;
 	}
-	
+
 	// TODO:
 	// Remove the unreadable function pointers.
 	// See, when the response is actually being sent
@@ -232,7 +232,7 @@ void ServerSocket::processConnections()
 						(*pos).first = (*pos).second._fd;
 					}
 				}
-			 	else if ((*pollfds)[i].revents == 	POLLOUT)
+			 	else if ((*pollfds)[i].revents == POLLOUT)
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second._remove) // The client asks to be removed

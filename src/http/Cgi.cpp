@@ -8,11 +8,11 @@ CGI::CGI()
 
 /**
  * @brief Sets all the environment variables for the CGI script.
- * 
+ *
  */
 void CGI::set_environment()
 {
-	_env["SERVER_SOFTWARE"] = "webserv/1.0";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
+	_env["SERVER_SOFTWARE"] = "webserv/1.0";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version
 	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
 	_env["GATEWAY_INTERFACE"] = "CGI/1.1";										//The revision of the CGI specification to which this server complies. Format: CGI/revision
 	_env["SERVER_PROTOCOL"] = "HTTP/1.1";							//The name and revision of the information protcol this request came in with. Format: protocol/revision
@@ -23,10 +23,10 @@ void CGI::set_environment()
 	_env["SCRIPT_NAME"] = "";														//A virtual path to the script being executed, used for self-referencing URLs.
 	_env["QUERY_STRING"] = _request.getQuery().first;								//The information which follows the ? in the URL which referenced this script. This is the query information. It should not be decoded in any fashion. This variable should always be set when there is query information, regardless of command line decoding.
 	_env["REMOTE_HOST"] = "";														//The hostname making the request. If the server does not have this information, it should set REMOTE_ADDR and leave this unset.
-	_env["REMOTE_ADDR"] = "";														//The IP address of the remote host making the request. 
+	_env["REMOTE_ADDR"] = "";														//The IP address of the remote host making the request.
 	_env["AUTH_TYPE"] = "";															//If the server supports user authentication, and the script is protects, this is the protocol-specific authentication method used to validate the user.
-	_env["REMOTE_USER"] = "";														//If the server supports user authentication, and the script is protected, this is the username they have authenticated as. 
-	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only. 
+	_env["REMOTE_USER"] = "";														//If the server supports user authentication, and the script is protected, this is the username they have authenticated as.
+	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only.
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
 	_env["HOST"] = _request.findHeader("Host");					//The length of the said content as given by the client.
@@ -39,10 +39,10 @@ void CGI::set_environment()
  * @brief Construct a new CGI::CGI object
  * - Parses the query parameters
  * - Sets the environment variables
- * 
- * @param request The request to handle 
+ *
+ * @param request The request to handle
  * @param config The server block configuration of the request
- * @param path the path 
+ * @param path the path
  * @param cgi_path the cgi path
  */
 CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
@@ -58,6 +58,7 @@ CGI::~CGI()
 {
 	USE_DEBUGGER;
 	debugger.info("CGI destructor called");
+
 }
 
 CGI & CGI::operator=(const CGI &src)
@@ -100,7 +101,7 @@ void	CGI::set_tmps(void)
 /**
  * @brief writes the body from the request in _tmp_in which later will be dupped to the STDIN
  * Takes the _fd_in and writes to it the body of the request
- * We catch invalid fds and we check if 
+ * We catch invalid fds and we check if
  */
 void	CGI::write_in_std_in()
 {
@@ -164,7 +165,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 			}
 			debugger.error("Worker did not exit normally."); // this is being called if the worker timed out
 			//throw(502); // else we throw a 500 error
-			return ; 
+			return ;
 		}
 		else
 		{
@@ -208,6 +209,8 @@ void	CGI::execute_cgi(void)
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
 		execve(_cgi_path.c_str(), _argvp, _envp);
+		delete _argvp; // --> TEST GROWING MEMORY FIX YAVUZ
+		delete _envp; // --> TEST GROWING MEMORY FIX YAVUZ
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
 		close(_fd_in);
 		close(_fd_out);

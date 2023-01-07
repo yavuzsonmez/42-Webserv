@@ -69,10 +69,10 @@ std::string get_first_location_in_path(const std::string path);
 
 /**
  * @brief converts any type into a string
- * 
- * @tparam T 
- * @param input 
- * @return std::string 
+ *
+ * @tparam T
+ * @param input
+ * @return std::string
  */
 template <typename T>
 std::string	to_str(T input)
@@ -84,17 +84,17 @@ std::string	to_str(T input)
 
 /**
  * @brief converts a map of any key-value type into an array of char*
- * 
- * @tparam key 
- * @tparam value 
- * @param map 
- * @return char** 
+ *
+ * @tparam key
+ * @tparam value
+ * @param map
+ * @return char**
  */
 template <typename key, typename value>
 char **map_to_array(std::map<key, value> &map)
 {
 	typename std::map<key, value>::iterator	it;
-	
+
 	char **array = new char*[sizeof(char*) * (map.size() + 1)];
 	if (array == NULL)
 		exit(1); // we have no memory or allocation just failed, so there is nothing we can do
@@ -110,16 +110,16 @@ char **map_to_array(std::map<key, value> &map)
 
 /**
  * @brief converts a vector of any type into an array of char*
- * 
- * @tparam T 
- * @param vector 
- * @return char** 
+ *
+ * @tparam T
+ * @param vector
+ * @return char**
  */
 template <typename T>
 char **vec_to_array(std::vector<T> &vector)
 {
 	typename std::vector<T>::iterator	it;
-	
+
 	char **array = new char*[sizeof(char*) * (vector.size() + 1)];
 	if (array == NULL)
 		exit(1); // we have no memory or allocation just failed, so there is nothing we can do
@@ -154,15 +154,15 @@ int	find_vector(std::vector<T1> &vector, T2 element)
 
 /**
  * @brief To string replacement for the cpp11 function
- * @tparam T 
- * @param value 
- * @return std::string 
+ * @tparam T
+ * @param value
+ * @return std::string
  */
 template<typename T>
 std::string to_string(const T & value) {
-    std::ostringstream oss;
-    oss << value;
-    return oss.str();
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
 }
 
 #endif
