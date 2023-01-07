@@ -109,9 +109,6 @@ clean			:
 fclean			:		clean
 						@rm -f $(NAME)
 						@echo "$(R)$(NAME) has been removed 🗑$(Reset)"
-						@rm -f debug.log
-						@rm -f leaks.log
-						@echo "$(R)logs have been removed 🗑$(Reset)"
 
 all				:		$(NAME)
 
