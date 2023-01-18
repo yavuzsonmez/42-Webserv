@@ -28,7 +28,7 @@ class	CGI
 {
 	public:
 		CGI();
-		CGI(Request request, ServerBlock config, std::string path, std::string cgi_path);
+		CGI(Request request, std::string server_name, std::string path, std::string cgi_path);
 		~CGI();
 		CGI	&operator=(const CGI &src);
 
@@ -62,7 +62,7 @@ class	CGI
 		int		_tmp_size;
 
 		Request	_request;
-		ServerBlock	_config;
+		std::string	_server_name;
 		std::string	_path;
 		std::string	_cgi_path;
 };

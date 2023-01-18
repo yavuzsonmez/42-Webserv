@@ -12,14 +12,14 @@ CGI::CGI()
  */
 void CGI::set_environment()
 {
-	_env["SERVER_SOFTWARE"] = "webserv/1.0";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version
-	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
-	_env["GATEWAY_INTERFACE"] = "CGI/1.1";										//The revision of the CGI specification to which this server complies. Format: CGI/revision
-	_env["SERVER_PROTOCOL"] = "HTTP/1.1";							//The name and revision of the information protcol this request came in with. Format: protocol/revision
-	_env["SERVER_PORT"] = to_str(_request.getPort().first);									//The port number to which the request was sent.
+	_env["SERVER_SOFTWARE"] = "webserv/1.0";										//The name and version of the information server software answering the request (and running the gateway). Format: name/version
+	_env["SERVER_NAME"] = _server_name;												//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
+	_env["GATEWAY_INTERFACE"] = "CGI/1.1";											//The revision of the CGI specification to which this server complies. Format: CGI/revision
+	_env["SERVER_PROTOCOL"] = "HTTP/1.1";											//The name and revision of the information protcol this request came in with. Format: protocol/revision
+	_env["SERVER_PORT"] = to_str(_request.getPort().first);							//The port number to which the request was sent.
 	_env["REQUEST_METHOD"] = _request.getMethodasString();							//The method with which the request was made. For HTTP, this is "GET", "HEAD", "POST", etc.
-	_env["PATH_INFO"] =  get_abs_path(_path);														//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
-	_env["PATH_TRANSLATED"] =  get_abs_path(_path);													//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
+	_env["PATH_INFO"] =  get_abs_path(_path);										//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
+	_env["PATH_TRANSLATED"] =  get_abs_path(_path);									//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
 	_env["SCRIPT_NAME"] = "";														//A virtual path to the script being executed, used for self-referencing URLs.
 	_env["QUERY_STRING"] = _request.getQuery().first;								//The information which follows the ? in the URL which referenced this script. This is the query information. It should not be decoded in any fashion. This variable should always be set when there is query information, regardless of command line decoding.
 	_env["REMOTE_HOST"] = "";														//The hostname making the request. If the server does not have this information, it should set REMOTE_ADDR and leave this unset.
@@ -29,8 +29,8 @@ void CGI::set_environment()
 	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only.
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
-	_env["HOST"] = _request.findHeader("Host");					//The length of the said content as given by the client.
-	_env["REDIRECT_STATUS"] = "500";							//If the server supports redirection, this variable should be set to the status code of the redirection.
+	_env["HOST"] = _request.findHeader("Host");										//The length of the said content as given by the client.
+	_env["REDIRECT_STATUS"] = "500";												//If the server supports redirection, this variable should be set to the status code of the redirection.
 	_env["BODY"] = _request.getBody().first;
 	_env["REQUEST_URI"] = _request.getPath().first;
 }
@@ -45,7 +45,7 @@ void CGI::set_environment()
  * @param path the path
  * @param cgi_path the cgi path
  */
-CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
+CGI::CGI(Request request, std::string server_name, std::string path, std::string cgi_path) : _request(request), _server_name(server_name), _path(path), _cgi_path(cgi_path)
 {
 	if (_request.getQuery().second)
 	{
@@ -58,13 +58,12 @@ CGI::~CGI()
 {
 	USE_DEBUGGER;
 	debugger.info("CGI destructor called");
-
 }
 
 CGI & CGI::operator=(const CGI &src)
 {
 	_request = src._request;
-	_config = src._config;
+	_server_name = src._server_name;
 	_path = src._path;
 	_cgi_path = src._cgi_path;
 	_env = src._env;
@@ -209,6 +208,20 @@ void	CGI::execute_cgi(void)
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
 		execve(_cgi_path.c_str(), _argvp, _envp);
+		int i = 0;
+		while (_argvp[i])
+		{
+			free(_argvp[i]);
+			i++;
+		}
+		i = 0;
+		//delete _argvp;
+		while (_envp[i])
+		{
+			free(_envp[i]);
+			i++;
+		}
+		// delete _envp;
 		delete _argvp; // --> TEST GROWING MEMORY FIX
 		delete _envp; // --> TEST GROWING MEMORY FIX
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
@@ -253,6 +266,8 @@ void	CGI::read_in_buff(void)
 	debugger.verbose("Closing connection 5");
 	close(_fd_out);
 	close(_fd_in);
+	fclose(_tmpout);
+	fclose(_tmpin);
 	return ;
 }
 

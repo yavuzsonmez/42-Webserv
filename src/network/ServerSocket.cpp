@@ -34,8 +34,8 @@ ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile
 		(*fd) = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
 		if (*fd < 0)
 			throw SocketCreationError();
-		fcntl(*fd, F_SETFL, fcntl(*fd, F_GETFL, 0) | O_NONBLOCK);
 		setsockopt(*fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
+		fcntl(*fd, F_SETFL, fcntl(*fd, F_GETFL, 0) | O_NONBLOCK);
 	}
 
 	for (fd = _fds.begin(), so = _sockets.begin(); fd != _fds.end(); fd++, so++) //bind the fds to the sockets and put them in listening mode
