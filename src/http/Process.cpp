@@ -11,6 +11,7 @@ Process::Process(Request request, ServerBlock config) : _request(request), _conf
 	_with_cgi = false;
 	_cgi_path = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
+	_server_name = _config.getAllServerNames().front();
 }
 
 Process::~Process(void)
@@ -25,6 +26,7 @@ Process & Process::operator = (const Process &src)
 	_cgi_path = src._cgi_path;
 	_cgi_fileending = src._cgi_fileending;
 	_with_cgi = src._with_cgi;
+	_server_name = src._server_name;
 	return *this;
 }
 
@@ -295,7 +297,7 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		{
 			_with_cgi = true;
 			_cgi_path = _config.getCgiPath();
-			_CGI = CGI(_request, _config, path, _cgi_path); // activates the cgi
+			_CGI = CGI(_request, _server_name, path, _cgi_path); // activates the cgi
 			_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 			return ;
 		}
@@ -354,7 +356,7 @@ void	Process::build_dl_response(void)
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 	_with_cgi = true;
-	_CGI = CGI(_request, _config, "./resources/directory_listing/directory_listing.php", "php-cgi");
+	_CGI = CGI(_request, _server_name, "./resources/directory_listing/directory_listing.php", "php-cgi");
 	_CGI.set_tmps();
 }
 

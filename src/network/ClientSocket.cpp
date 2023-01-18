@@ -38,7 +38,7 @@ ClientSocket::~ClientSocket()
  */
 bool ClientSocket::Timeout()
 {
-	if (std::time(NULL) - _timeout > 5000)
+	if (std::time(NULL) - _timeout > 1)
 	{
 		USE_DEBUGGER;
 		_socket_state = DONE; // set state of client to DONE because it is finished.
