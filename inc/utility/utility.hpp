@@ -58,7 +58,6 @@ bool checkIfCgiExecutableAndFileEndingAreSet(std::vector<ServerBlock> &serverBlo
 std::string remove_dot_if_first_character_is_dot(std::string to_edit);
 int is_valid_fd(int fd);
 int send_server_unavailable(int forward, ServerBlock serverblock);
-int send_client_timeout(int forward, ServerBlock serverblock);
 std::string get_file_content_cached(std::string path);
 int stoi_replacement( std::string s );
 int kill_with_error(int pid);
