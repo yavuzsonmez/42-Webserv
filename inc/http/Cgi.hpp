@@ -54,6 +54,8 @@ class	CGI
 		char	**_argvp;
 		char	**_envp;
 
+		std::string location_dl; // location for directory listing
+
 	private:
 		std::map<std::string, std::string>	_env;
 		std::vector<std::string>	_query_parameters;

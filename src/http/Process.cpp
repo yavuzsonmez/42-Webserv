@@ -163,7 +163,8 @@ void	Process::handle_request(void)
 				if (find_vector(_methods, _request.getMethod().first) == -1)
 					throw (405);
 				try {
-					build_dl_response();}
+					build_dl_response();
+				}
 				catch (int e){
 					debugger.error("Could not find the file listing script!");
 					throw(404);
@@ -350,7 +351,7 @@ void	Process::build_dl_response(void)
 	char	tmp[1000];
 	getcwd(tmp, 1000);
 	std::string abs(tmp);
-	directory = abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
+	directory = abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/";
 	try {
 		_request.setBody(directory);
 	} catch (int e) {
@@ -361,6 +362,7 @@ void	Process::build_dl_response(void)
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 	_with_cgi = true;
 	_CGI = CGI(_request, _server_name, "./resources/directory_listing/directory_listing.php", "php-cgi");
+	_CGI.location_dl = directory;
 	_CGI.set_tmps();
 }
 
