@@ -7,9 +7,9 @@
 #include "../configuration_key/ServerBlock.hpp"
 #include "./ClientSocket.hpp"
 
-#define BACKLOG 25 // maximum number of allowed incoming connection in the queue until being accept()
+#define BACKLOG 20 // maximum number of allowed incoming connection in the queue until being accept()
 
-#define MAXIMUM_CONNECTED_CLIENTS 20 // maximum number of connected clients
+#define MAXIMUM_CONNECTED_CLIENTS 100 // maximum number of connected clients
 
 /**
  * @brief Server Socket listening for requests
