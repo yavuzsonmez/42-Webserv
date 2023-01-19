@@ -76,18 +76,19 @@ void	Response::create_response(void)
 		_raw_body = _raw_body.substr(pos + 4);
 	}
 	_response = _protocol + " " + _status_code + " " + _status_text + "\r\n";
-	_response += "server: " + _server + "\r\n";
+	//_response += "server: " + _server + "\r\n";
 	if (!_redirection.empty())
-		_response += "location: " + _redirection + "\r\n";
-	if (!_content_type.empty())
+		_response += "Location: " + _redirection + "\r\n";
+	if (!_content_type.empty() && _headers_raw.find("Content-Type") != std::string::npos)
 		_response += "content-type: " + _content_type + "\r\n";
 	if (!_content_length.empty())
 		_response += "content-length: " + to_str(_raw_body.size()) + "\r\n";
 	_response += "webserver: PETROULETTE\r\n";
 	if (!_headers_raw.empty())
 		_response += _headers_raw + "\r\n";
+	std::cout << "OUR RESPONSE: \n" << _response << std::endl;
 	if (!_body.empty())
-		_response += "\r\n" + _raw_body;
+		_response += "\r\n\r\n" + _raw_body;
 }
 
 std::string	Response::get_file_format(void)
