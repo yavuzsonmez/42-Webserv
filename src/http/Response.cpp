@@ -86,7 +86,6 @@ void	Response::create_response(void)
 	_response += "webserver: PETROULETTE\r\n";
 	if (!_headers_raw.empty())
 		_response += _headers_raw + "\r\n";
-	std::cout << "OUR RESPONSE: \n" << _response << std::endl;
 	if (!_body.empty())
 		_response += "\r\n\r\n" + _raw_body;
 }
