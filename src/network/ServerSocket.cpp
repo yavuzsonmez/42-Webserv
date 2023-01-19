@@ -194,6 +194,7 @@ void ServerSocket::processConnections()
 		}
 		for (unsigned long i = 0; i < (*pollfds).size(); ++i) //iterate through the entire area of sockets
 		{
+			// print out amount of clients
 			/**
 			 * Listen to the listening sockets for new connections (ports)
 			 */
@@ -257,13 +258,6 @@ void ServerSocket::processConnections()
 				else
 				{
 					checkIfConnectionIsBroken((*pollfds), i);
-					// if timestamp is older than 5000 milliseconds, then we remove the client
-					if ((*pos).second.timestamp + 5 < std::time(NULL))
-					{
-						debugger.verbose("Client timed out. !!!!!!!!!!");
-						disconnectClient((*pollfds), i);
-						continue;
-					}
 					continue;
 				}
 			}
