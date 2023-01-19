@@ -213,12 +213,12 @@ void ServerSocket::processConnections()
 			{
 				client_iter	pos;
 				pos = get_CS_position(_clients, (*pollfds)[i].fd); //retrieve the right client
-				if ((*pos).second.timestamp + 5 < std::time(NULL))
-				{
-					debugger.verbose("Client timed out. !!!!!!!!!!");
-					disconnectClient((*pollfds), i);
-					continue;
-				}
+				// if ((*pos).second.timestamp + 5 < std::time(NULL))
+				// {
+				// 	debugger.verbose("Client timed out. !!!!!!!!!!");
+				// 	disconnectClient((*pollfds), i);
+				// 	continue;
+				// }
 				if ((*pollfds)[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
