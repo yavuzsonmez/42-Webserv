@@ -52,16 +52,36 @@ void	Response::create_response(void)
 		_raw_body = _raw_body.substr(pos + 4);
 	}
 	_response = _protocol + " " + _status_code + " " + _status_text + "\r\n";
-	_response += "server: " + _server + "\r\n";
 	if (!_redirection.empty())
 		_response += "location: " + _redirection + "\r\n";
-	if (!_content_type.empty())
+	if (!_content_type.empty() && _headers_raw.find("Content-type") == std::string::npos)
 		_response += "content-type: " + _content_type + "\r\n";
 	if (!_content_length.empty())
-		_response += "content-length: " + _content_length + "\r\n";
+		_response += "content-length: " + to_str(_raw_body.size()) + "\r\n";
+	if (!_headers_raw.empty())
+		_response += _headers_raw + "\r\n";
 	_response += "webserver: PETROULETTE\r\n";
 	if (!_body.empty())
-		_response += "\r\n" + _body;
+		_response += "\r\n" + _raw_body;
+	// _raw_body = _body;
+	// size_t pos = _raw_body.find("\r\n\r\n");
+	// if (pos != std::string::npos) {
+	// 	_headers_raw = _raw_body.substr(0, pos);
+	// 	_raw_body = _raw_body.substr(pos + 4);
+	// }
+	// _response = _protocol + " " + _status_code + " " + _status_text + "\r\n";
+	// //_response += "server: " + _server + "\r\n";
+	// if (!_redirection.empty())
+	// 	_response += "Location: " + _redirection + "\r\n";
+	// if (!_content_type.empty())
+	// 	_response += "content-type: " + _content_type + "\r\n";
+	// if (!_content_length.empty())
+	// 	_response += "content-length: " + to_str(_raw_body.size()) + "\r\n";
+	// _response += "webserver: PETROULETTE\r\n";
+	// if (!_headers_raw.empty())
+	// 	_response += _headers_raw + "\r\n";
+	// if (!_body.empty())
+	// 	_response += "\r\n\r\n" + _raw_body;
 }
 
 std::string	Response::get_file_format(void)
