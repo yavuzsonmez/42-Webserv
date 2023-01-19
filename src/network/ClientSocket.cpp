@@ -230,6 +230,7 @@ void	ClientSocket::one(void)
 		_event = POLLERR;
 		debugger.verbose("Thrown exception in ::one");
 		_process.exception(e);
+		_remove = true;
 		return ;
 	}
 	_fd = _process._CGI._fd_out;
@@ -250,6 +251,7 @@ void	ClientSocket::two(void)
 		debugger.verbose("Thrown cgi exception in ::two");
 		std::cerr << "Error in ::two " << error << std::endl;
 		_event = POLLERR;
+		_remove = true;
 		_process.server_overloaded();
 		return ;
 	}
@@ -270,6 +272,7 @@ void	ClientSocket::three(void)
 	} catch (int error) {
 		debugger.verbose("Thrown cgi exception in ::three");
 		_event = POLLERR;
+		_remove = true;
 		_process.server_overloaded();
 		return ;
 	}
