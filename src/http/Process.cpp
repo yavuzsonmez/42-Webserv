@@ -11,7 +11,7 @@ Process::Process(Request request, ServerBlock config) : _request(request), _conf
 	_with_cgi = false;
 	_cgi_path = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
-	_server_name = config.getAllServerNames().front();
+	_server_name = request.getHost();
 }
 
 Process::~Process(void)
