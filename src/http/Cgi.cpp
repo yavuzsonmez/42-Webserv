@@ -33,6 +33,11 @@ void CGI::set_environment()
 	_env["REDIRECT_STATUS"] = "500";												//If the server supports redirection, this variable should be set to the status code of the redirection.
 	_env["BODY"] = _request.getBody().first;
 	_env["REQUEST_URI"] = _request.getPath().first;
+	if (!location_dl.empty())
+	{
+		_env["LOCATION_DL"] = location_dl;
+		std::cout << "LOCATION URI : " << _env["LOCATION_DL"] << std::endl;
+	}
 }
 
 /**
@@ -68,6 +73,7 @@ CGI & CGI::operator=(const CGI &src)
 	_cgi_path = src._cgi_path;
 	_env = src._env;
 	_query_parameters = src._query_parameters;
+	location_dl = src.location_dl;
 	return *this;
 }
 
