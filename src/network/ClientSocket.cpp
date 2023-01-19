@@ -25,6 +25,7 @@ ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &serverB
 	_event = POLLIN;
 	_remove = false;
 	_timeout = std::time(NULL);
+	timestamp = std::time(NULL);
 	_socket_state = PREPARING; // set state of client to PREPARING
 }
 
