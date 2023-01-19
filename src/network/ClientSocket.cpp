@@ -67,6 +67,10 @@ void	ClientSocket::read_in_buffer(void)
 	USE_DEBUGGER;
 	buffer.resize(buffer.size() + _count);
 	_bytes = read(_fd, (char*)buffer.c_str() + _position, _count);
+	if (_bytes <= 0){
+		_remove = true;
+		return;
+	}
 	_position += _bytes;
 	if (_state == HEADER)
 	{
@@ -136,7 +140,7 @@ void	ClientSocket::send_response(void)
 		return ;
 	}
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length() - _position, 0);
-	if (_bytes == -1)
+	if (_bytes < 1 )
 	{
 		_remove = true;
 		_socket_state = DONE; // set state of client to DONE because it is finished.

@@ -138,7 +138,7 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
 		debugger.debug( to_string(_clients.size()) + " / 10Maximum number of clients reached. Declining connection.");
 		int result = send_server_unavailable(forward, _serverBlock);
-		if (result == -1) {
+		if (result < 1) {
 			debugger.verbose("Error while sending 503 to client. Closing connection.");
 			close(forward);
 			return false;
