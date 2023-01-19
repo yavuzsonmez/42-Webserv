@@ -17,6 +17,7 @@
 */
 int send_server_unavailable(int forward, ServerBlock serverblock)
 {
+	std::cout << "--------Unavailable---------" << std::endl;
 	Response response;
 	response.set_status_code(Service_Unavailable);
 	response.set_protocol("HTTP/1.1");

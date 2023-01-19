@@ -188,6 +188,8 @@ void ServerSocket::processConnections()
 	// See, when the response is actually being sent
 	// Main routine. This will be called the whole time the server runs
 	while (1) {
+		std::cout << "filedescriptors: " << (*pollfds).size() << std::endl;
+		std::cout << "clients: " << _clients.size() << std::endl;
 		if (poll((struct pollfd *)((*pollfds).data()), (*pollfds).size(), -1) < 1) // Here we wait for poll information.
 		{
 			std::cout << "An error occured when polling.";
