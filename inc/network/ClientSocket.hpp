@@ -60,6 +60,8 @@ class ClientSocket
 		int					_client_fd;
 		bool				_remove;
 		SOCKET_STATE		_socket_state;
+		
+		int					timestamp;
 
 	private:
 
