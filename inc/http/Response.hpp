@@ -35,7 +35,6 @@ class Response
 	void	set_content_length(std::string content_length);
 	void	set_transfer_encoding(std::string transfer_encoding);
 	void	set_body(std::string body);
-	void	prepare_headers();
 
 	std::string	get_protocol(void);
 	std::string	get_status_code(void);
