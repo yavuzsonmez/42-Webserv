@@ -331,9 +331,12 @@ void	Process::server_overloaded(void)
  */
 void	Process::build_cgi_response(void)
 {
-	_response.set_body(_CGI.get_buf());
+	std::string tmp;
+	tmp = _CGI.get_buf();
+	_response.set_body(tmp);
 	_response.set_content_length(to_str(_response.get_body().length()));
 	_response.set_content_type(_response.get_file_format());
+	_response.prepare_headers();
 	_response.create_response();
 }
 
