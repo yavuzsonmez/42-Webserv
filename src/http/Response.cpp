@@ -57,12 +57,12 @@ void	Response::create_response(void)
 	if (!_content_type.empty() && _headers_raw.find("Content-type") == std::string::npos)
 		_response += "content-type: " + _content_type + "\r\n";
 	if (!_content_length.empty())
-		_response += "content-length: " + _content_length + "\r\n";
+		_response += "content-length: " + to_str(_raw_body.size()) + "\r\n";
 	if (!_headers_raw.empty())
 		_response += _headers_raw + "\r\n";
 	_response += "webserver: PETROULETTE\r\n";
 	if (!_body.empty())
-		_response += "\r\n" + _body;
+		_response += "\r\n" + _raw_body;
 	// _raw_body = _body;
 	// size_t pos = _raw_body.find("\r\n\r\n");
 	// if (pos != std::string::npos) {
