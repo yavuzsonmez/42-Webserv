@@ -11,7 +11,7 @@ Process::Process(Request request, ServerBlock config) : _request(request), _conf
 	_with_cgi = false;
 	_cgi_path = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
-	_server_name = _config.getAllServerNames().front();
+	_server_name = config.getAllServerNames().front();
 }
 
 Process::~Process(void)
@@ -289,9 +289,10 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 	}
 	else
 	{
+		// TEST
 		_response.set_status_code(code);
 		_response.set_status_text(status);
-		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+		_response.set_server(_server_name);
 		// This is where cgi is recognized
 		if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 		{
