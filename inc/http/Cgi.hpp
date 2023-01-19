@@ -48,6 +48,9 @@ class	CGI
 		//int			_pipefd_out[2];
 		int			_fd_in;
 		int			_fd_out;
+		FILE	*_tmpout;
+		FILE	*_tmpin;
+
 		char	**_argvp;
 		char	**_envp;
 
@@ -56,11 +59,10 @@ class	CGI
 		std::vector<std::string>	_query_parameters;
 		std::vector<std::string>	_argv;
 		std::string	_buf;
-		FILE	*_tmpout;
-		FILE	*_tmpin;
+		// FILE	*_tmpout;
+		// FILE	*_tmpin;
 		//int		_fd;
 		int		_tmp_size;
-
 		Request	_request;
 		std::string	_server_name;
 		std::string	_path;

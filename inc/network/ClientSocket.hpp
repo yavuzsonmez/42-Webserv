@@ -63,6 +63,8 @@ class ClientSocket
 		
 		int					timestamp;
 
+		Process				_process;
+
 	private:
 
 		struct sockaddr_in	_socket;
@@ -79,7 +81,7 @@ class ClientSocket
 		void					(ClientSocket::*_func_ptr)(void);
 		ServerBlock			getServerBlock();
 		Request				_clientRequest;
-		Process				_process;
+		
 };
 
 #endif

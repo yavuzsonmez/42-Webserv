@@ -73,6 +73,10 @@ void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
 {
 	USE_DEBUGGER;
 	client_iter pos = get_CS_position(_clients, pollfds[i].fd);
+	close(pos.base()->second._process._CGI._fd_out);
+	close(pos.base()->second._process._CGI._fd_in);
+	fclose(pos.base()->second._process._CGI._tmpout);
+	fclose(pos.base()->second._process._CGI._tmpin);
 	close(pollfds[i].fd);
 	pollfds.erase(pollfds.begin() + i);
 	if (pos != _clients.end())
