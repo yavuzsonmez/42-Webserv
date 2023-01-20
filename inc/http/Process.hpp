@@ -50,6 +50,8 @@ class Process
 	std::vector<method>	_methods;
 	int			_pipefd_in[2];
 	int			_pipefd_out[2];
+	
+	bool	set_location_key_if_exists(ConfigurationKey &location);
 
 };
 

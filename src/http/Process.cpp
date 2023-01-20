@@ -11,6 +11,11 @@ Process::Process(Request request, ServerBlock config) : _request(request), _conf
 	_with_cgi = false;
 	_cgi_path = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
+	ConfigurationKey locationKey;
+	if (set_location_key_if_exists(locationKey)) {
+		_cgi_path = locationKey.cgi_path;
+		_cgi_fileending = locationKey.cgi_path;
+	}
 	_server_name = request.getHost();
 }
 
@@ -298,7 +303,6 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 		{
 			_with_cgi = true;
-			_cgi_path = _config.getCgiPath();
 			_CGI = CGI(_request, _server_name, path, _cgi_path); // activates the cgi
 			_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 			return ;
@@ -364,6 +368,28 @@ void	Process::build_dl_response(void)
 	_CGI = CGI(_request, _server_name, "./resources/directory_listing/directory_listing.php", cgi_path);
 	_CGI.location_dl = directory;
 	_CGI.set_tmps();
+}
+
+
+/**
+ * @brief Sets it to the configuration key, if the location key exists
+ * @param &location
+ */
+bool	Process::set_location_key_if_exists(ConfigurationKey &location)
+{
+	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
+	std::vector<ConfigurationKey>::iterator	it;
+	for (it = locations.begin(); it != locations.end(); it++)
+	{
+		std::string	request_path = _request.getPath().first.insert(0, "/");
+		
+		if (!(*it).value.compare(request_path))
+		{
+			location = *it;
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
