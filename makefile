@@ -66,7 +66,7 @@ SRCS			=		$(ENTRY) $(DEBUGGER) $(CONFIG_FILE) $(HTTP) $(NETWORK) $(UTILS)
 
 OBJS			=		$(SRCS:.cpp=.o)
 
-FLAGS			=		-Werror -Wall -Wextra
+FLAGS			=		-Werror -Wall -Wextra -g
 
 # Here we define how every single file is being compiled.
 # With MAKECMDGOALS we detect if we are running a debug build and then inject the defines.
@@ -109,9 +109,6 @@ clean			:
 fclean			:		clean
 						@rm -f $(NAME)
 						@echo "$(R)$(NAME) has been removed 🗑$(Reset)"
-						@rm -f debug.log
-						@rm -f leaks.log
-						@echo "$(R)logs have been removed 🗑$(Reset)"
 
 all				:		$(NAME)
 

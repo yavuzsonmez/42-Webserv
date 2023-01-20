@@ -46,9 +46,12 @@ class Process
 	std::string	_cgi_path;
 	std::string	_cgi_fileending;
 	std::string	_redirection;
+	std::string	_server_name;
 	std::vector<method>	_methods;
 	int			_pipefd_in[2];
 	int			_pipefd_out[2];
+	
+	bool	set_location_key_if_exists(ConfigurationKey &location);
 
 };
 

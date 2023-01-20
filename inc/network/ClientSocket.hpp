@@ -60,6 +60,10 @@ class ClientSocket
 		int					_client_fd;
 		bool				_remove;
 		SOCKET_STATE		_socket_state;
+		
+		int					timestamp;
+
+		Process				_process;
 
 	private:
 
@@ -77,7 +81,7 @@ class ClientSocket
 		void					(ClientSocket::*_func_ptr)(void);
 		ServerBlock			getServerBlock();
 		Request				_clientRequest;
-		Process				_process;
+		
 };
 
 #endif

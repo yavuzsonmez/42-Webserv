@@ -21,7 +21,7 @@ class ServerSocket
 
 	public:
 
-		ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address);
+		ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile, unsigned int address);
 
 		//ServerSocket( const ServerSocket &src );
 		virtual ~ServerSocket();

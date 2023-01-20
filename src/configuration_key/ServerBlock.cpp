@@ -65,7 +65,7 @@ std::string ServerBlock::getCgiPath() {
 		return "";
 	}
 	std::string cgi_path = configKeys[0].value;
-	return remove_dot_if_first_character_is_dot(cgi_path);
+	return cgi_path;
 }
 
 /**
@@ -196,7 +196,7 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 {
 	std::string path_to_file;
 
-	path_to_file = "placeholder";
+	path_to_file = "./resources/default_pages/500_default.html";
 
 	switch (statuscode)
 	{

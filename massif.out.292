@@ -1,0 +1,1488 @@
+desc: --stacks=yes
+cmd: ./webserv conf/webserv.conf
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=683799487
+mem_heap_B=2550100
+mem_heap_extra_B=9972
+mem_stacks_B=7200
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=1323348953
+mem_heap_B=2105241
+mem_heap_extra_B=9959
+mem_stacks_B=7240
+heap_tree=detailed
+n6: 2105241 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 891107 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n3: 891107 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 444980 0x43062E: Response::Response(Response const&) (in /test/webserv)
+    n1: 444980 0x4309B2: Process::Process(Process const&) (in /test/webserv)
+     n1: 444980 0x430D3E: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+      n1: 444980 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+       n1: 444980 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+        n1: 444980 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+         n1: 444980 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+          n1: 444980 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+           n1: 444980 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+            n1: 444980 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+             n1: 444980 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+              n1: 444980 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+               n1: 444980 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+                n1: 444980 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+                 n0: 444980 0x404273: main (main.cpp:49)
+   n1: 444859 0x43060E: Response::Response(Response const&) (in /test/webserv)
+    n1: 444859 0x4309B2: Process::Process(Process const&) (in /test/webserv)
+     n1: 444859 0x430D3E: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+      n1: 444859 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+       n1: 444859 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+        n1: 444859 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+         n1: 444859 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+          n1: 444859 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+           n1: 444859 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+            n1: 444859 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+             n1: 444859 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+              n1: 444859 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+               n1: 444859 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+                n1: 444859 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+                 n0: 444859 0x404273: main (main.cpp:49)
+   n0: 1268 in 32 places, all below massif's threshold (1.00%)
+ n3: 534630 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 444980 0x4F51831: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 444980 0x421B63: Response::create_response() (Response.cpp:57)
+    n1: 444980 0x42A557: Process::build_response(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) (Process.cpp:314)
+     n1: 444980 0x428D63: Process::handle_request() (Process.cpp:177)
+      n1: 444980 0x4277F2: Process::process_request() (Process.cpp:43)
+       n1: 444980 0x42DB77: ClientSocket::set_up() (ClientSocket.cpp:192)
+        n1: 444980 0x42CFC7: ClientSocket::read_in_buffer() (ClientSocket.cpp:91)
+         n1: 444980 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+          n1: 444980 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+           n1: 444980 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+            n0: 444980 0x404273: main (main.cpp:49)
+   n0: 0 in 13 places, all below massif's threshold (1.00%)
+  n2: 89650 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 89650 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n1: 89650 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 89650 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 89650 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 89650 0x404273: main (main.cpp:49)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 459091 0x4F503DD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_assign(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 459091 0x4F506E7: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::operator=(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 444859 0x4215C8: Response::set_body(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) (Response.cpp:27)
+    n1: 444859 0x42A475: Process::build_response(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) (Process.cpp:306)
+     n1: 444859 0x428D63: Process::handle_request() (Process.cpp:177)
+      n1: 444859 0x4277F2: Process::process_request() (Process.cpp:43)
+       n1: 444859 0x42DB77: ClientSocket::set_up() (ClientSocket.cpp:192)
+        n1: 444859 0x42CFC7: ClientSocket::read_in_buffer() (ClientSocket.cpp:91)
+         n1: 444859 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+          n1: 444859 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+           n1: 444859 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+            n0: 444859 0x404273: main (main.cpp:49)
+   n0: 14232 in 17 places, all below massif's threshold (1.00%)
+ n1: 120640 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 120640 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 120640 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 118560 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 118560 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n3: 110240 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n2: 60320 0x40D47D: void std::_Construct<ServerBlock, ServerBlock>(ServerBlock*, ServerBlock const&) (stl_construct.h:83)
+        n1: 52000 0x40D287: ServerBlock* std::__uninitialized_copy<false>::__uninit_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:75)
+         n1: 52000 0x40BFA0: ServerBlock* std::uninitialized_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:126)
+          n1: 52000 0x40A7CB: ServerBlock* std::__uninitialized_copy_a<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, ServerBlock>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, std::allocator<ServerBlock>&) (stl_uninitialized.h:281)
+           n1: 52000 0x4091D5: ServerBlock* std::vector<ServerBlock, std::allocator<ServerBlock> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > > >(unsigned long, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >) (stl_vector.h:1227)
+            n1: 52000 0x407BAF: std::vector<ServerBlock, std::allocator<ServerBlock> >::operator=(std::vector<ServerBlock, std::allocator<ServerBlock> > const&) (vector.tcc:195)
+             n2: 52000 0x404A3F: ConfigFileParsing::ConfigFileParsing(ConfigFileParsing const&) (ConfigFileParsing.cpp:17)
+              n2: 31200 0x430C38: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+               n1: 31200 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+                n0: 31200 in 2 places, all below massif's threshold (1.00%)
+               n0: 0 in 1 place, below massif's threshold (1.00%)
+              n0: 20800 in 4 places, all below massif's threshold (1.00%)
+        n0: 8320 in 1 place, below massif's threshold (1.00%)
+       n2: 24960 0x430C1D: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+        n1: 24960 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+         n0: 24960 in 2 places, all below massif's threshold (1.00%)
+        n0: 0 in 1 place, below massif's threshold (1.00%)
+       n0: 24960 in 8 places, all below massif's threshold (1.00%)
+      n0: 8320 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n1: 72704 0x4EBAEFE: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n1: 72704 0x40106F8: call_init.part.0 (dl-init.c:72)
+   n1: 72704 0x4010809: _dl_init (dl-init.c:30)
+    n1: 72704 0x4000C68: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+     n1: 72704 0x0: ???
+      n1: 72704 0xFFF000E6D: ???
+       n0: 72704 0xFFF000E77: ???
+ n0: 27069 in 22 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=3
+#-----------
+time=2140754473
+mem_heap_B=345139
+mem_heap_extra_B=10749
+mem_stacks_B=4464
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=3047042743
+mem_heap_B=4286818
+mem_heap_extra_B=41990
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=5
+#-----------
+time=3897516024
+mem_heap_B=7335300
+mem_heap_extra_B=59100
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=4592120343
+mem_heap_B=7479022
+mem_heap_extra_B=62154
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=5426231940
+mem_heap_B=7725641
+mem_heap_extra_B=72311
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=6224939841
+mem_heap_B=7564497
+mem_heap_extra_B=64079
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=7163563368
+mem_heap_B=19215168
+mem_heap_extra_B=65280
+mem_stacks_B=1616
+heap_tree=detailed
+n4: 19215168 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 17670138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 17669291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 17669291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 17669291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 17669291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 17669291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 17669291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 686400 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 686400 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 686400 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 684320 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 684320 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n2: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 407680 in 12 places, all below massif's threshold (1.00%)
+       n2: 226720 0x40D47D: void std::_Construct<ServerBlock, ServerBlock>(ServerBlock*, ServerBlock const&) (stl_construct.h:83)
+        n1: 218400 0x40D287: ServerBlock* std::__uninitialized_copy<false>::__uninit_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:75)
+         n1: 218400 0x40BFA0: ServerBlock* std::uninitialized_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:126)
+          n1: 218400 0x40A7CB: ServerBlock* std::__uninitialized_copy_a<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, ServerBlock>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, std::allocator<ServerBlock>&) (stl_uninitialized.h:281)
+           n1: 218400 0x4091D5: ServerBlock* std::vector<ServerBlock, std::allocator<ServerBlock> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > > >(unsigned long, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >) (stl_vector.h:1227)
+            n1: 218400 0x407BAF: std::vector<ServerBlock, std::allocator<ServerBlock> >::operator=(std::vector<ServerBlock, std::allocator<ServerBlock> > const&) (vector.tcc:195)
+             n2: 218400 0x404A3F: ConfigFileParsing::ConfigFileParsing(ConfigFileParsing const&) (ConfigFileParsing.cpp:17)
+              n2: 197600 0x430C38: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+               n1: 197600 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+                n0: 197600 in 2 places, all below massif's threshold (1.00%)
+               n0: 0 in 1 place, below massif's threshold (1.00%)
+              n0: 20800 in 4 places, all below massif's threshold (1.00%)
+        n0: 8320 in 1 place, below massif's threshold (1.00%)
+      n0: 49920 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 518470 in 27 places, all below massif's threshold (1.00%)
+ n1: 340160 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340160 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12118 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=10
+#-----------
+time=7948311054
+mem_heap_B=13480885
+mem_heap_extra_B=69027
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=8789432576
+mem_heap_B=13540162
+mem_heap_extra_B=70846
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=9692821915
+mem_heap_B=13545362
+mem_heap_extra_B=70918
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=10657617943
+mem_heap_B=13546345
+mem_heap_extra_B=70951
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=11683753596
+mem_heap_B=13549387
+mem_heap_extra_B=70733
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 13549387 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 11910139 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 11909292 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 11909292 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 11909292 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 11909292 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 11909292 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 11909292 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 738400 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 738400 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 738400 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 736320 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 736320 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n3: 653120 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 249600 in 11 places, all below massif's threshold (1.00%)
+       n2: 237120 0x40D47D: void std::_Construct<ServerBlock, ServerBlock>(ServerBlock*, ServerBlock const&) (stl_construct.h:83)
+        n1: 228800 0x40D287: ServerBlock* std::__uninitialized_copy<false>::__uninit_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:75)
+         n1: 228800 0x40BFA0: ServerBlock* std::uninitialized_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:126)
+          n1: 228800 0x40A7CB: ServerBlock* std::__uninitialized_copy_a<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, ServerBlock>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, std::allocator<ServerBlock>&) (stl_uninitialized.h:281)
+           n1: 228800 0x4091D5: ServerBlock* std::vector<ServerBlock, std::allocator<ServerBlock> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > > >(unsigned long, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >) (stl_vector.h:1227)
+            n1: 228800 0x407BAF: std::vector<ServerBlock, std::allocator<ServerBlock> >::operator=(std::vector<ServerBlock, std::allocator<ServerBlock> > const&) (vector.tcc:195)
+             n2: 228800 0x404A3F: ConfigFileParsing::ConfigFileParsing(ConfigFileParsing const&) (ConfigFileParsing.cpp:17)
+              n2: 208000 0x430C38: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+               n2: 208000 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+                n1: 166400 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+                 n1: 166400 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+                  n1: 166400 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+                   n1: 166400 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+                    n1: 166400 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+                     n1: 166400 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+                      n1: 166400 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+                       n1: 166400 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+                        n1: 166400 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+                         n1: 166400 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+                          n0: 166400 0x404273: main (main.cpp:49)
+                n0: 41600 in 1 place, below massif's threshold (1.00%)
+               n0: 0 in 1 place, below massif's threshold (1.00%)
+              n0: 20800 in 4 places, all below massif's threshold (1.00%)
+        n0: 8320 in 1 place, below massif's threshold (1.00%)
+       n2: 166400 0x430C1D: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+        n1: 166400 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+         n0: 166400 in 2 places, all below massif's threshold (1.00%)
+        n0: 0 in 1 place, below massif's threshold (1.00%)
+      n0: 83200 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 559641 in 27 places, all below massif's threshold (1.00%)
+ n1: 341207 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 341207 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 13165 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=15
+#-----------
+time=12771465052
+mem_heap_B=13554587
+mem_heap_extra_B=70757
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=13920591647
+mem_heap_B=13559787
+mem_heap_extra_B=70797
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=14517187312
+mem_heap_B=13566162
+mem_heap_extra_B=71078
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 13566162 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 11910260 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 11909292 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 11909292 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 11909292 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 11909292 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 11909292 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 11909292 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 968 in 2 places, all below massif's threshold (1.00%)
+ n1: 738400 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 738400 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 738400 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 736320 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 736320 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n3: 653120 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 249600 in 11 places, all below massif's threshold (1.00%)
+       n2: 237120 0x40D47D: void std::_Construct<ServerBlock, ServerBlock>(ServerBlock*, ServerBlock const&) (stl_construct.h:83)
+        n1: 228800 0x40D287: ServerBlock* std::__uninitialized_copy<false>::__uninit_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:75)
+         n1: 228800 0x40BFA0: ServerBlock* std::uninitialized_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:126)
+          n1: 228800 0x40A7CB: ServerBlock* std::__uninitialized_copy_a<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, ServerBlock>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, std::allocator<ServerBlock>&) (stl_uninitialized.h:281)
+           n1: 228800 0x4091D5: ServerBlock* std::vector<ServerBlock, std::allocator<ServerBlock> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > > >(unsigned long, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >) (stl_vector.h:1227)
+            n1: 228800 0x407BAF: std::vector<ServerBlock, std::allocator<ServerBlock> >::operator=(std::vector<ServerBlock, std::allocator<ServerBlock> > const&) (vector.tcc:195)
+             n2: 228800 0x404A3F: ConfigFileParsing::ConfigFileParsing(ConfigFileParsing const&) (ConfigFileParsing.cpp:17)
+              n2: 208000 0x430C38: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+               n2: 208000 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+                n1: 166400 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+                 n1: 166400 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+                  n1: 166400 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+                   n1: 166400 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+                    n1: 166400 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+                     n1: 166400 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+                      n1: 166400 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+                       n1: 166400 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+                        n1: 166400 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+                         n1: 166400 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+                          n0: 166400 0x404273: main (main.cpp:49)
+                n0: 41600 in 1 place, below massif's threshold (1.00%)
+               n0: 0 in 1 place, below massif's threshold (1.00%)
+              n0: 20800 in 4 places, all below massif's threshold (1.00%)
+        n0: 8320 in 1 place, below massif's threshold (1.00%)
+       n2: 166400 0x430C1D: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+        n1: 166400 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+         n0: 166400 in 2 places, all below massif's threshold (1.00%)
+        n0: 0 in 1 place, below massif's threshold (1.00%)
+      n0: 83200 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 576277 in 27 places, all below massif's threshold (1.00%)
+ n1: 341225 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 341225 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 13183 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=18
+#-----------
+time=15129876628
+mem_heap_B=13512085
+mem_heap_extra_B=69283
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=19
+#-----------
+time=15758461061
+mem_heap_B=13567145
+mem_heap_extra_B=71111
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=16401904272
+mem_heap_B=13517285
+mem_heap_extra_B=69323
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=17061076714
+mem_heap_B=13570187
+mem_heap_extra_B=70893
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=22
+#-----------
+time=17735350873
+mem_heap_B=13522485
+mem_heap_extra_B=69363
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 13522485 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 11880138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 11879291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 11879291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 11879291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 11879291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 11879291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 11879291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 721760 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 721760 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 721760 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 719680 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 719680 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n3: 653120 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 249600 in 11 places, all below massif's threshold (1.00%)
+       n2: 237120 0x40D47D: void std::_Construct<ServerBlock, ServerBlock>(ServerBlock*, ServerBlock const&) (stl_construct.h:83)
+        n1: 228800 0x40D287: ServerBlock* std::__uninitialized_copy<false>::__uninit_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:75)
+         n1: 228800 0x40BFA0: ServerBlock* std::uninitialized_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*) (stl_uninitialized.h:126)
+          n1: 228800 0x40A7CB: ServerBlock* std::__uninitialized_copy_a<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, ServerBlock>(__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, ServerBlock*, std::allocator<ServerBlock>&) (stl_uninitialized.h:281)
+           n1: 228800 0x4091D5: ServerBlock* std::vector<ServerBlock, std::allocator<ServerBlock> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > > >(unsigned long, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >, __gnu_cxx::__normal_iterator<ServerBlock const*, std::vector<ServerBlock, std::allocator<ServerBlock> > >) (stl_vector.h:1227)
+            n1: 228800 0x407BAF: std::vector<ServerBlock, std::allocator<ServerBlock> >::operator=(std::vector<ServerBlock, std::allocator<ServerBlock> > const&) (vector.tcc:195)
+             n2: 228800 0x404A3F: ConfigFileParsing::ConfigFileParsing(ConfigFileParsing const&) (ConfigFileParsing.cpp:17)
+              n2: 208000 0x430C38: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+               n2: 208000 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+                n1: 166400 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+                 n1: 166400 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+                  n1: 166400 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+                   n1: 166400 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+                    n1: 166400 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+                     n1: 166400 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+                      n1: 166400 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+                       n1: 166400 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+                        n1: 166400 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+                         n1: 166400 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+                          n0: 166400 0x404273: main (main.cpp:49)
+                n0: 41600 in 1 place, below massif's threshold (1.00%)
+               n0: 0 in 1 place, below massif's threshold (1.00%)
+              n0: 20800 in 4 places, all below massif's threshold (1.00%)
+        n0: 8320 in 1 place, below massif's threshold (1.00%)
+       n2: 166400 0x430C1D: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+        n1: 166400 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+         n0: 166400 in 2 places, all below massif's threshold (1.00%)
+        n0: 0 in 1 place, below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 579719 in 27 places, all below massif's threshold (1.00%)
+ n1: 340868 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340868 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12826 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=23
+#-----------
+time=18425265542
+mem_heap_B=13575387
+mem_heap_extra_B=70933
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=24
+#-----------
+time=19129359412
+mem_heap_B=13581762
+mem_heap_extra_B=71230
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=19850871553
+mem_heap_B=13580587
+mem_heap_extra_B=71005
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=20772670688
+mem_heap_B=36812886
+mem_heap_extra_B=71050
+mem_stacks_B=1616
+heap_tree=peak
+n3: 36812886 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 35160139 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 35159292 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 35159292 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 35159292 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 35159292 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 35159292 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 35159292 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n0: 930987 in 28 places, all below massif's threshold (1.00%)
+ n1: 721760 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 721760 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 721760 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 719680 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 719680 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 653120 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 653120 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=27
+#-----------
+time=21911821235
+mem_heap_B=25225787
+mem_heap_extra_B=71829
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=22493212675
+mem_heap_B=25232162
+mem_heap_extra_B=72110
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=29
+#-----------
+time=23084000291
+mem_heap_B=25178085
+mem_heap_extra_B=70315
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=23683831017
+mem_heap_B=25230987
+mem_heap_extra_B=71885
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25230987 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23550139 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23549292 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23549292 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23549292 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23549292 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23549292 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23549292 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 738400 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 738400 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 738400 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 736320 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 736320 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 653120 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 653120 in 13 places, all below massif's threshold (1.00%)
+      n0: 83200 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 601241 in 27 places, all below massif's threshold (1.00%)
+ n1: 341207 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 341207 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 13165 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=31
+#-----------
+time=24291142384
+mem_heap_B=25237362
+mem_heap_extra_B=72166
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=24907850000
+mem_heap_B=25183285
+mem_heap_extra_B=70371
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=25533600726
+mem_heap_B=25236187
+mem_heap_extra_B=71941
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=26166832239
+mem_heap_B=25242562
+mem_heap_extra_B=72222
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=26808685807
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=36
+#-----------
+time=27459071101
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=37
+#-----------
+time=28118096395
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=28785761689
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=29462066983
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=30147012277
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=41
+#-----------
+time=30840597571
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=31542822865
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=32253688159
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=32973193453
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=33701338747
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=46
+#-----------
+time=34438124041
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=35183549335
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=36064145584
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=36572609081
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=50
+#-----------
+time=37084912578
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=51
+#-----------
+time=37601076172
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=38121059669
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=38644883166
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=54
+#-----------
+time=39172566760
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=39704070257
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=40239413754
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=57
+#-----------
+time=40778617348
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=58
+#-----------
+time=41321640845
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=59
+#-----------
+time=41868504342
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=60
+#-----------
+time=42419227936
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=61
+#-----------
+time=42973771433
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=62
+#-----------
+time=43532154930
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=63
+#-----------
+time=44094398524
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=64
+#-----------
+time=44660462021
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=65
+#-----------
+time=45230365518
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=66
+#-----------
+time=45804129112
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=67
+#-----------
+time=46381712609
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=68
+#-----------
+time=46963136106
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=69
+#-----------
+time=47548419700
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=70
+#-----------
+time=48137523197
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=71
+#-----------
+time=48730466694
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=72
+#-----------
+time=49327270288
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=73
+#-----------
+time=49927893785
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=74
+#-----------
+time=50532357282
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=75
+#-----------
+time=51140680876
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=76
+#-----------
+time=51752824373
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=77
+#-----------
+time=52368807870
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=78
+#-----------
+time=52988651464
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=79
+#-----------
+time=53612314961
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=80
+#-----------
+time=54239818458
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=81
+#-----------
+time=54871182052
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=82
+#-----------
+time=55506365549
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=83
+#-----------
+time=56145389046
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=84
+#-----------
+time=56788272640
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=85
+#-----------
+time=57434976137
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=86
+#-----------
+time=58085519634
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=87
+#-----------
+time=58739923228
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=88
+#-----------
+time=59398146725
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=89
+#-----------
+time=60060210222
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=90
+#-----------
+time=60726133816
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=detailed
+n4: 25165990 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n2: 23520138 0x4F50497: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 23519291 0x4F50C96: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace_aux(unsigned long, unsigned long, unsigned long, char) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 23519291 0x42CD9E: ClientSocket::read_in_buffer() (ClientSocket.cpp:67)
+    n2: 23519291 0x42CD21: ClientSocket::call_func_ptr() (ClientSocket.cpp:56)
+     n1: 23519291 0x42F612: ServerSocket::processConnections() (ServerSocket.cpp:215)
+      n1: 23519291 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+       n0: 23519291 0x404273: main (main.cpp:49)
+     n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n0: 847 in 2 places, all below massif's threshold (1.00%)
+ n1: 703040 0x41B692: __gnu_cxx::new_allocator<ConfigurationKey>::allocate(unsigned long, void const*) (new_allocator.h:104)
+  n1: 703040 0x41B339: __gnu_cxx::__alloc_traits<std::allocator<ConfigurationKey> >::allocate(std::allocator<ConfigurationKey>&, unsigned long) (alloc_traits.h:182)
+   n2: 703040 0x41AEF6: std::_Vector_base<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate(unsigned long) (stl_vector.h:170)
+    n1: 700960 0x41A852: ConfigurationKey* std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > > >(unsigned long, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >, __gnu_cxx::__normal_iterator<ConfigurationKey const*, std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > >) (stl_vector.h:1224)
+     n2: 700960 0x41A46D: std::vector<ConfigurationKey, std::allocator<ConfigurationKey> >::operator=(std::vector<ConfigurationKey, std::allocator<ConfigurationKey> > const&) (vector.tcc:195)
+      n1: 634400 0x4194DE: ServerBlock::ServerBlock(ServerBlock const&) (ServerBlock.cpp:16)
+       n0: 634400 in 13 places, all below massif's threshold (1.00%)
+      n0: 66560 in 1 place, below massif's threshold (1.00%)
+    n0: 2080 in 1 place, below massif's threshold (1.00%)
+ n0: 602090 in 27 places, all below massif's threshold (1.00%)
+ n1: 340722 0x4F5296B: void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n2: 340722 0x4F529CD: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+   n1: 328042 0x430C9A: ClientSocket::ClientSocket(ClientSocket const&) (in /test/webserv)
+    n1: 328042 0x431C67: std::pair<int, ClientSocket>::pair(std::pair<int, ClientSocket> const&) (stl_pair.h:96)
+     n1: 328042 0x435A61: void std::_Construct<std::pair<int, ClientSocket>, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> const&) (stl_construct.h:83)
+      n1: 328042 0x435777: std::pair<int, ClientSocket>* std::__uninitialized_copy<false>::__uninit_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:75)
+       n1: 328042 0x4351D0: std::pair<int, ClientSocket>* std::uninitialized_copy<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*>(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*) (stl_uninitialized.h:126)
+        n1: 328042 0x4348B9: std::pair<int, ClientSocket>* std::__uninitialized_copy_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket> >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:281)
+         n1: 328042 0x433761: std::pair<int, ClientSocket>* std::__uninitialized_move_if_noexcept_a<std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> > >(std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::pair<int, ClientSocket>*, std::allocator<std::pair<int, ClientSocket> >&) (stl_uninitialized.h:304)
+          n1: 328042 0x43208F: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::_M_insert_aux(__gnu_cxx::__normal_iterator<std::pair<int, ClientSocket>*, std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > > >, std::pair<int, ClientSocket> const&) (vector.tcc:370)
+           n1: 328042 0x430E5D: std::vector<std::pair<int, ClientSocket>, std::allocator<std::pair<int, ClientSocket> > >::push_back(std::pair<int, ClientSocket> const&) (stl_vector.h:925)
+            n1: 328042 0x42F169: ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd, std::allocator<pollfd> >&, int) (ServerSocket.cpp:155)
+             n1: 328042 0x42F573: ServerSocket::processConnections() (ServerSocket.cpp:203)
+              n1: 328042 0x42E714: ServerSocket::ServerSocket(ServerBlock, ConfigFileParsing, unsigned int) (ServerSocket.cpp:48)
+               n0: 328042 0x404273: main (main.cpp:49)
+   n0: 12680 in 42 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=91
+#-----------
+time=61395877313
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=92
+#-----------
+time=62069460810
+mem_heap_B=25165990
+mem_heap_extra_B=68938
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=93
+#-----------
+time=62577924320
+mem_heap_B=25210655
+mem_heap_extra_B=71865
+mem_stacks_B=7136
+heap_tree=empty
+#-----------
+snapshot=94
+#-----------
+time=63087818022
+mem_heap_B=25188485
+mem_heap_extra_B=70411
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=95
+#-----------
+time=63600624709
+mem_heap_B=25210980
+mem_heap_extra_B=71900
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=96
+#-----------
+time=64116200471
+mem_heap_B=25267075
+mem_heap_extra_B=73917
+mem_stacks_B=1448
+heap_tree=empty
+#-----------
+snapshot=97
+#-----------
+time=64632558055
+mem_heap_B=25267075
+mem_heap_extra_B=73917
+mem_stacks_B=1448
+heap_tree=empty
