@@ -465,7 +465,6 @@ bool	Process::get_location_dl(std::string location)
  */
 void	Process::exception(int e)
 {
-	std::cout << "HANDLING ERROR CODE WITH" << e << std::endl;
 	switch (e)
 	{
 		case 404:

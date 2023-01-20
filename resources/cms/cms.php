@@ -29,11 +29,11 @@
 <?php
 
 $dirname = "uploads/";
-$images = glob($dirname."*.{jpg,jpeg,png,gif}", GLOB_BRACE);
+$images = glob($dirname."*.{png}", GLOB_BRACE);
 // remove everything after the last dot
 foreach($images as $image) {
 	// display the image
-
+	usleep(50000);
 	echo '<div class="bg-dark text-secondary px-4 py-5 text-center">';
 	echo '<div class="py-5">';
 	echo '<h1 class="display-5 fw-bold text-white"></h1>';

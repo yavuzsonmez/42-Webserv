@@ -16,12 +16,13 @@
 			$dirpath = $_SERVER['LOCATION_DL'];
 		}
 		function buildPath($file) {
-			return  $file;
+			// take last part of path and add it to current location
+			
 		}
 		$dir = opendir($dirpath);
 		echo "<h1>Directory Listing active</h1>";
 		while ($file = readdir($dir)) {
-		if (is_dir($file)) { // is a directory
+		if (is_dir($_SERVER['LOCATION_DL'] . $file)) { // is a directory
 			echo "<a href=\"" . buildPath($file) ."\">$file/</a><br>";
 		} else { // is a file
 			echo "<a href=\"" . buildPath($file) ."\">$file</a><br>";
