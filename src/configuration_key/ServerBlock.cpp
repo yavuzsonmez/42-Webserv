@@ -210,6 +210,9 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 	if (statuscode == 401) {
 		path_to_file = "./resources/default_pages/401_default.html";
 	}
+	if (statuscode == 413) {
+		path_to_file = "./resources/default_pages/413_default.html";
+	}
 
 	switch (statuscode)
 	{
