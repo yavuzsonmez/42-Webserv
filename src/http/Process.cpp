@@ -526,7 +526,7 @@ void	Process::exception(int e)
 			break;
 		default:
 			try {
-				build_response(_config.getErrorPagePathForCode(503), "503", "Server not available");
+				build_response(_config.getErrorPagePathForCode(404), "404", "Server not available");
 			}
 			catch (int e) {
 				throw (e);

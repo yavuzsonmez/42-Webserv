@@ -198,16 +198,16 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 
 	path_to_file = "./resources/default_pages/404_default.html";
 
-	if (e == 404) {
+	if (statuscode == 404) {
 		path_to_file = "./resources/default_pages/404_default.html";
 	}
-	if (e == 500) {
+	if (statuscode == 500) {
 		path_to_file = "./resources/default_pages/500_default.html";
 	}
-	if (e == 503) {
+	if (statuscode == 503) {
 		path_to_file = "./resources/default_pages/503_default.html";
 	}
-	if (e == 401) {
+	if (statuscode == 401) {
 		path_to_file = "./resources/default_pages/401_default.html";
 	}
 
