@@ -225,7 +225,8 @@ void ConfigFileParsing::addConfigurationKeyToCurrentServerBlock( ConfigurationKe
 		this->server_bracket_counter++;
 		serverBlocks.push_back(ServerBlock());
 		serverBlocks[currentServerIndex].serverIndex = (currentServerIndex + 1);
-		std::cout << "Server " << serverBlocks[currentServerIndex].serverIndex << " created" << std::endl;
+		if (ENABLE_LOGGING)
+			std::cout << "Server " << serverBlocks[currentServerIndex].serverIndex << " created" << std::endl;
 		this->isCurrentlyInServerBlock = true;
 	}
 	else
