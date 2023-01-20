@@ -89,16 +89,13 @@ bool checkIfCgiExecutableAndFileEndingAreSet(std::vector<ServerBlock> &serverBlo
 	for (serverBlocks.begin(), serverBlocks.end(); i != serverBlocks.end(); ++i) {
 		std::vector<ConfigurationKey> locationBlocksInServerBlock = (*i).getConfigurationKeysWithType(LOCATION); // go through all locations available
 		std::vector<ConfigurationKey>::iterator j = locationBlocksInServerBlock.begin();
+		// Iterate over every location block
 		for (locationBlocksInServerBlock.begin(), locationBlocksInServerBlock.end(); j != locationBlocksInServerBlock.end(); ++j) {
 			ConfigurationKey locationBlock = *j;
 			// either cgi_path and cgi_fileending are set or none of them are set
-			if (locationBlock.cgi_path.empty() && !locationBlock.cgi_fileending.empty()) {
+			if (locationBlock.cgi_path.empty() != locationBlock.cgi_fileending.empty()) {
 				return false;
 			}
-			if (!locationBlock.cgi_path.empty() && locationBlock.cgi_fileending.empty()) {
-				return false;
-			}
-			return true;
 		}
 	}
 	return true;
