@@ -65,7 +65,7 @@ std::string ServerBlock::getCgiPath() {
 		return "";
 	}
 	std::string cgi_path = configKeys[0].value;
-	return remove_dot_if_first_character_is_dot(cgi_path);
+	return cgi_path;
 }
 
 /**
