@@ -36,10 +36,7 @@ void CGI::set_environment()
 	if (!location_dl.empty())
 	{
 		_env["LOCATION_DL"] = location_dl;
-		std::cout << "LOCATION URI : " << _env["LOCATION_DL"] << std::endl;
 	}
-	
-	std::cout << "OUR PATH INFO " << calculate_path_info(_path) << std::endl;
 }
 
 std::string CGI::calculate_path_info(std::string path) {

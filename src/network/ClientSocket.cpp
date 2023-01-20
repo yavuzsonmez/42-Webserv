@@ -178,7 +178,6 @@ ServerBlock ClientSocket::getServerBlock()
 	size_t pos = host.find(":");
 	if (pos != std::string::npos)
 		host = host.substr(0, pos);
-	std::cout << "HOST: " << host << std::endl;
 	host = trim_whitespaces(host);
 	return _configFile.getServerBlockWithServerNameAndServerPort(host, port);
 }
