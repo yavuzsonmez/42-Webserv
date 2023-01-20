@@ -196,7 +196,7 @@ std::string ServerBlock::getErrorPagePathForCode(int statuscode)
 {
 	std::string path_to_file;
 
-	path_to_file = "placeholder";
+	path_to_file = "./resources/default_pages/500_default.html";
 
 	switch (statuscode)
 	{

@@ -245,7 +245,9 @@ void	CGI::execute_cgi(void)
 		std::exit(1); // exit the child
 	}
 	else // parent
+	{
 		return wait_for_child(pid);
+	}
 }
 
 /**
