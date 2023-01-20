@@ -22,5 +22,6 @@
 #define User_Agent "User-Agent"
 #define WWW_Authenticate "WWW-Authenticate"
 #define X_Header "X-*	Header"
+#define Set_Cookie "Set-Cookie"
 
 #endif

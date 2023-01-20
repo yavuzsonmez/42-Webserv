@@ -11,6 +11,12 @@ Process::Process(Request request, ServerBlock config) : _request(request), _conf
 	_with_cgi = false;
 	_cgi_path = _config.getCgiPath();
 	_cgi_fileending = _config.getCgiFileEnding();
+	ConfigurationKey locationKey;
+	if (set_location_key_if_exists(locationKey)) {
+		_cgi_path = locationKey.cgi_path;
+		_cgi_fileending = locationKey.cgi_path;
+	}
+	_server_name = request.getHost();
 }
 
 Process::~Process(void)
@@ -25,6 +31,7 @@ Process & Process::operator = (const Process &src)
 	_cgi_path = src._cgi_path;
 	_cgi_fileending = src._cgi_fileending;
 	_with_cgi = src._with_cgi;
+	_server_name = src._server_name;
 	return *this;
 }
 
@@ -161,7 +168,8 @@ void	Process::handle_request(void)
 				if (find_vector(_methods, _request.getMethod().first) == -1)
 					throw (405);
 				try {
-					build_dl_response();}
+					build_dl_response();
+				}
 				catch (int e){
 					debugger.error("Could not find the file listing script!");
 					throw(404);
@@ -287,15 +295,15 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 	}
 	else
 	{
+		// TEST
 		_response.set_status_code(code);
 		_response.set_status_text(status);
-		_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
+		_response.set_server(_server_name);
 		// This is where cgi is recognized
 		if (detectCgi(path, code, status)) // checks if the file ending has the cgi fileending, if yes, the request is targeted to the cgi
 		{
 			_with_cgi = true;
-			_cgi_path = _config.getCgiPath();
-			_CGI = CGI(_request, _config, path, _cgi_path); // activates the cgi
+			_CGI = CGI(_request, _server_name, path, _cgi_path); // activates the cgi
 			_CGI.set_tmps(); // sets the tmps for the cgi, so we can output and input to and from the cgi
 			return ;
 		}
@@ -328,7 +336,9 @@ void	Process::server_overloaded(void)
  */
 void	Process::build_cgi_response(void)
 {
-	_response.set_body(_CGI.get_buf());
+	std::string tmp;
+	tmp = _CGI.get_buf();
+	_response.set_body(tmp);
 	_response.set_content_length(to_str(_response.get_body().length()));
 	_response.set_content_type(_response.get_file_format());
 	_response.create_response();
@@ -341,10 +351,11 @@ void	Process::build_cgi_response(void)
 void	Process::build_dl_response(void)
 {
 	std::string	directory;
+	std::string cgi_path = _config.getCgiPath();
 	char	tmp[1000];
 	getcwd(tmp, 1000);
 	std::string abs(tmp);
-	directory = abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "&" + _request.getPath().first;
+	directory = abs + "/" + get_location(_request.getPath().first.insert(0, "/"), ROOT) + "/";
 	try {
 		_request.setBody(directory);
 	} catch (int e) {
@@ -354,8 +365,31 @@ void	Process::build_dl_response(void)
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 	_with_cgi = true;
-	_CGI = CGI(_request, _config, "./resources/directory_listing/directory_listing.php", "php-cgi");
+	_CGI = CGI(_request, _server_name, "./resources/directory_listing/directory_listing.php", "php-cgi");
+	_CGI.location_dl = directory;
 	_CGI.set_tmps();
+}
+
+
+/**
+ * @brief Sets it to the configuration key, if the location key exists
+ * @param &location
+ */
+bool	Process::set_location_key_if_exists(ConfigurationKey &location)
+{
+	std::vector<ConfigurationKey>	locations = _config.getConfigurationKeysWithType(LOCATION);
+	std::vector<ConfigurationKey>::iterator	it;
+	for (it = locations.begin(); it != locations.end(); it++)
+	{
+		std::string	request_path = _request.getPath().first.insert(0, "/");
+		
+		if (!(*it).value.compare(request_path))
+		{
+			location = *it;
+			return true;
+		}
+	}
+	return false;
 }
 
 /**

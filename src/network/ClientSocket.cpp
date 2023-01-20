@@ -25,6 +25,7 @@ ClientSocket::ClientSocket(struct sockaddr_in clientSocket, ServerBlock &serverB
 	_event = POLLIN;
 	_remove = false;
 	_timeout = std::time(NULL);
+	timestamp = std::time(NULL);
 	_socket_state = PREPARING; // set state of client to PREPARING
 }
 
@@ -38,7 +39,7 @@ ClientSocket::~ClientSocket()
  */
 bool ClientSocket::Timeout()
 {
-	if (std::time(NULL) - _timeout > 5000)
+	if (std::time(NULL) - _timeout > 5)
 	{
 		USE_DEBUGGER;
 		_socket_state = DONE; // set state of client to DONE because it is finished.
@@ -66,6 +67,10 @@ void	ClientSocket::read_in_buffer(void)
 	USE_DEBUGGER;
 	buffer.resize(buffer.size() + _count);
 	_bytes = read(_fd, (char*)buffer.c_str() + _position, _count);
+	if (_bytes <= 0){
+		_remove = true;
+		return;
+	}
 	_position += _bytes;
 	if (_state == HEADER)
 	{
@@ -135,7 +140,7 @@ void	ClientSocket::send_response(void)
 		return ;
 	}
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length() - _position, 0);
-	if (_bytes == -1)
+	if (_bytes < 1 )
 	{
 		_remove = true;
 		_socket_state = DONE; // set state of client to DONE because it is finished.
@@ -173,7 +178,6 @@ ServerBlock ClientSocket::getServerBlock()
 	size_t pos = host.find(":");
 	if (pos != std::string::npos)
 		host = host.substr(0, pos);
-	std::cout << "HOST: " << host << std::endl;
 	host = trim_whitespaces(host);
 	return _configFile.getServerBlockWithServerNameAndServerPort(host, port);
 }
@@ -229,6 +233,7 @@ void	ClientSocket::one(void)
 		_event = POLLERR;
 		debugger.verbose("Thrown exception in ::one");
 		_process.exception(e);
+		_remove = true;
 		return ;
 	}
 	_fd = _process._CGI._fd_out;
@@ -249,6 +254,7 @@ void	ClientSocket::two(void)
 		debugger.verbose("Thrown cgi exception in ::two");
 		std::cerr << "Error in ::two " << error << std::endl;
 		_event = POLLERR;
+		_remove = true;
 		_process.server_overloaded();
 		return ;
 	}
@@ -269,6 +275,7 @@ void	ClientSocket::three(void)
 	} catch (int error) {
 		debugger.verbose("Thrown cgi exception in ::three");
 		_event = POLLERR;
+		_remove = true;
 		_process.server_overloaded();
 		return ;
 	}

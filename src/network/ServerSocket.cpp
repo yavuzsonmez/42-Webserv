@@ -11,7 +11,7 @@
  * @param address, network interface where to listen.
  * @param configFile the configuration File
  */
-ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile ,unsigned int address): _serverBlock(serverBlock), _configFile(configFile)
+ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile, unsigned int address): _serverBlock(serverBlock), _configFile(configFile)
 {
 	std::vector<struct sockaddr_in>::iterator	so;
 	std::vector<unsigned int> allPorts = getAllServerPortsFromAllServerBlocks(configFile.serverBlocks);
@@ -25,7 +25,6 @@ ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile
 		(*so).sin_addr.s_addr = address;
 		bzero(&((*so).sin_zero), 8);
 	}
-	std::cout << "STILL OK" << std::endl;
 	const int	enable = 1;
 	_fds.resize(_sockets.size());
 	std::vector<int>::iterator	fd;
@@ -34,8 +33,8 @@ ServerSocket::ServerSocket(ServerBlock serverBlock, ConfigFileParsing configFile
 		(*fd) = socket(AF_INET, SOCK_STREAM, 0); //IPv4, TCP
 		if (*fd < 0)
 			throw SocketCreationError();
-		fcntl(*fd, F_SETFL, fcntl(*fd, F_GETFL, 0) | O_NONBLOCK);
 		setsockopt(*fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
+		fcntl(*fd, F_SETFL, fcntl(*fd, F_GETFL, 0) | O_NONBLOCK);
 	}
 
 	for (fd = _fds.begin(), so = _sockets.begin(); fd != _fds.end(); fd++, so++) //bind the fds to the sockets and put them in listening mode
@@ -53,7 +52,7 @@ ServerSocket::~ServerSocket(){}
 /**
  * @brief Removes the socket from the vector and closes it.
  * This should be called if the client was not yet created
- * @param pollfds the pollfds 
+ * @param pollfds the pollfds
  * @param i index
  */
 void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
@@ -65,8 +64,8 @@ void ServerSocket::socketFailed(std::vector<pollfd> &pollfds, int i)
 
 /**
  * @brief Disconnects the given client from the server
- * 
- * @param pollfds the pollfds 
+ *
+ * @param pollfds the pollfds
  * @param i index
  */
 void ServerSocket::disconnectClient(std::vector<pollfd> &pollfds, int i)
@@ -110,10 +109,10 @@ void ServerSocket::checkIfConnectionIsBroken(std::vector<pollfd> &pollfds, int i
 
 /**
  * @brief Here we listen on the ports and accept new incoming connections.
- * 
+ *
  * @param pollfds the pollfd vector
  * @param i index of the current pollfd
- * 
+ *
  * @returns false, if a client was declined
  */
 bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds, int i) {
@@ -133,12 +132,12 @@ bool ServerSocket::acceptNewConnectionsIfAvailable(std::vector<pollfd> &pollfds,
 	if (val == -1) { // fcntl failed, we now need to close the socket
 		debugger.verbose("fcntl failed. Closing socket.");
 		close(forward);
-		return false; 
+		return false;
 	};
 	if (_clients.size() >= MAXIMUM_CONNECTED_CLIENTS) {
 		debugger.debug( to_string(_clients.size()) + " / 10Maximum number of clients reached. Declining connection.");
 		int result = send_server_unavailable(forward, _serverBlock);
-		if (result == -1) {
+		if (result < 1) {
 			debugger.verbose("Error while sending 503 to client. Closing connection.");
 			close(forward);
 			return false;
@@ -182,18 +181,24 @@ void ServerSocket::processConnections()
 		(*pollfds)[i].events = POLLIN;
 		(*pollfds)[i].revents = 0;
 	}
-	
+
 	// TODO:
 	// Remove the unreadable function pointers.
 	// See, when the response is actually being sent
 	// Main routine. This will be called the whole time the server runs
 	while (1) {
+		if (ENABLE_LOGGING)
+		{
+			std::cout << "filedescriptors: " << (*pollfds).size() << std::endl;
+			std::cout << "clients: " << _clients.size() << std::endl;
+		}
 		if (poll((struct pollfd *)((*pollfds).data()), (*pollfds).size(), -1) < 1) // Here we wait for poll information.
 		{
 			std::cout << "An error occured when polling.";
 		}
 		for (unsigned long i = 0; i < (*pollfds).size(); ++i) //iterate through the entire area of sockets
 		{
+			// print out amount of clients
 			/**
 			 * Listen to the listening sockets for new connections (ports)
 			 */
@@ -210,6 +215,12 @@ void ServerSocket::processConnections()
 			{
 				client_iter	pos;
 				pos = get_CS_position(_clients, (*pollfds)[i].fd); //retrieve the right client
+				// if ((*pos).second.timestamp + 5 < std::time(NULL))
+				// {
+				// 	debugger.verbose("Client timed out. !!!!!!!!!!");
+				// 	disconnectClient((*pollfds), i);
+				// 	continue;
+				// }
 				if ((*pollfds)[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
@@ -232,7 +243,7 @@ void ServerSocket::processConnections()
 						(*pos).first = (*pos).second._fd;
 					}
 				}
-			 	else if ((*pollfds)[i].revents == 	POLLOUT)
+			 	else if ((*pollfds)[i].revents == POLLOUT)
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
 					if ((*pos).second._remove) // The client asks to be removed

@@ -63,6 +63,8 @@ class Response
 	std::string	_content_length;
 	std::string	_transfer_encoding;
 	std::string	_body;
+	std::string	_raw_body;
+	std::string	_headers_raw;
 	// std::string _html;
 	// std::string _plain;
 	// std::string _image;

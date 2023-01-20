@@ -7,12 +7,13 @@
     </p>
     <p class="subtitle">
 	<?php
-		echo $_SERVER['REQUEST_URI'];
+		echo $_SERVER['LOCATION_DL'] . '<br>';
+		// replace all & with a /
 
-		if ($POST['dir'] == '') {
+		if ($_SERVER['LOCATION_DL'] == '') {
 			$dirpath = '.';
 		} else {
-			$dirpath = $POST['dir'];
+			$dirpath = $_SERVER['LOCATION_DL'];
 		}
 		function buildPath($file) {
 			return  $file;

@@ -8,44 +8,54 @@ CGI::CGI()
 
 /**
  * @brief Sets all the environment variables for the CGI script.
- * 
+ *
  */
 void CGI::set_environment()
 {
-	_env["SERVER_SOFTWARE"] = "webserv/1.0";											//The name and version of the information server software answering the request (and running the gateway). Format: name/version 
-	_env["SERVER_NAME"] = _config.getAllServerNames().front();					//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
-	_env["GATEWAY_INTERFACE"] = "CGI/1.1";										//The revision of the CGI specification to which this server complies. Format: CGI/revision
-	_env["SERVER_PROTOCOL"] = "HTTP/1.1";							//The name and revision of the information protcol this request came in with. Format: protocol/revision
-	_env["SERVER_PORT"] = to_str(_request.getPort().first);									//The port number to which the request was sent.
+	_env["SERVER_SOFTWARE"] = "webserv/1.0";										//The name and version of the information server software answering the request (and running the gateway). Format: name/version
+	_env["SERVER_NAME"] = _server_name;												//The server's hostname, DNS alias, or IP address as it would appear in self-referencing URLs.
+	_env["GATEWAY_INTERFACE"] = "CGI/1.1";											//The revision of the CGI specification to which this server complies. Format: CGI/revision
+	_env["SERVER_PROTOCOL"] = "HTTP/1.1";											//The name and revision of the information protcol this request came in with. Format: protocol/revision
+	_env["SERVER_PORT"] = to_str(_request.getPort().first);							//The port number to which the request was sent.
 	_env["REQUEST_METHOD"] = _request.getMethodasString();							//The method with which the request was made. For HTTP, this is "GET", "HEAD", "POST", etc.
-	_env["PATH_INFO"] =  get_abs_path(_path);														//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
-	_env["PATH_TRANSLATED"] =  get_abs_path(_path);													//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
+	_env["PATH_INFO"] =  calculate_path_info(_path);										//The extra path information, as given by the client. In other words, scripts can be accessed by their virtual pathname, followed by extra information at the end of this path. The extra information is sent as PATH_INFO. This information should be decoded by the server if it comes from a URL before it is passed to the CGI script.
+	_env["PATH_TRANSLATED"] =  get_abs_path(_path);									//The server provides a translated version of PATH_INFO, which takes the path and does any virtual-to-physical mapping to it.
 	_env["SCRIPT_NAME"] = "";														//A virtual path to the script being executed, used for self-referencing URLs.
 	_env["QUERY_STRING"] = _request.getQuery().first;								//The information which follows the ? in the URL which referenced this script. This is the query information. It should not be decoded in any fashion. This variable should always be set when there is query information, regardless of command line decoding.
 	_env["REMOTE_HOST"] = "";														//The hostname making the request. If the server does not have this information, it should set REMOTE_ADDR and leave this unset.
-	_env["REMOTE_ADDR"] = "";														//The IP address of the remote host making the request. 
+	_env["REMOTE_ADDR"] = "";														//The IP address of the remote host making the request.
 	_env["AUTH_TYPE"] = "";															//If the server supports user authentication, and the script is protects, this is the protocol-specific authentication method used to validate the user.
-	_env["REMOTE_USER"] = "";														//If the server supports user authentication, and the script is protected, this is the username they have authenticated as. 
-	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only. 
+	_env["REMOTE_USER"] = "";														//If the server supports user authentication, and the script is protected, this is the username they have authenticated as.
+	_env["REMOTE_IDENT"] = "";														//If the HTTP server supports RFC 931 identification, then this variable will be set to the remote user name retrieved from the server. Usage of this variable should be limited to logging only.
 	_env["CONTENT_TYPE"] = _request.findHeader("Content-Type");						//For queries which have attached information, such as HTTP POST and PUT, this is the content type of the data.
 	_env["CONTENT_LENGTH"] = _request.findHeader("Content-Length");					//The length of the said content as given by the client.
-	_env["HOST"] = _request.findHeader("Host");					//The length of the said content as given by the client.
-	_env["REDIRECT_STATUS"] = "500";							//If the server supports redirection, this variable should be set to the status code of the redirection.
+	_env["HOST"] = _request.findHeader("Host");										//The length of the said content as given by the client.
+	_env["REDIRECT_STATUS"] = "500";												//If the server supports redirection, this variable should be set to the status code of the redirection.
 	_env["BODY"] = _request.getBody().first;
 	_env["REQUEST_URI"] = _request.getPath().first;
+	if (!location_dl.empty())
+	{
+		_env["LOCATION_DL"] = location_dl;
+	}
+}
+
+std::string CGI::calculate_path_info(std::string path) {
+	// returns the PATH INFO php CGI variable.
+	(void) path;
+	return "/";
 }
 
 /**
  * @brief Construct a new CGI::CGI object
  * - Parses the query parameters
  * - Sets the environment variables
- * 
- * @param request The request to handle 
+ *
+ * @param request The request to handle
  * @param config The server block configuration of the request
- * @param path the path 
+ * @param path the path
  * @param cgi_path the cgi path
  */
-CGI::CGI(Request request, ServerBlock config, std::string path, std::string cgi_path) : _request(request), _config(config), _path(path), _cgi_path(cgi_path)
+CGI::CGI(Request request, std::string server_name, std::string path, std::string cgi_path) : _request(request), _server_name(server_name), _path(path), _cgi_path(cgi_path)
 {
 	if (_request.getQuery().second)
 	{
@@ -63,11 +73,12 @@ CGI::~CGI()
 CGI & CGI::operator=(const CGI &src)
 {
 	_request = src._request;
-	_config = src._config;
+	_server_name = src._server_name;
 	_path = src._path;
 	_cgi_path = src._cgi_path;
 	_env = src._env;
 	_query_parameters = src._query_parameters;
+	location_dl = src.location_dl;
 	return *this;
 }
 
@@ -100,7 +111,7 @@ void	CGI::set_tmps(void)
 /**
  * @brief writes the body from the request in _tmp_in which later will be dupped to the STDIN
  * Takes the _fd_in and writes to it the body of the request
- * We catch invalid fds and we check if 
+ * We catch invalid fds and we check if
  */
 void	CGI::write_in_std_in()
 {
@@ -111,7 +122,8 @@ void	CGI::write_in_std_in()
 	{
 		return ;
 	}
-	write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length());
+	if (write(_fd_in, _request.getBody().first.data(), _request.getBody().first.length()) < 1)
+		throw (500);
 	if (_tmpin != NULL)
 		rewind(_tmpin);
 	return ;
@@ -164,7 +176,7 @@ void CGI::wait_for_child(pid_t worker_pid)
 			}
 			debugger.error("Worker did not exit normally."); // this is being called if the worker timed out
 			//throw(502); // else we throw a 500 error
-			return ; 
+			return ;
 		}
 		else
 		{
@@ -208,13 +220,31 @@ void	CGI::execute_cgi(void)
 		_query_parameters.insert(_query_parameters.begin(), _cgi_path.c_str());
 		_argvp = vec_to_array(_query_parameters);
 		execve(_cgi_path.c_str(), _argvp, _envp);
+		int i = 0;
+		while (_argvp[i])
+		{
+			free(_argvp[i]);
+			i++;
+		}
+		i = 0;
+		//delete _argvp;
+		while (_envp[i])
+		{
+			free(_envp[i]);
+			i++;
+		}
+		// delete _envp;
+		delete _argvp; // --> TEST GROWING MEMORY FIX
+		delete _envp; // --> TEST GROWING MEMORY FIX
 		debugger.error("Could not execute CGI. Error happened in execute_cgi");
 		close(_fd_in);
 		close(_fd_out);
 		std::exit(1); // exit the child
 	}
 	else // parent
+	{
 		return wait_for_child(pid);
+	}
 }
 
 /**
@@ -246,10 +276,19 @@ void	CGI::read_in_buff(void)
 	}
 	rewind(_tmpout);	// move the courser back to the beginning
 	_buf.resize(_tmp_size);		//inrease the underlying char array in _buf by the value of _tmp_size
-	read(_fd_out, (char*)(_buf.data()), _tmp_size);
+	if (read(_fd_out, (char*)(_buf.data()), _tmp_size) < 1)
+	{
+		close(_fd_out);
+		close(_fd_in);
+		fclose(_tmpout);
+		fclose(_tmpin);
+		throw (500);
+	}
 	debugger.verbose("Closing connection 5");
 	close(_fd_out);
 	close(_fd_in);
+	fclose(_tmpout);
+	fclose(_tmpin);
 	return ;
 }
 
