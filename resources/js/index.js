@@ -1,1 +1,1 @@
-console.log("JAVASCRIPT!")
+console.log("THIS IS RUNNING ON JAVASCRIPT! :D")
