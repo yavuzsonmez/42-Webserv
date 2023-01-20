@@ -63,7 +63,6 @@ void	Response::create_response(void)
 	_response += "webserver: PETROULETTE\r\n";
 	if (!_body.empty())
 		_response += "\r\n" + _raw_body;
-	std::cout << "ERROR BODY FOR TIMEOUT: " << _body << std::endl;
 }
 
 std::string	Response::get_file_format(void)
