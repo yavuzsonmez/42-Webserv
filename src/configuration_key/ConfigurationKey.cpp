@@ -8,7 +8,7 @@
  * Default constructor
  */
 ConfigurationKey::ConfigurationKey() {
-	throw("Unsupported constructor. Use key value constructor instead!");
+	
 }
 
 /**
