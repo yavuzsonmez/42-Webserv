@@ -273,7 +273,6 @@ void Request::setPath(std::string &url)
 	}
 	if (count > 1)
 	{
-		std::cout << "count: " << count << std::endl;
 		hasNestedRequestPath = true;
 	}
 

@@ -140,6 +140,8 @@ void	ClientSocket::send_response(void)
 		return ;
 	}
 	_bytes = send(_fd, _process._response.get_response().data() + _position, _process._response.get_response().length() - _position, 0);
+	// content to be sent:
+	//std::cout << "FOR IMAGE " << _clientRequest.getScript().first << _process._response.get_response().data() + _position << std::endl;
 	if (_bytes < 1 )
 	{
 		_remove = true;
@@ -279,7 +281,10 @@ void	ClientSocket::three(void)
 		_process.server_overloaded();
 		return ;
 	}
-	_process.build_cgi_response();
+	if (_process._with_cgi)
+	{
+		_process.build_cgi_response();
+	}
 	_fd = _client_fd;
 	_event = POLLOUT;
 	_func_ptr = &ClientSocket::send_response;

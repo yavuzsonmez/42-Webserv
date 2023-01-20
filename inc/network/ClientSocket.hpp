@@ -64,6 +64,7 @@ class ClientSocket
 		int					timestamp;
 
 		Process				_process;
+		Request				_clientRequest;
 
 	private:
 
@@ -80,7 +81,6 @@ class ClientSocket
 		unsigned long		_content_length;
 		void					(ClientSocket::*_func_ptr)(void);
 		ServerBlock			getServerBlock();
-		Request				_clientRequest;
 		
 };
 

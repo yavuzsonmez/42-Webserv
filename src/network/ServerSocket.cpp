@@ -215,12 +215,6 @@ void ServerSocket::processConnections()
 			{
 				client_iter	pos;
 				pos = get_CS_position(_clients, (*pollfds)[i].fd); //retrieve the right client
-				// if ((*pos).second.timestamp + 5 < std::time(NULL))
-				// {
-				// 	debugger.verbose("Client timed out. !!!!!!!!!!");
-				// 	disconnectClient((*pollfds), i);
-				// 	continue;
-				// }
 				if ((*pollfds)[i].revents == POLLIN) //Client is ready for reading, so we try to read the entire request.
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
@@ -246,6 +240,10 @@ void ServerSocket::processConnections()
 			 	else if ((*pollfds)[i].revents == POLLOUT)
 				{
 					(*pos).second.call_func_ptr(); //execute the next operation on the fd
+					//std::cout << "------- START " << std::endl;
+					//std::cout << "Client will now write to file descriptor: " << (*pos).second._fd << std::endl;
+					//std::cout << "Client will now image path: " << (*pos).second._clientRequest.getScript().first << std::endl;
+					//std::cout << "------- END " << std::endl;
 					if ((*pos).second._remove) // The client asks to be removed
 					{
 						debugger.verbose("Client asked to be removed. 2");

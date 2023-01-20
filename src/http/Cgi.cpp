@@ -198,7 +198,7 @@ void	CGI::execute_cgi(void)
 	if (pid < 0)
 	{
 		debugger.error("Could not fork CGI.");
-		throw(500);
+		throw(503);
 	}
 	else if (pid == 0) // child
 	{

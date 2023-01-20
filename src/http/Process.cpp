@@ -311,7 +311,7 @@ void	Process::build_response(std::string path, std::string code, std::string sta
 		{
 			// the request is a static file
 			try {
-				_response.set_body(get_file_content_for_request(path));
+				_response.set_body(get_file_content_for_request(path)); // still ok
 			} catch (int e) {
 				throw (404);
 			}
@@ -465,6 +465,7 @@ bool	Process::get_location_dl(std::string location)
  */
 void	Process::exception(int e)
 {
+	std::cout << "HANDLING ERROR CODE WITH" << e << std::endl;
 	switch (e)
 	{
 		case 404:
