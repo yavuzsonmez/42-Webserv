@@ -347,6 +347,7 @@ void	Process::build_cgi_response(void)
 void	Process::build_dl_response(void)
 {
 	std::string	directory;
+	std::string cgi_path = _config.getCgiPath();
 	char	tmp[1000];
 	getcwd(tmp, 1000);
 	std::string abs(tmp);
@@ -360,7 +361,7 @@ void	Process::build_dl_response(void)
 	_response.set_status_code("200");
 	_response.set_server(_config.getConfigurationKeysWithType(SERVER_NAME).front().server_names.front());
 	_with_cgi = true;
-	_CGI = CGI(_request, _server_name, "./resources/directory_listing/directory_listing.php", "php-cgi");
+	_CGI = CGI(_request, _server_name, "./resources/directory_listing/directory_listing.php", cgi_path);
 	_CGI.location_dl = directory;
 	_CGI.set_tmps();
 }

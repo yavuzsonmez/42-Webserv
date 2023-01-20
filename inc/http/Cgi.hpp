@@ -41,7 +41,8 @@ class	CGI
 		static void	sig_handler(int signum);
 		std::string	get_buf(void);
 		void wait_for_child(pid_t worker_pid);
-
+		std::string	calculate_path_info(std::string path);
+		
 		std::string	get_query(std::string referer);
 
 		//int			_pipefd_in[2];
