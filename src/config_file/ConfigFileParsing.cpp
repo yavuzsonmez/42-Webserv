@@ -328,6 +328,7 @@ void ConfigFileParsing::printAllServerBlocks(std::vector<ServerBlock> &serverBlo
 {
 	if (DEBUGMODE != 1) return;
 	int locationBlockCounter = 0;
+	(void) locationBlockCounter;
 	std::string intendation = "   ";
 	for (int i = 0; i < (int) serverBlocks.size(); i++) {
 		std::cout << R << "SERVER BLOCK " << Reset << i << std::endl;
